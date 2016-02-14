@@ -1,0 +1,37 @@
+\chapter{Design and Technology}
+Planning user interface involves a lot of time spent at the drawing board, without a lot of coding. This is necessary to avoid rewriting big shank's of code over and over again. Things like wireframes, use cases and user stories are used to build fundaments for a new user interface.
+\section{Wireframes}\label{wireframes}
+Creating wireframes is a crucial part of user interface design. The point of wireframes is to have something that is easier to change than the code you are going to write. Before coming to the programming phase, one can iterate over a lot more design propositions, and is able to change things up easily during this initial or planning phase. One could call wireframes a foundation of the application you are developing, wireframes are not supposed to show the creative design, but rather reflect on the technological and use related aspects of the software.\\\\
+During this project a software development methodology called scrum was used, this helps manage product development process significantly. In scrum, planning phase never ends, there is a endless loop of planning and implementation as the project develops. This gives a bit more freedom while drawing wireframes, the focus is on one or two specific features of the software and iterating until the feature is finished.\\\\
+\section{User stories and use cases}\label{userStoriesAndUseCases}
+To achieve the goad of creating good user interface, a lot of work needs to be put in going through how the applications is going to be used in theory. We create a set of use cases, these describe individual functions that the user would want to execute. This can be shown in a form of a graph, that starts usually at the default state of the software and traverses and lists actions that are needed to achieve the goal.\\\\
+User stories are supposed to help develop good use cases, they are sentences that describe The type of a user, the goal and reasoning behind a given action. An example would be:\\\emph{As a administrator, I want to get to the users section, so that I can remove a user}.\\
+This gives a great starting point for creating good use case, user stories are created by comping up with the actions relevant to the purpose of the software. By looking at user stories, decision is made on which of the user stories are a priority. Next an appropriate use case is made.
+\section{ReactJS}\label{technologies}
+In this thesis a couple of new technologies and frameworks were used. ReactJS is a JavaScript library for building user interfaces, it abstracts away the DOM from a programmer, gives a programming model similar to OOP\footnote{Object oriented programming}  to generate appropriate html document. An additional extension of React, called react-bootstrap was used to make the creative design of the application easier. React-bootstrap is just a normal twitter bootstrap\footnote{twitter url} wrapped in syntax that reassembles that of React elements.\\\\
+There are a lot of problems with the solution involving ReactJS. First of all this library is created with so called single-page applications in mind, alternatively React could be used to implement smaller portions of a website, like a real time chat window, while the rest of a page is generated in a different way.\\\\
+First complication is the amount of computation that is needed for a large complicated application to be generated with React. While small application like messaging app or chat window works great with React, a bit more thought needs to go into design of much more complicated applications like Autograder. \\\\
+Application that was written with React is being compiled to one JavaScript file, this is the source file of the whole front-end of the application. This means that server is serving out one file and the rest is being compiled on the client side, the necessary data is being fetched from the server as it's needed, see section \ref{websocets} on websockets.\\\\
+The problem arises when deciding on what should be rendered and when. It's obvious that we do not show or render every application element at once, we need a way to split the rendering into \emph{views} in other words have multiple states of the application that are associated with given url. We can achieve that by having switch statements in out code that looks at the given url, and determines what part of the code should be evaluated and rendered. This might get complicated as the application grows, to help us manage both the url states and overall improve the code readability, another library that was build on top of React was used.\\\\
+React-router is a routing library that takes care of managing urls, and helps organize routes by simply looking at the nesting patter of the UI components that you want to render, furthermore it is possible to determine the parents and child elements by looking on either url or nesting patter in code, this helps make the code more readable and is helpful when debugging.
+
+\section{WebSocets}\label{websocets}
+WebSocets is a protocol that enables two-way communication between a client that is running untrusted code, and a host that is configured to communicate from that code. With this one can send and receive event-driven responses without having to poll the server for a reply. The decision to use WebSocets was somehow indirect, while working with React, it became obvious that the old pattern for receiving data from server would not be optimal for the the way React works and the way the development of the Autograder goes.\\\\
+React works by listening to the changes on separate UI components, and updating their state in real time. When fetching data asynchronously, by using techniques like AJAX, the only way to update UI component is to poll the server for change and ask React to re-render on that basis. Although this is not a bad way to do things, and Autograder does not really need a lot of polling to work correctly, there are no obvious disadvantages of using WebSocets, on top of that, the way it works is more similar to the way React does things client side.\\\\
+The advantages of having constant connection to the server are that the contents on the page can be updated in real time when the server updates its state. One of the use cases that came up while discussing Autograder, was to have some sort of notification system built in the system. The problem was that in the prevois version of Autograder, it was almost impossible to tell whenever someone enrolled to a course or some other important event happend in the system that needed Admin og Teacher attention, without looking for that specific event. Despite the fact that notification systems are fully possible to implement by doing it AJAX way, it would still require an event on the client side to trigger the update and notify the user, with connection based communication the update would happend almost instantly.\\\\
+As mentioned before, WebSocets integrates pretty well with React, the way to do it, just simply listen to the incoming data through the WebSocet connection, and set the components underlying state - while react listens to the componetns state, it will render when changes are detected.
+\section{Bootstrap}\label{bootstrap}
+
+\lstset{
+  numbers=left,
+  stepnumber=1,    
+  firstnumber=1,
+  numberfirstline=true
+}
+\begin{lstlisting}
+<Button>
+   <div>
+     <a></a>
+   </div>
+</Butoon>
+\end{lstlisting}

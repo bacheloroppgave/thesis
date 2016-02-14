@@ -1,0 +1,29 @@
+%\documentclass[11pt,a4paper]{report}
+%\usepackage{blindtext}
+%\usepackage[utf8]{inputenc}
+
+%\title{University of Stavanger\\
+%Department of Electrical Engineering and Computer Science}
+%\author{Thomas Darvik and Tomasz Gliniecki}
+%\date{\today}
+
+%\begin{document}
+\maketitle
+\chapter{Introduction}
+%\section*{Introduction}
+
+[THERE ARE SOME PROBLEMS WITH FRONT-END VS FRONT END -- FIX IT]
+
+Compared to previous times when user interface was largely controlled by the software engineers that wrote them, many modern day systems are created by user experience and designers. Whether the user is a costumer or an employee, the path the user of the program has to take to get from point A to point B has become its own field. This requires the author of the program to be more aware of all the aspects of the program they are writing and always think of alternative ways to do the tasks at hand. Equally important is the usability of the program. Modern user interfaces on the web should also take into account that some users might have disabilities or other problems that prevent them from easily navigating the site.
+
+Most programs go through many changes and iterations throughout the design-process and development phase. Therefore, it can be useful to revisit certain parts and rethink some aspects of the program. At the University of Stavanger, former master student Heine Furubotten (insert reference) created the Autograder-system for automatic code submission and a practical feedback for students. The system was designed to remove all the overhead that the students must think of when submitting the code. The former way of submitting code required the teacher and student to share the code, where the teacher would have to download the code and run it, before giving feedback to the student. This is a long time-consuming process, and the time it takes for the student to get feedback and approval is long. Therefore, the Autograder system solves many of the earlier problems of the old system. In addision, the Autograder system is connected to Github, a git version-control-system, where sharing and managing code is very easy. The system was created so that the teaching staff could do a faster and better job with feedback and learning. The idea of having the code automatically graded and corrected is not a new one, however, at the University of Stavanger, no such systems existed and thus the program was created.
+
+The original Autograder system is created with a web-based front-end system and a server-side that handles all the assignments and other tasks. The program is divided in based on your rights as a user. There are different roles for students, teachers and admins, howerver, everything is managed on the web. The current design completes many of the goals of the system, however, there are some problems that needs to be addressed. One of the goals of the original author is to simplify the process of grading the students assignments. In the new Autograder system one of the main goals has been to improve the time it takes the student assistants and teaching staff to grade the students, by reducing the number of navigations and click the teacher has to use. This is one of the ways the new Autograder system has been redesigned and re imagined.
+
+The system has already been tested on both master and bachelor level programming courses. These courses are advanced and require a lot of programming. Since the program has been up and running for a while, it is easier to find problems and obvious user interface issues. The goal of the approach is to see the system in action and testing new features, without having to make a fully functional system that is lock both in functionality and features. Talking to teaching staff and students after courses has gathered good feedback, and some improvements to the system has been planned out and changed. The scale of the system has also improved. Now that more courses have been put through the system, some aspects of the grading and approval will be redesign and rewritten. The natural transition from the original system to the new would not have been possible without users feedback. The main goal of the project is to improve the current design-faults and harden the system where it is possible. Teachers have given their feedback and questions about scalability has been raised.
+
+Furthermore, there have been questions about mobile solutions and other feature of the page. Now that the system is maturing it will be a natural progression to think about mobile solutions. In the ever growing mobile-market, an increasing number of hand-held devices have been introduced to the market, and users will expect this to be integrated in the Autograder system. Nevertheless, the main focus of the new Autograder is not to implement mobile solution, rather rewrite and revisit the original design and front-end system.
+
+The original backend-system is created using a combination of multiple technologies and programming languages. The main programming language is Go, a low level language created by Google. [insert reference]. The programming language it self is fairly new compared to other languages, however Google has done some incredible work when it comes to server-handling and server-oriented features. It is therefore very easy to make web-servers and a back-end systems that communicates with other systems, making Autograder a very fast application. The original web-server of the Autograder system has been rewritten, and discussed later on in this thesis. The storage solution of the original Autograder has also been rewritten from a key-value database to a more conventional relational database. This is also discussed later on in this thesis.
+
+%\end{document}
