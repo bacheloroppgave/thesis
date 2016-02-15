@@ -21,7 +21,6 @@ React works by listening to the changes on separate UI components, and updating 
 The advantages of having constant connection to the server are that the contents on the page can be updated in real time when the server updates its state. One of the use cases that came up while discussing Autograder, was to have some sort of notification system built in the system. The problem was that in the prevois version of Autograder, it was almost impossible to tell whenever someone enrolled to a course or some other important event happend in the system that needed Admin og Teacher attention, without looking for that specific event. Despite the fact that notification systems are fully possible to implement by doing it AJAX way, it would still require an event on the client side to trigger the update and notify the user, with connection based communication the update would happend almost instantly.\\\\
 As mentioned before, WebSocets integrates pretty well with React, the way to do it, just simply listen to the incoming data through the WebSocet connection, and set the components underlying state - while react listens to the componetns state, it will render when changes are detected.
 \section{Bootstrap}\label{bootstrap}
-
 \lstset{
   numbers=left,
   stepnumber=1,    
