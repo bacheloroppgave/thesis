@@ -1,3 +1,4 @@
 .gitignore
 thesis.pdf
 *.log
+*~
