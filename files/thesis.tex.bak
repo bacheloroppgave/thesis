@@ -39,8 +39,6 @@
 \usepackage{subfigure}
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 
-
-
 \title{Autograder frontend}
 \author{Thomas Darvik and Tomasz Gliniecki}
 \date{\today}
@@ -53,6 +51,5 @@
 \import{chapters/motivation/}{motivation.tex}
 \import{chapters/background/}{background.tex}
 \import{chapters/design/}{design.tex}
-
-
+\import{sources/}{sources.tex}
 \end{document}
