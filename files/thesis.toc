@@ -1,13 +1,13 @@
 \select@language {english}
 \contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}
 \contentsline {chapter}{\numberline {2}Motivation}{4}{chapter.2}
-\contentsline {chapter}{\numberline {3}Background}{5}{chapter.3}
-\contentsline {section}{\numberline {3.1}Front-end}{5}{section.3.1}
-\contentsline {section}{\numberline {3.2}Back-end}{5}{section.3.2}
-\contentsline {section}{\numberline {3.3}Storage solution}{6}{section.3.3}
-\contentsline {chapter}{\numberline {4}Design and Technology}{7}{chapter.4}
-\contentsline {section}{\numberline {4.1}Wireframes}{7}{section.4.1}
-\contentsline {section}{\numberline {4.2}User stories and use cases}{7}{section.4.2}
-\contentsline {section}{\numberline {4.3}ReactJS}{8}{section.4.3}
-\contentsline {section}{\numberline {4.4}WebSocets}{8}{section.4.4}
-\contentsline {section}{\numberline {4.5}Bootstrap}{9}{section.4.5}
+\contentsline {chapter}{\numberline {3}Background}{6}{chapter.3}
+\contentsline {section}{\numberline {3.1}Front-end}{6}{section.3.1}
+\contentsline {section}{\numberline {3.2}Back-end}{7}{section.3.2}
+\contentsline {section}{\numberline {3.3}Storage solution}{7}{section.3.3}
+\contentsline {chapter}{\numberline {4}Design and Technology}{8}{chapter.4}
+\contentsline {section}{\numberline {4.1}Wireframes}{8}{section.4.1}
+\contentsline {section}{\numberline {4.2}User stories and use cases}{8}{section.4.2}
+\contentsline {section}{\numberline {4.3}ReactJS}{9}{section.4.3}
+\contentsline {section}{\numberline {4.4}WebSocets}{10}{section.4.4}
+\contentsline {section}{\numberline {4.5}Bootstrap}{10}{section.4.5}
