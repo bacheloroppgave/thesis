@@ -1,6 +1,5 @@
 \documentclass[12pt,a4paper]{report}
-
-%Remove all this when done;
+% import packages:
 \usepackage{blindtext}
 \usepackage{graphicx}		% GRAFIKK (BILDER)
 \usepackage[utf8]{inputenc}
@@ -18,13 +17,14 @@
 \usepackage{mathtools}
 \usepackage[hidelinks]{hyperref}
 \usepackage{pdfpages}
+\usepackage{setspace}
 \usepackage[english]{babel}
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 \tolerance = 5000 % LaTeX er normalt streng når det gjelder linjebrytingen.
 \hbadness = \tolerance % Vi vil være litt mildere, særlig fordi norsk har så
 \pretolerance = 2000
-
+\onehalfspacing
 \pagenumbering{gobble}
 \usepackage{xfrac}
 \usepackage{floatrow}
@@ -42,25 +42,15 @@
 
 
 
-
 \begin{document}
 
 
 \chapter*{Introduction}
-It is common for students learning programming to go through courses in a practical way with assignments and programming exercises. Assignments and exercises usually consists of a number of tasks that the student will have to solve. When the student is finished, the code is submitted to the teacher. The teacher downloads the code, runs it and grades the student. This approach is time consuming, and by the time the teacher has graded all the exercises, the students have already started on their next assignment. This process is both time consuming. It also requires a lot of extra work, both for the student and the teacher. This can lead to students not fully understanding the curriculum and in worst case miss out on key parts of the course. When the courses get more advanced, and scope increases, this problem gets even bigger. A lot of time is wasted on the overhead work, rather than giving student the help and feedback they need. The University of Stavanger already uses a system called Autograder, AG for short, for code management and grading of code. The system collects student submitted code from Github, a version control system based on Git, and grades it based on test written by the teacher. The system was written by Heine Furubotten [ref], and has been used in some of the courses held at bachelor and master level at UiS in 2015.
 
-The idea behind the system is not a new one. However, the system is developed with direct user feedback both from students and teachers. This gives an advantage when it comes to implementation of useful functionality. It is therefore tailored for the advanced programming courses at UiS. Nevertheless, the system can be implemented on other universities and work for a number of different programming languages. As of now, Autograder has been used mainly with the Go programming language, but the front end system does not limit which programming languages that can be used. The current system is a three part system, with a version control system, website and a server. The current frontend is created with a web based system and a server side that handles the logic. 
+It is common for students learning programming to go through courses in a practical way with assignments and programming exercises. Assignments and exercises usually consists of a number of tasks that the student will have to solve. When the student is finished, the code is submitted to the teacher. The teacher downloads the code, runs it and grades the student. This approach is time consuming, and by the time the teacher has graded all the exercises, the students have already started on their next assignment. This can lead to students not fully understanding the curriculum and in worst case miss out on key parts of the course. When the courses get more advanced, and the code base increases, this problem gets even bigger. A lot of time is wasted on the overhead work, rather than giving student the help and feedback they need. It also requires a lot of work for the teachers, and can often result in students being left behind by the teacher because of pressure to get all the grading done. Even though the system discussed is in use now, it does not mean that it cannot be changed and improved. One way of solving this problem is by using a system of automatic testing and grading. Such a system is already implemented on other universities, but these systems usually lack key features. With that in mind, former master student Heine Furubotten created a system call Autograder. Autograder is a system for automatic testing, code reviewing and grading. The system collects student submitted code from Github, a version control system, and grades it based on test written by the teacher. The system has already been in use on some of the courses held at bachelor and master level at UiS. Autograder requires some basic knowledge of Github and Git, however, these technologies will have to be taught at some point later on anyway. The process of submitting code is easy, as well as the process of getting feedback.
 
+Autograder works the same way many programs in the industry work, and mimics the the real world scenarios that the student will encounter later. When the students graduate and start working in the industry, a similar process of code review and test-driven development will probably be the most common way of programming. It is therefore not an issue to rely on the students learning version control system. The system has already been used on some of the advanced programming couses at UiS, and has proven a valuable asset. The system worked as expected and made the job of the teachers easier, by showing all the student in a web-based system and their progress. Automatic testing was done though code submitted to Github. The code was downloaded and run on computers at UiS, showing the results and build log in the browser. This made it easy for both students and teachers to monitor progress, and evaluate the work. Feedback was given along the way, and helped improved the system with direct feedback from the users. According to Heine, the system improved how the assignments and grading process is done. It also made it simpler for the students to focus on the tasks at hand, rather than having to think about a cumbersome and slow grading process.
 
-The current system completes many of the goals of the author, however, there are some problems that needs to be addressed. One of the goals of the original author is to simplify the process of grading the assignments. The number of students in a course can range from a small class of 10 students to a big class of 30-40 students. The system as of now works great with smaller classes, however, when that number increases, some problems appear. One of the goals of this thesis will be to revisit these parts of the system, and predict how the system will be used in the future. The system should work both for small classes and bigger classes. It front end should not be the limiting factor when choosing a programming language. In addition, it should also be a fun and productive experience both for student and teachers, rather than limiting. Furthermore, there have been questions about mobile solutions and other feature of the page. Now that the system is maturing it will be a natural progression to think about mobile solutions. In the ever growing mobile-market, an increasing number of hand-held devices have been introduced to the market, and users will expect this to be integrated in the Autograder system.
-
-
-
-
- When the system was designed, the front end was one of four parts of the system that Heine had to write in a limited time frame. Now that the system is growing with more features to come, it is time to revisit the user interface and remake and re imagine the front end system. The main goal of this thesis is therefore to revisit the design of the original Autograder system, and improve some aspects of the front end and server side systems that is talking to the front end. This is to optimize the workflow for students and teachers while still keeping some of the original ideas of the system in mind.
-
-
-
-
+Automatic testing of code and grading is not a new idea. Many similar systems are in use at other universities. The biggest difference is that they rely on third party software for testing, and can in many cases not fit the need of the teachers and students. The Autograder system is developed at UiS with direct student and teacher feedback. This gives an advantage when it comes to implementation of useful functions, and is therefore tailored for the needs of the advanced programming courses at UiS. Nevertheless, this does not limit the functionality of the program, which can be implemented on other universities. Autograder is not limited to programming languages design-wise, however, it is mostly tested with the Go programming language. Both student and teachers have been very pleased with the system, and now that it has been used for some time, relevant user-data can be gathered to improve the system even more.
 
 \end{document}
