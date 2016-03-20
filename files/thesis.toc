@@ -7,7 +7,7 @@
 \contentsline {section}{\numberline {3.3}Storage solution}{7}{section.3.3}
 \contentsline {chapter}{\numberline {4}Design and Technology}{8}{chapter.4}
 \contentsline {section}{\numberline {4.1}Wireframes}{8}{section.4.1}
-\contentsline {section}{\numberline {4.2}User stories and use cases}{8}{section.4.2}
+\contentsline {section}{\numberline {4.2}User stories and use cases}{9}{section.4.2}
 \contentsline {section}{\numberline {4.3}ReactJS}{9}{section.4.3}
 \contentsline {section}{\numberline {4.4}WebSocets}{10}{section.4.4}
-\contentsline {section}{\numberline {4.5}Bootstrap}{10}{section.4.5}
+\contentsline {section}{\numberline {4.5}Bootstrap}{11}{section.4.5}
