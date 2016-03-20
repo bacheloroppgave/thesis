@@ -4,9 +4,28 @@
 \BOOKMARK [1][-]{section.3.1}{Front-end}{chapter.3}% 4
 \BOOKMARK [1][-]{section.3.2}{Back-end}{chapter.3}% 5
 \BOOKMARK [1][-]{section.3.3}{Storage solution}{chapter.3}% 6
-\BOOKMARK [0][-]{chapter.4}{Design and Technology}{}% 7
-\BOOKMARK [1][-]{section.4.1}{Wireframes}{chapter.4}% 8
-\BOOKMARK [1][-]{section.4.2}{User stories and use cases}{chapter.4}% 9
-\BOOKMARK [1][-]{section.4.3}{ReactJS}{chapter.4}% 10
-\BOOKMARK [1][-]{section.4.4}{WebSocets}{chapter.4}% 11
-\BOOKMARK [1][-]{section.4.5}{Bootstrap}{chapter.4}% 12
+\BOOKMARK [0][-]{chapter.4}{Design and Architecture}{}% 7
+\BOOKMARK [1][-]{section.4.1}{Design}{chapter.4}% 8
+\BOOKMARK [2][-]{subsection.4.1.1}{The focus}{section.4.1}% 9
+\BOOKMARK [2][-]{subsection.4.1.2}{Planning of software solutions}{section.4.1}% 10
+\BOOKMARK [2][-]{subsection.4.1.3}{User stories}{section.4.1}% 11
+\BOOKMARK [2][-]{subsection.4.1.4}{Wireframes}{section.4.1}% 12
+\BOOKMARK [1][-]{section.4.2}{Development process}{chapter.4}% 13
+\BOOKMARK [2][-]{subsection.4.2.1}{Kanban / Scrum}{section.4.2}% 14
+\BOOKMARK [1][-]{section.4.3}{Architecture}{chapter.4}% 15
+\BOOKMARK [2][-]{subsection.4.3.1}{Choice of software architecture}{section.4.3}% 16
+\BOOKMARK [2][-]{subsection.4.3.2}{MVP or Model View Controller}{section.4.3}% 17
+\BOOKMARK [2][-]{subsection.4.3.3}{Flux}{section.4.3}% 18
+\BOOKMARK [2][-]{subsection.4.3.4}{Other}{section.4.3}% 19
+\BOOKMARK [2][-]{subsection.4.3.5}{Backend}{section.4.3}% 20
+\BOOKMARK [3][-]{subsubsection.4.3.5.1}{Server}{subsection.4.3.5}% 21
+\BOOKMARK [3][-]{subsubsection.4.3.5.2}{Database}{subsection.4.3.5}% 22
+\BOOKMARK [2][-]{subsection.4.3.6}{Frontend}{section.4.3}% 23
+\BOOKMARK [3][-]{subsubsection.4.3.6.1}{Angular}{subsection.4.3.6}% 24
+\BOOKMARK [2][-]{subsection.4.3.7}{React}{section.4.3}% 25
+\BOOKMARK [0][-]{chapter.5}{Design and Technology @depricated}{}% 26
+\BOOKMARK [1][-]{section.5.1}{Wireframes}{chapter.5}% 27
+\BOOKMARK [1][-]{section.5.2}{User stories and use cases}{chapter.5}% 28
+\BOOKMARK [1][-]{section.5.3}{ReactJS}{chapter.5}% 29
+\BOOKMARK [1][-]{section.5.4}{WebSocets}{chapter.5}% 30
+\BOOKMARK [1][-]{section.5.5}{Bootstrap}{chapter.5}% 31

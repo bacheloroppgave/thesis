@@ -18,6 +18,9 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{pdfpages}
 \usepackage[english]{babel}
+\usepackage{xcolor}
+\newcommand\todo[1]{\textcolor{blue}{\textbf{\large{\\TODO: #1}}}}
+\newcommand\worry[1]{\textcolor{red}{\textbf{\small{(#1)}}}}
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 \tolerance = 5000 % LaTeX er normalt streng når det gjelder linjebrytingen.
@@ -38,6 +41,9 @@
 \usepackage{epstopdf}
 \usepackage{subfigure}
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\graphicspath{{pictures/}}
+
 
 \title{Autograder frontend}
 \author{Thomas Darvik and Tomasz Gliniecki}
