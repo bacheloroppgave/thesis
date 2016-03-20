@@ -13,7 +13,7 @@
 \BOOKMARK [1][-]{section.4.2}{Development process}{chapter.4}% 13
 \BOOKMARK [2][-]{subsection.4.2.1}{Kanban / Scrum}{section.4.2}% 14
 \BOOKMARK [1][-]{section.4.3}{Architecture}{chapter.4}% 15
-\BOOKMARK [2][-]{subsection.4.3.1}{Choice of software architecture}{section.4.3}% 16
+\BOOKMARK [2][-]{subsection.4.3.1}{Software architecture}{section.4.3}% 16
 \BOOKMARK [2][-]{subsection.4.3.2}{MVP or Model View Controller}{section.4.3}% 17
 \BOOKMARK [2][-]{subsection.4.3.3}{Flux}{section.4.3}% 18
 \BOOKMARK [2][-]{subsection.4.3.4}{Other}{section.4.3}% 19
@@ -24,8 +24,7 @@
 \BOOKMARK [3][-]{subsubsection.4.3.6.1}{Angular}{subsection.4.3.6}% 24
 \BOOKMARK [2][-]{subsection.4.3.7}{React}{section.4.3}% 25
 \BOOKMARK [0][-]{chapter.5}{Design and Technology @depricated}{}% 26
-\BOOKMARK [1][-]{section.5.1}{Wireframes}{chapter.5}% 27
-\BOOKMARK [1][-]{section.5.2}{User stories and use cases}{chapter.5}% 28
-\BOOKMARK [1][-]{section.5.3}{ReactJS}{chapter.5}% 29
-\BOOKMARK [1][-]{section.5.4}{WebSocets}{chapter.5}% 30
-\BOOKMARK [1][-]{section.5.5}{Bootstrap}{chapter.5}% 31
+\BOOKMARK [1][-]{section.5.1}{User stories and use cases}{chapter.5}% 27
+\BOOKMARK [1][-]{section.5.2}{ReactJS}{chapter.5}% 28
+\BOOKMARK [1][-]{section.5.3}{WebSocets}{chapter.5}% 29
+\BOOKMARK [1][-]{section.5.4}{Bootstrap}{chapter.5}% 30

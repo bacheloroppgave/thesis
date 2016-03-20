@@ -14,19 +14,18 @@
 \contentsline {section}{\numberline {4.2}Development process}{10}{section.4.2}
 \contentsline {subsection}{\numberline {4.2.1}Kanban / Scrum}{10}{subsection.4.2.1}
 \contentsline {section}{\numberline {4.3}Architecture}{11}{section.4.3}
-\contentsline {subsection}{\numberline {4.3.1}Choice of software architecture}{11}{subsection.4.3.1}
-\contentsline {subsection}{\numberline {4.3.2}MVP or Model View Controller}{11}{subsection.4.3.2}
-\contentsline {subsection}{\numberline {4.3.3}Flux}{11}{subsection.4.3.3}
-\contentsline {subsection}{\numberline {4.3.4}Other}{11}{subsection.4.3.4}
-\contentsline {subsection}{\numberline {4.3.5}Backend}{11}{subsection.4.3.5}
-\contentsline {subsubsection}{\numberline {4.3.5.1}Server}{11}{subsubsection.4.3.5.1}
-\contentsline {subsubsection}{\numberline {4.3.5.2}Database}{11}{subsubsection.4.3.5.2}
-\contentsline {subsection}{\numberline {4.3.6}Frontend}{11}{subsection.4.3.6}
-\contentsline {subsubsection}{\numberline {4.3.6.1}Angular}{11}{subsubsection.4.3.6.1}
-\contentsline {subsection}{\numberline {4.3.7}React}{11}{subsection.4.3.7}
-\contentsline {chapter}{\numberline {5}Design and Technology @depricated}{12}{chapter.5}
-\contentsline {section}{\numberline {5.1}Wireframes}{12}{section.5.1}
-\contentsline {section}{\numberline {5.2}User stories and use cases}{12}{section.5.2}
-\contentsline {section}{\numberline {5.3}ReactJS}{13}{section.5.3}
-\contentsline {section}{\numberline {5.4}WebSocets}{14}{section.5.4}
-\contentsline {section}{\numberline {5.5}Bootstrap}{14}{section.5.5}
+\contentsline {subsection}{\numberline {4.3.1}Software architecture}{11}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}MVP or Model View Controller}{12}{subsection.4.3.2}
+\contentsline {subsection}{\numberline {4.3.3}Flux}{12}{subsection.4.3.3}
+\contentsline {subsection}{\numberline {4.3.4}Other}{12}{subsection.4.3.4}
+\contentsline {subsection}{\numberline {4.3.5}Backend}{12}{subsection.4.3.5}
+\contentsline {subsubsection}{\numberline {4.3.5.1}Server}{12}{subsubsection.4.3.5.1}
+\contentsline {subsubsection}{\numberline {4.3.5.2}Database}{12}{subsubsection.4.3.5.2}
+\contentsline {subsection}{\numberline {4.3.6}Frontend}{12}{subsection.4.3.6}
+\contentsline {subsubsection}{\numberline {4.3.6.1}Angular}{12}{subsubsection.4.3.6.1}
+\contentsline {subsection}{\numberline {4.3.7}React}{12}{subsection.4.3.7}
+\contentsline {chapter}{\numberline {5}Design and Technology @depricated}{13}{chapter.5}
+\contentsline {section}{\numberline {5.1}User stories and use cases}{13}{section.5.1}
+\contentsline {section}{\numberline {5.2}ReactJS}{14}{section.5.2}
+\contentsline {section}{\numberline {5.3}WebSocets}{14}{section.5.3}
+\contentsline {section}{\numberline {5.4}Bootstrap}{15}{section.5.4}
