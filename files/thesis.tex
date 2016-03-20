@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{report}
+\documentclass[12pt]{report}
 % import packages:
 \usepackage{blindtext}
 \usepackage{graphicx}		% GRAFIKK (BILDER)
@@ -50,11 +50,13 @@
 \author{Thomas Darvik and Tomasz Gliniecki}
 \date{\today}
 \begin{document}
-\maketitle
+\import{chapters/titlepage/}{titlepage.tex}
+%\maketitle
 \pagenumbering{roman}
 \tableofcontents
 \pagenumbering{arabic}
-\import{chapters/intro/}{intro.tex}
+
+\import{chapters/introduction/}{introduction.tex}
 \import{chapters/motivation/}{motivation.tex}
 \import{chapters/background/}{background.tex}
 \import{chapters/design/}{design.tex}
