@@ -3,3 +3,8 @@ thesis.pdf
 *.log
 *~
 *.priv*
+*.log
+*.aux
+*.out
+*.toc
+*.ignore*
