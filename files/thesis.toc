@@ -23,3 +23,8 @@
 \contentsline {subsubsection}{\numberline {2.3.6.1}Angular}{15}{subsubsection.2.3.6.1}
 \contentsline {subsection}{\numberline {2.3.7}React}{15}{subsection.2.3.7}
 \contentsline {chapter}{\numberline {3}Implementation}{16}{chapter.3}
+\contentsline {section}{\numberline {3.1}Dataflow}{16}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}React.js}{16}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}Flux}{18}{subsection.3.1.2}
+\contentsline {section}{\numberline {3.2}Websockets}{18}{section.3.2}
+\contentsline {section}{\numberline {3.3}Backend}{18}{section.3.3}

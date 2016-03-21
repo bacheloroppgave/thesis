@@ -10,7 +10,51 @@
 \usepackage{graphicx}
 \usepackage{titlesec}
 \usepackage[margin=1.0in]{geometry}
+\usepackage{textcomp}
+\usepackage{upquote}
 \usepackage{listings}
+\usepackage{inconsolata}
+\usepackage{color}
+% Taken from Lena Herrmann at 
+% http://lenaherrmann.net/2010/05/20/javascript-syntax-highlighting-in-the-latex-listings-package
+\definecolor{lightgrey}{RGB}{240,240,240}
+\definecolor{darkgray}{rgb}{.1,.1,.1}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={function,return,var},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]",
+  morestring=[b]<>,
+  basicstyle=\ttfamily\small
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgrey},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+
 \usepackage{enumitem}
 \usepackage{wrapfig}
 \usepackage{gensymb}

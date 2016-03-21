@@ -22,3 +22,8 @@
 \BOOKMARK [3][-]{subsubsection.2.3.6.1}{Angular}{subsection.2.3.6}% 22
 \BOOKMARK [2][-]{subsection.2.3.7}{React}{section.2.3}% 23
 \BOOKMARK [0][-]{chapter.3}{Implementation}{}% 24
+\BOOKMARK [1][-]{section.3.1}{Dataflow}{chapter.3}% 25
+\BOOKMARK [2][-]{subsection.3.1.1}{React.js}{section.3.1}% 26
+\BOOKMARK [2][-]{subsection.3.1.2}{Flux}{section.3.1}% 27
+\BOOKMARK [1][-]{section.3.2}{Websockets}{chapter.3}% 28
+\BOOKMARK [1][-]{section.3.3}{Backend}{chapter.3}% 29
