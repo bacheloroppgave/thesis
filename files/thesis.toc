@@ -25,6 +25,6 @@
 \contentsline {chapter}{\numberline {3}Implementation}{16}{chapter.3}
 \contentsline {section}{\numberline {3.1}Dataflow}{16}{section.3.1}
 \contentsline {subsection}{\numberline {3.1.1}React.js}{16}{subsection.3.1.1}
-\contentsline {subsection}{\numberline {3.1.2}Flux}{18}{subsection.3.1.2}
-\contentsline {section}{\numberline {3.2}Websockets}{18}{section.3.2}
-\contentsline {section}{\numberline {3.3}Backend}{18}{section.3.3}
+\contentsline {subsection}{\numberline {3.1.2}Flux}{19}{subsection.3.1.2}
+\contentsline {section}{\numberline {3.2}Websockets}{19}{section.3.2}
+\contentsline {section}{\numberline {3.3}Backend}{19}{section.3.3}
