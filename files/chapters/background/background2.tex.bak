@@ -1,3 +1,50 @@
+\documentclass[12pt,a4paper]{report}
+% import packages:
+\usepackage{blindtext}
+\usepackage{graphicx}		% GRAFIKK (BILDER)
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{dirtree}
+\usepackage{import}
+\usepackage{afterpage}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{wrapfig}
+\usepackage{gensymb}
+\usepackage{mathtools}
+\usepackage[hidelinks]{hyperref}
+\usepackage{pdfpages}
+\usepackage{setspace}
+\usepackage[english]{babel}
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\tolerance = 5000 % LaTeX er normalt streng når det gjelder linjebrytingen.
+\hbadness = \tolerance % Vi vil være litt mildere, særlig fordi norsk har så
+\pretolerance = 2000
+\onehalfspacing
+\pagenumbering{gobble}
+\usepackage{xfrac}
+\usepackage{floatrow}
+\usepackage{inputenc}
+\setlength{\parindent}{0mm}
+\setlength{\parskip}{1em}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{amsfonts} %Trengs ikke
+\usepackage{amssymb} %Trengs ikke
+\usepackage{siunitx}
+\usepackage{epstopdf}
+\usepackage{subfigure}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\newcommand\todo[1]{\textcolor{blue}{\textbf{\large{\\TODO: #1}}}}
+\newcommand\worry[1]{\textcolor{red}{\textbf{\small{(#1)}}}}
+
+\begin{document}
+
 \chapter{Background}
 
 When designing the new Autograder front-end, it was necessary to develop other parts of the system for emulating dummy-data for the project. One of the most conventional ways of doing this is to create a database that stores the dummy-data, and have a server serve the frontend with that data. The system works in many ways as the fully functional Autograder, with predefined protocols for communications so that the new front-end can be implemented and deployed with a relatively small amount of effort. Making these protocols require us to both think about the current needs and future needs. Even though the system is currently up and running, many new ways of communicating with the new frontend is planned and will be implemented in the new system. It is however, no small task to create these sub-systems. We will go though some of the technologies we are using in this chapter.
@@ -16,3 +63,7 @@ To be able to make the front-end without using real datasets, it was necessary t
 
 \section{Storage solution}
 Even though the scope of the assignment is the front-end, a storage solution was necessary. The original system uses key-value-store, which is great for storing data which can be found using a key or index. The new Autograder need a system that can store relations between roles and courses. Therefore, the solution that is used is a relational database. The database be filled with dummy-data from the beginning, so that the front-end and server can work with data. This data will look like the real data that will be served to the system later on if the new front-end is implemented in the already working Autograder system.
+
+\end{document}
+
+
