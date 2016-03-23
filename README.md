@@ -1,11 +1,11 @@
-# thesis
+# Autograder frontend
 thesis github repository for better verion management of latex files
 
 proposed structure
 
-Intro og motivation OK
+##:Intro og motivation OK
 
-#Background ( beskrive kun hva de teknologiene gjør, ikke hvordan vi bruker de)
+##Background ( beskrive kun hva de teknologiene gjør, ikke hvordan vi bruker de)
 * ## Frontend 
  * React
  * HTML
@@ -18,7 +18,7 @@ Intro og motivation OK
  * Websockets
  * mySQL/SQL
 
-#Design/Architecture (hva vi bruker de technologiene til og hvordan)
+##Design/Architecture (hva vi bruker de technologiene til og hvordan)
 * ## Webapp 
  * User Interface
  * HTML
@@ -31,7 +31,7 @@ Intro og motivation OK
  * Communication
  * Storage
 
-#Implementation (forklare hvordan alt er koblet sammen)
+##Implementation (forklare hvordan alt er koblet sammen)
 * ## Client 
  * React
  * Flux
@@ -42,4 +42,6 @@ Intro og motivation OK
  * gorilla/websockets 
  * SQL driver
  * Database
+
+* #++
 
