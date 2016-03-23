@@ -7,14 +7,14 @@ proposed structure
 
 #Background 
 ###( beskrive kun hva de teknologiene gjør, ikke hvordan vi bruker de)
-* ## Frontend 
+* ### Frontend 
  * React
  * HTML
  * JavaScript (+about single threded style)
  * Bootstrap
  * Websockets
 
-* ## Backend  
+* ### Backend  
  * Go
  * Websockets
  * mySQL/SQL
@@ -22,35 +22,35 @@ proposed structure
 #Design/Architecture 
 ###(hva vi bruker de technologiene til og hvordan)
 
-* ## Flux and MVC
+* ### Flux and MVC
  * What is MVC and Flux
  * Why Flux over MVC (not clear)
 
-* ## Design
+* ### Design
  * User Interface Design
  * Wireframes
  * Kanban/Scrum
 
-* ## Webapp 
+* ### Webapp 
  * User Interface
  * HTML
  * JavaScript(FLUX)
  * Artistic Design
  * Data fetching
 
-* ## Server 
+* ### Server 
  * Server
  * Communication
  * Storage
 
 #Implementation 
 ###(forklare hvordan alt er koblet sammen)
-* ## Client 
+* ### Client 
  * React
  * Flux
  * Websockets
 
-* ## Server 
+* ### Server 
  * go/http 
  * gorilla/websockets 
  * SQL driver
