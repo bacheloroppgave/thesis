@@ -5,7 +5,7 @@ proposed structure
 
 ###Intro og motivation OK
 
-###Background 
+#Background 
 ###( beskrive kun hva de teknologiene gjør, ikke hvordan vi bruker de)
 * ## Frontend 
  * React
@@ -19,7 +19,7 @@ proposed structure
  * Websockets
  * mySQL/SQL
 
-###Design/Architecture 
+#Design/Architecture 
 ###(hva vi bruker de technologiene til og hvordan)
 
 * ## Flux and MVC
@@ -43,7 +43,7 @@ proposed structure
  * Communication
  * Storage
 
-###Implementation 
+#Implementation 
 ###(forklare hvordan alt er koblet sammen)
 * ## Client 
  * React
