@@ -3,9 +3,10 @@ thesis github repository for better verion management of latex files
 
 proposed structure
 
-##:Intro og motivation OK
+###Intro og motivation OK
 
-##Background ( beskrive kun hva de teknologiene gjør, ikke hvordan vi bruker de)
+###Background 
+###( beskrive kun hva de teknologiene gjør, ikke hvordan vi bruker de)
 * ## Frontend 
  * React
  * HTML
@@ -18,7 +19,18 @@ proposed structure
  * Websockets
  * mySQL/SQL
 
-##Design/Architecture (hva vi bruker de technologiene til og hvordan)
+###Design/Architecture 
+###(hva vi bruker de technologiene til og hvordan)
+
+* ## Flux and MVC
+ * What is MVC and Flux
+ * Why Flux over MVC (not clear)
+
+* ## Design
+ * User Interface Design
+ * Wireframes
+ * Kanban/Scrum
+
 * ## Webapp 
  * User Interface
  * HTML
@@ -31,7 +43,8 @@ proposed structure
  * Communication
  * Storage
 
-##Implementation (forklare hvordan alt er koblet sammen)
+###Implementation 
+###(forklare hvordan alt er koblet sammen)
 * ## Client 
  * React
  * Flux
