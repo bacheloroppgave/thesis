@@ -13,15 +13,6 @@ Two main software design patterns that were considered for this solution were Fl
 Designing it with MVC would look as follows:
 
 \begin{tikzpicture}[node distance = 2cm, auto]
- \node [block] (model) {Model};
- \node [block, right of=model] (view) {View};
- \node [block, right of=view] (controller) {Controller};
- \path [line] (model) -- (identify);
- \path [line] (view) -- (identify);
- \path [line] (controller) -- (identify);
-\end{tikzapicture}
-
-\begin{tikzpicture}[node distance = 2cm, auto]
     % Place nodes
     \node [block] (init) {initialize model};
     \node [cloud, left of=init] (expert) {expert};
