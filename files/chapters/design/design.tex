@@ -4,34 +4,30 @@ The design of software application needs a well defined problem, when a new impr
 
 \section{Flux and MVC}\label{sec:fluxmvc}
 \subsection{What is MVC and Flux}
-Two main software design patterns that were considered for this solution were Flux and MVC, from the start the decision was made to use React.js as a view - (the part of the application that shows current data state), while researching React.js the preffered way to write the app for many programmers seemed to be Flux, although there was no clear advandage of Flux over MVC. MVC stands for Model View Controller, the first part, the model represents the logic, and data that is being displayed, the view is the part that displays the information, and controller accepts the user input and sends it either to model or view, these are the main parts of the application that communicate with eachother. One can be very creative while implementing MVC, and when unexperienced programmer tries it, it can become very difficult to manage all the different parts and especcialy complicated when having a lot of different components that communicate with eachother. Even though Autograder is not as huge and complicated as some sites its still not a small application, there are many elements that depend on data from different places. One example would be the main part of the Autograder which is the lab overview where teachers can have an easy access to all the assignments and see individual results. 
+Two main software design patterns that were considered for this solution were Flux and MVC, React.js was set to be the main tool for using it as a view - (the part of the application that shows current data state), while researching React.js the preffered way to write the app for many programmers seemed to be Flux, although there was no clear advandage of Flux over MVC. MVC stands for Model View Controller, the first part, the model represents the logic, and data that is being displayed, the view is the part that displays the information the current data, and controller accepts the user input and sends it either to model or view, these are the main parts of the application that communicate with eachother. One can be very creative while implementing MVC, there exists many implementations of MVC, in general the flow inside MVC is not well defined, and when unexperienced programmer tries it, it can become very difficult to manage all the different parts, and it gets especcialy complicated when having a lot of different components that communicate with eachother. Even though Autograder is not as huge and complicated as some sites its still not a small application, there are many elements that depend on data from different places. One example would be the main part of the Autograder which is the lab overview where teachers can have an easy access to all the assignments and see individual results. 
+
 \begin{figure}[h]
   {\includegraphics[width=1\linewidth]{laboverviewteacher}}
   \caption{The view that teacher sees when looking at all the labs in a given course}
   \label{fig:laboverwievteacher}
 \end{figure}
-Designing it with MVC would look as follows:
 
-\begin{tikzpicture}[node distance = 2cm, auto]
-    % Place nodes
-    \node [block] (init) {initialize model};
-    \node [cloud, left of=init] (expert) {expert};
-    \node [cloud, right of=init] (system) {system};
-    \node [block, below of=init] (identify) {identify candidate models};
-    \node [block, below of=identify] (evaluate) {evaluate candidate models};
-    \node [block, left of=evaluate, node distance=3cm] (update) {update model};
-    \node [decision, below of=evaluate] (decide) {is best candidate better?};
-    \node [block, below of=decide, node distance=3cm] (stop) {stop};
-    % Draw edges
-    \path [line] (init) -- (identify);
-    \path [line] (identify) -- (evaluate);
-    \path [line] (evaluate) -- (decide);
-    \path [line] (decide) -| node [near start] {yes} (update);
-    \path [line] (update) |- (identify);
-    \path [line] (decide) -- node {no}(stop);
-    \path [line,dashed] (expert) -- (init);
-    \path [line,dashed] (system) -- (init);
-    \path [line,dashed] (system) |- (evaluate);
+The center section is a table of all the lab results for every student, to the right there is a expanded view of a selected lab (marked with gray).
+Simple flowchart represented with MVC style design:
+
+Other componene
+
+\begin{tikzpicture}[scale=2]
+  %nodes
+  \node [block] (v1) at (0,0) {View lab list};
+  \node [block] (v2) at (2,1) {Controller lab status};
+    \draw [->] (v1) |- node [midway, above] {Choose lab} (v2);
+  \node [block] (v3) at (4,0) {Model labs};
+    \draw [->] (v3) |- node [midway, above] {Notify} (v2);
+  \node [block] (v4) at (0,-1) {View lab details};
+    
+    \draw [->] (v2) |- node {} (v1);
+    \draw [->] (v2) |- node [midway, below] {Update} (v3);
 \end{tikzpicture}
   
 \subsection{Why Flux}
