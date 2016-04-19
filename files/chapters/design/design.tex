@@ -15,19 +15,19 @@ Two main software design patterns that were considered for this solution were Fl
 The center section is a table of all the lab results for every student, to the right there is a expanded view of a selected lab (marked with gray).
 Simple flowchart represented with MVC style design:
 
-Other componene
+Other components;
 
 \begin{tikzpicture}[scale=2]
   %nodes
-  \node [block] (v1) at (0,0) {View lab list};
-  \node [block] (v2) at (2,1) {Controller lab status};
-    \draw [->] (v1) |- node [midway, above] {Choose lab} (v2);
-  \node [block] (v3) at (4,0) {Model labs};
-    \draw [->] (v3) |- node [midway, above] {Notify} (v2);
-  \node [block] (v4) at (0,-1) {View lab details};
-    
-    \draw [->] (v2) |- node {} (v1);
-    \draw [->] (v2) |- node [midway, below] {Update} (v3);
+  \node [block] (v1) at (0,0) {View LAB LIST};
+  \node [block] (v2) at (2,1) {Controller LAB STATUS};
+  \node [block] (v3) at (4,0) {Model LABS};
+  \node [block] (v4) at (0,-1) {View LAB DETAILS};
+
+  \draw [->] (v1) |- node [midway, above] {Choose lab} (v2);
+  \draw [->] (v2) |- node [midway, below] {Update} (v1);
+  \draw [->] (v2) -| node [midway, above] {Update} (v3);
+  \draw [->] (v3) -| node {Notify} (2.3,0.57);
 \end{tikzpicture}
   
 \subsection{Why Flux}
