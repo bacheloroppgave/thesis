@@ -17,19 +17,8 @@ Simple flowchart represented with MVC style design:
 
 Other components;
 
-\begin{tikzpicture}[scale=2]
-  %nodes
-  \node [block] (v1) at (0,0) {View LAB LIST};
-  \node [block] (v2) at (2,1) {Controller LAB STATUS};
-  \node [block] (v3) at (4,0) {Model LABS};
-  \node [block] (v4) at (0,-1) {View LAB DETAILS};
+\input{./graphs/mvc.tikz}
 
-  \draw [->] (v1) |- node [midway, above] {Choose lab} (v2);
-  \draw [->] (v2) |- node [midway, below] {Update} (v1);
-  \draw [->] (v2) -| node [midway, above] {Update} (v3);
-  \draw [->] (v3) -| node {Notify} (2.3,0.57);
-\end{tikzpicture}
-  
 \subsection{Why Flux}
 
 \section{Design}
