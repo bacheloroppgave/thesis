@@ -4,7 +4,7 @@ The design of software application needs a well defined problem, when a new impr
 
 \section{Flux and MVC}\label{sec:fluxmvc}
 \subsection{What is MVC and Flux}
-Two main software design patterns that were considered for this solution were Flux and MVC, React.js was set to be the main tool for using it as a view - (the part of the application that shows current data state), while researching React.js the preffered way to write the app for many programmers seemed to be Flux, although there was no clear advandage of Flux over MVC. MVC stands for Model View Controller, the first part, the model represents the logic, and data that is being displayed, the view is the part that displays the information the current data, and controller accepts the user input and sends it either to model or view, these are the main parts of the application that communicate with eachother. One can be very creative while implementing MVC, there exists many implementations of MVC, in general the flow inside MVC is not well defined, and when unexperienced programmer tries it, it can become very difficult to manage all the different parts, and it gets especcialy complicated when having a lot of different components that communicate with eachother. Even though Autograder is not as huge and complicated as some sites its still not a small application, there are many elements that depend on data from different places. One example would be the main part of the Autograder which is the lab overview where teachers can have an easy access to all the assignments and see individual results. 
+Two main software design patterns that were considered for this solution were Flux and MVC, React.js was set to be the main tool for using it as a view - (the part of the application that shows current data state), while researching React.js the proffered way to write the app for many programmers seemed to be Flux, although there was no clear advantage of Flux over MVC. MVC stands for Model View Controller, the first part, the model represents the logic, and data that is being displayed, the view is the part that displays the information the current data, and controller accepts the user input and sends it either to model or view, these are the main parts of the application that communicate with each other. One can be very creative while implementing MVC, there exists many implementations of MVC, in general the flow inside MVC is not well defined, and when inexperienced programmer tries it, it can become very difficult to manage all the different parts, and it gets especially complicated when having a lot of different components that communicate with each other. Even though Autograder is not as huge and complicated as some sites its still not a small application, there are many elements that depend on data from different places. To explain it better let's look at an example. Lab overview where teachers can have an easy access to all the assignments and see individual results.
 
 \begin{figure}[h]
   {\includegraphics[width=1\linewidth]{laboverviewteacher}}
@@ -15,11 +15,26 @@ Two main software design patterns that were considered for this solution were Fl
 The center section is a table of all the lab results for every student, to the right there is a expanded view of a selected lab (marked with gray).
 Simple flowchart represented with MVC style design:
 
-Other components;
+\begin{figure}[h]
+\centering
+\input{./graphs/modelmvc.tex}
+\caption{\worry{not final}}
+\end{figure}
 
-\input{./graphs/mvc.tikz}
+In short, the figure represents only one specific case for implementing certain functionality, there is no general pattern in which data flows through the system, in this case: views signal controller, controller updates model, model notifies about its changes to the controller, then the controller updates the views. This is pretty straight forward, but as the application grows and more components and interactive elements are added it may be difficult to visualize the flow.
+\\Flux was design with simplicity in mind, although the pattern may not be as different from MVC at first, key difference is that in Flux the data flow is defined, and every action is forced to the beginning of the system:
+
+\begin{figure}[h]
+\centering
+\scalebox{0.9}{\input{./graphs/modelflux.tex}}
+\caption{\worry{not final}}
+\end{figure}
+
+Here a user action is triggered, the dispatcher which is a global central hub, reads what \emph{type} of action is being sent, and notifies the stores about it. Each store represents the data for one or many views, its not direct representation of how the data is stored on the server, but it manages itself in a way to represent the data associated view might need. When an action is triggered and reaches store, store then updates itself with the \emph{change} that was associated with the action, when it is done it notifies the views about the change. Views listen to the changes and when they get notified, they get the data from the stores by accessing it through public getter methods from the stores.
+This pattern is very scalable, if we were to add more components, by looking at the graph we only need another box, that sends a User action that will further down the graph modify new or the same Store. It becomes easier to manage different components, because everything will at some point go through that dentral hub called the Dispatcher, this is the starting point of every new \emph{state} that the component is in.
 
 \subsection{Why Flux}
+In this application, the use of Flux pattern was a bit experimental, it was suggested by the developers of React.js that Flux works really well with React.js as there are appropriate hooks built in to React that could be used, that works naturally with Flux pattern.
 
 \section{Design}
 
