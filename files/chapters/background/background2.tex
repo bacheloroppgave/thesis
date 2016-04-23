@@ -10,7 +10,13 @@ Making the new Autograder requires a solid framework for HTML and CSS that remov
 As with the JavaScript and data binding, we use React. React is an open source JavaScript library designed and maintained by Facebook \worry{ref here}. The framework provides a view for data rendered as HTML, and maintains a state that can change depending on the data that comes from the server. This removes a lot of overhead programming that the developers usually have to think about. If the data in the server changes, the change is reflected on the frontpage in realtime. Say for example that the users rights are changed from Student to Teacher. The frontend will have to reflect that change, and show data relevant for a teacher. With React, this change can be made without having to update the page manually. The document object model, DOM for short, is always updated. Updating of elements and data on the page is one of Reacts strongest sides, therefore, it is a very good library for Autograder frontend.
 
 The choice between ReactJS and AngularJS (the other big JavaScript-library in the industry) is really based on preference. The component based pipeline that React offers is very appealing when the website will recycle a lot of the same elements. The new frontend can be compared to a single-page-application, where the different pages are loaded in without refreshing the page. Normally this requires a lot of loading and unloading of elements, and ReactJS already have this build in to the framework.
-
+\\ReactJS uses Virtual DOM to run its Tree Diff algorythm and figures out what parts of the DOM should be rendered, this enables quick re-rendering of only relevant for the change components.
+\begin{figure}[h]
+\centering
+\scalebox{0.7}{\input{./graphs/reactdiffdiagramthin.tex}}
+\caption{Grapgh of how ReactJS uses Virtual DOM to patch the DOM}
+\end{figure}
+\newpage
 \section{Back-end}
 To be able to make the front-end without using real datasets, it was necessary to create a functional server that can get data from the storage solution and serve it to the front-end. The original Autograder already use Go, short for Go language, as the programming language for the back-end. Go is very fast when it comes to web-servers. Making a webserver requires just a few lines of code, and handles multiple connections in go-routines, which is similar to threads. Therefore, it is not a hard choice when selecting the programming language of the back-end. The web-servers job is to be the link between the data stored in the system and the front-end. As mentioned, predefined protocols for communication, such as data structures created with JSON (JavaScript Object Notation) is used to communicate with the front-end. Sending packages with content that the front-end can decode and handle in a predefined way. Consequently, the back-end can be written in many programming languages without effecting the front-end or storage.
 
