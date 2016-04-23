@@ -1,6 +1,6 @@
 \chapter{Implementation}
-Implementation of the design and architecture is not always straightforward. Especially when working on new unfamiliar frameworks. A lot of work has been done in frameworks such as Angular with MVP, other frameworsk would usually use MVP, or slight alteration of it. This was not the case with React.js and Flux which was chose for this application solution.
 
+The implementation of the design and architecture is not always as straightforward as planned. Especially when working with new unfamiliar frameworks. A lot of work has been done in frameworks for the web, such as AngularJS. These frameworks usually use MVC (Model-view-controller), or slight alterations of it. ReactJS uses Flux, a relatively new way of thinking about data-flow in an application. Flux is unidirectional, which means that all data flows in one way and is controlled by modules such as the Dispatcher. (See diagram \worry{Fix links and figures here}
 \section{Client}
 \subsection{React}
 \subsection{Flux}
@@ -12,9 +12,60 @@ Implementation of the design and architecture is not always straightforward. Esp
 \subsection{SQL driver}
 \subsection{Database}
 \input{graphs/databaseer.tex}
+
 \section{Dataflow}
 \subsection{React.js}
-React focuses on fast rendering of selected components, withouth the need for refreshing the page. Of course it doesnt magically works out of the box, one still needs to design the logick and data transfer in such a way to enable this real-time re-rendering of the components. As discuissed in section \ref{sec:flux} \emph{Flux}, in this application flux architecture was used. This architecture is only a way to write your program, so that there is some structure to follow, and do specific things the same way. An exaple would be handling the user input from a specific component. React has a way to communicate between components, and in the beginnig there were attempts to utilize this in orther to send data between different components, like user input automatically updates some field. It is very simple to achieve in react, although the way to go about it, is not by sending data directly thgrough, and between the components, rather have an external logic that could listen to one components change and update another. It becomes clear when the application grows, it is almost impossible to keep track of all the states and wher the data travells. This leads to the next point - architecture Flux.
+
+React focuses on fast rendering of selected components, without the need to refresh the page. Traditionally data will be updated whenever the user updates the page. Modern websites rely on data flowing in an asynchronous manner, where new data can come in at any time. Using the architecture of Flux combined with React, it is simple to create websites that update in real time. However, this does not work out of the box, and coding must be done both on the backend and frontend to make this work. As discussed in section \ref{sec:flux} \emph{Flux}, the architecture is only a way to write the program. It is up to the writer to implement the code in a way that works. Imagine an input field on a webpage where you can write your name. The website has a field that greets the visitor upon entering the page, writing their name and pressing a submit button. Normally you would wait for an event triggered by the button, to update the DOM-elements of the input-field and the greeting text. In React, however, you have a Store, where all the data is stored. The greeter-text listens for a change in the store. The user inputs their name, which triggers a change-event in the store, which in turn updates the greeter.
+
+\worry{Legg inn figur om Flux}
+
+{\input{./graphics/simple.tex}
+
+The above figure shows how the components called Input field and Greeter talks together through the Store. The greeters job is simply to listen for changes in the store, while the input will update the store with the users name. This approach may seem slow and unnecessary, especially on a small application such as the greeter, but the need for a shared Store emerges when the applications grows. React is state-based, meaning it uses states as a way of handling versions of data. New data will update the state of components, which in turn will trigger a re-render of the component. 
+
+As of April 2016, ReactJS is in version 15.01. A new version of ReactJS has been announced, but it is not deployment ready as of now. React is written in JSX, a simplified JavaScript language with XML-layout. The JSX-file is transformed to pure JavaScript. In addition, the XML-attributes are transformed into arguments. Simplified syntax removes a lot of typing, and regular HTML DOM-elements are predefined in React. This means that most HTML-elements can be directly typed in the JSX without having to import or define new elements. Elements such as \emph{input}, \emph{div}, \emph{button} and many more are there out of the box. Below is a simple React component called \emph{SimpleComponent}. It has three methods;
+
+
+\begin{itemize}
+\item \emph{getInitialState:} fired before the component is renderd. This sets up
+values for later use. We define a variable called \emph{value}. 
+\item \emph{onChange:} fired when the corresponding element is changed. In this case the input-field.
+\item \emph{render:} renders the component with a return-statement
+\end{itemize}
+
+
+
+
+
+
+
+
+\begin{lstlisting}[caption=Simple React element with onClick-handlers, label=lst:simplecomponent]
+
+var SimpleComponent = React.createClass({
+  getInitialState: function() {
+    return {
+		value: "",
+    }
+  },
+  onChange: function(event) {
+  	this.setState({value: event.target.value});
+  }s
+  render: function() {
+	return(
+		<input 
+		  type="text"
+		  value={this.state.value}
+		  onChange={this.onChange}
+		/>	
+	);  
+  }  
+\end{lstlisting}
+
+In the example above, the value of the input field is connected to a state called value. The value is updated when the input's onChange-event is triggered (when the user types in the input). ... skriv mer her om basic ReactJS.
+
+Legg også inn annet om Flux her.
 
 
 \begin{lstlisting}[caption=React setup for listening to cache/data store, label=lst:componentlisteners]
