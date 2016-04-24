@@ -1,85 +1,101 @@
 \chapter{Design and Architecture}
-\section{Design}
-The design of software application needs a well defined problem, when a new improved design of a user interface is needed. Main focus lays in easy navigation, responsive interface and intuitive access to the most needed parts of the system. \todo{rewrite introduciont to chapter}.
 
-\subsection{The focus}
-The focus of new design lays in improving the user experience. This application is integrateing GitHub for safe login system, access to git repositories through authentication, and gives the user easy controll over the repositories relevant to specific courses. The system is designed is such a way so that both students and teachers have intuitive access to the parts of the system that they use most frequently. There exists student section and teacher section, these are called "modes"\worry{insert something about admin mode?}, having Autograder in teacher mode, one can easily create a new course and rename it, GitHub integration \ref{gihubintegration} takes care of creating and managing the repositories needed in that course, initial setup of a course is done through a course setup page. The management of students that have joined the course, involves actions like creating group assignments, expelling students and approving new studends who joined the course, these can be done in the course management page. Most used functionality, by both teachers and teaching assistants is course lab overview. This lets a teacher quickly skim through all the students and look if anyone hasn't delivered their assignment yet, or see the score of each assignment, from there, it is also possible to approve or reject any given lab assignment. Another function is to be able to easily controll group assignments, and assign students to specific groups. In the group management page, there exists a user friendly interface for creating new groups and adding available students to any given group, users can be notyfied about which group they have been assigned to, similarly, students can easily create groups that need to be approved by the teachers. Students will utilize Autograder manilny for checking if their assignment has been approved. The default page for in student mode would be lab overview, there one can see the current assignment and its progress, the default course is the one choosen on last session when the user was logged in, it is also worth mentioning that usually one student wont be using Autograder in more than one course, but the system is designed for easy switch between different courses. Another userbase for Autograder are teaching assistants, they are both users and teacher in other courses, this is where Autograder modes come in handy, while working as a TA, user can switch to teacher mode and has access to the teaches functionality in the courses he teaches, similarly switching to student mode gives quick access to relevat functions in taht mode.
-\subsection{Planning of software solutions}
-\todo{}
-\subsection{User stories}
-User stories are a way to describe what application does, and what it is supposed to do in easy to read short sentences. The focus here is to give a good fundament of what the applications is being developed for. Since there is a lot of functionality to be implementet, with the help of user stories is is possible to concentrate on one functionality described by that user story at a time. One example of a user storie would be \emph{"As a teacher I want to be able to easily create groups for assignments, so that i don't have to approve student created groups."} fig: \ref{fig:groupmanagement}, \worry{choose better user story maby?} this describes vaguely what a certain user would like to do with the application, by looking at this user story, a set of tasks is being created, if there are parts of the system that need to be thought out again, or what new implementations are needed to be in place before this functionality can be implemented. With each new user story, the complexity of the application grows, and user interface should be theoretically improving on each cycle due to the way in which new functionality is implemented, since the flow of the application is being thought out and some initial design flaws might be discovered, things need to be either redesigned or a new solution found before this new functionality can be implemented. \todo{More}
+The design of software application needs a well defined problem, when a new improved design of a user interface is needed. Main focus lays in easy navigation, responsive interface and intuitive access to the most needed parts of the system. Architecture describes ways of structuring software logic and communication.
 
-\subsection{Wireframes}
-Creating wireframes is a crucial part of user interface design. The point of wireframes is to have something that is easier to change than the code to be developed. Before coming to the programming phase, one can iterate over a lot more design propositions, and is able to change things up easily during this initial or planning phase. Wireframes are foundation of the application being developed, they are not supposed to show the creative design, but rather reflect on the technological and use-related aspects of the application. Before the development of new user story takes action, sketches and drawings of user interface are being produced. This is done to eliminate flaws in the interface design before they are implemented, a couple of iterations of drawing are done and evalueted from the users perspective. When this initial phase is done, more sophisticated drawings or wireframes are being created. These more detailed drawings with descriptions of areas of the interface, describe what certain elements of this user interface do. Serving as a blue print for further developing of the interface.
+\section{Flux and MVC}\label{sec:fluxmvc}
+\subsection{What is MVC and Flux}
+Two main software design patterns that were considered for this solution were Flux and MVC, React.js was set to be the main tool for using it as a view - (the part of the application that shows current data state), while researching React.js the preferred way to write the app for many programmers seemed to be Flux, although there was no clear advantage of Flux. MVC stands for Model View Controller, the first part, the \emph{model} represents the logic, and data that is being displayed, the \emph{view} is the part that displays the information the current data, and \emph{controller} accepts the user input and sends it either to model or view, these three parts are the main elements of the application that communicate with each other. One can be very creative while implementing MVC, there exists many implementations of MVC, in general the flow inside MVC is not well defined, and when inexperienced programmer tries it, it can become very difficult to manage all the different parts, and it gets especially complicated when having a lot of different components that communicate with each other. Even though Autograder is not as huge and complicated as some of the sites out there, its still not a small application, there are many elements that depend on data from different places. To explain it better let's look at an example. Lab overview where teachers can have an easy access to all the assignments and see individual results.
+
 \begin{figure}[h]
-  {\includegraphics[width=1\linewidth]{groupmanagement}}
-  \caption{Wireframes for Group management page}
+  {\includegraphics[width=1\linewidth]{laboverviewteacher}}
+  \caption{The view that teacher sees when looking at all the labs in a given course}
+  \label{fig:laboverwievteacher}
+\end{figure}
+
+The center section is a table of all the lab results for every student, to the right there is a expanded view of a selected lab (marked with gray).
+Simple flowchart represented with MVC style design:
+
+\begin{figure}[h]
+\centering
+\input{./graphs/modelmvc.tex}
+\caption{Example of how the MVC architecture behaves}
+\end{figure}
+
+In short, the figure represents only one specific case for implementing certain functionality, there is no general pattern in which data flows through the system, in this case: views signal controller, controller updates model, model notifies about its changes to the controller, then the controller updates the views. This is pretty straight forward, but as the application grows and more components and interactive elements are added it may be difficult to visualize the flow.
+\\Flux was design with simplicity in mind, although the pattern may not be as different from MVC at first, key difference is that in Flux the data flow is defined, and every action is forced to the beginning of the system:
+
+\begin{figure}[h]
+\centering
+\scalebox{0.9}{\input{./graphs/modelflux.tex}}
+\caption{General data flows in Flux architecture}
+\end{figure}
+
+Here a user action is triggered, the dispatcher which is a global central hub of the system, reads what \emph{type} of action is being sent, and notifies the stores about it. Each store represents the data for one or many views, its not a direct mapping of how the data is stored on the server, but it manages itself in a way to represent the data any associated views might need. When an action is triggered and reaches store, store then updates itself with the \emph{change} that was associated with the action, when it is done, it notifies the views about the change. Views when they get notified, they get the data from the stores by accessing it through public store getter methods.
+This pattern is very scalable, if we were to add more components, by looking at the graph we only need another box, that sends a User action that will further down the graph modify new or the same store. It becomes easier to manage different components, because everything will at some point go through that central hub called the Dispatcher, this is the starting point of every new \emph{state} that the component is in. The main difference between Flux and MVC is that flux forces unidirectional dataflow, this might seem unnecessary at first, and it is when it comes to small applications, but nevertheless it simplifies the maintenance of the codebase in the long run.
+
+\subsection{Why Flux}
+In this application, the use of Flux pattern was a bit experimental, it was suggested by the developers of React.js that Flux works really well with React.js as there are appropriate hooks built in to React that could be used, that works naturally with Flux pattern. \todo{more, or delete it..}
+
+\section{Design}
+
+\subsection{User Interface Design}
+The focus of new design lays in improving the user experience. Users of previous system, have shown dislike towards the UI design choices. The new UI is designed is such a way so that both students and teachers have intuitive access to the parts of the system that they use most frequently. There exists student section, teacher section, and also admin section, these major sections are designed so that it is obvious what parts of the system you have access to from the current section you are in. having Autograder in teacher mode, one can easily create a new course and rename it, GitHub integration \ref{gihubintegration} takes care of creating and managing the repositories needed in that course, initial setup of a course is done through a course settings page. The management of students that have joined the course, involves actions like organizing groups, expelling students and approving new students who joined the course, these can be done in the groups page and users page through easily accessible navigation. Most used functionality, by both teachers and teaching assistants is course lab overview. This results page lets a teacher quickly skim through all the students and look if anyone hasn't delivered their assignment yet, or see the score of each assignment, from there, it is also possible to approve or reject any given lab assignment. Another function is to be able to easily control group assignments, and assign students to specific groups. In the groups page, there exists a user friendly interface for creating new groups and adding available students to any given group, users can be notified about which group they have been assigned to, similarly, students can easily create groups that need to be approved by the teachers.
+\\Students will utilize Autograder mainly for checking if their assignment has been approved, since handing in of the assignments happens through GitHub integration. The default page for student section is lab overview, in there one can see the current assignment and its progress, it is also worth mentioning that usually one student wont be using Autograder in more than one course, but the system is designed for easy switch between different courses by using tabs to switch current page data with the relevant course information. There is no distinguished mode for teaching assistant, these are often students that are also registered as teachers in different course, this is where Autograder main sections come in handy, while working as a TA, user can switch to teacher mode and has access to the teachers functionality in the courses he teaches, similarly switching to student mode gives quick access to relevant functions in that mode.
+\\As for admins of the system, there will usually be a handful of users with admin privileges, admins control access to the major sections of Autograder, when a user registers admins can assign teacher permissions for that user to be able to create new organizations and courses, and of course admins can upgrade other users to admins. Besides that there is a settings panel for admins that enables setting up initial setting for Autograder server, like hostname, passwords etc.
+
+\subsection{Planning of software solutions}\label{sec:softwaresolution}
+To achieve the goal of better, quicker and more responsive interface, the front-end application is written in JavaScript. By using new emerging open source technologies and libraries like React.js, it enabled quick and easy way to create a responsive user interface. As mentioned in section \ref{sec:fluxmvc} React takes care of the view - what the user sees, and interacts with. What is missing is something to control the user interface and the data structures that it displays. When the view part is out of the way, a couple of decisions has to be made about the rest of the front-end system, in this case, the application is an alteration of so called "one page app", that means user doesn't see the page refresh on any updates, the spin in this implementation is that the user is still provided with the new URL on each state change of the app, this is not usually the case in "on page apps". For this purpose another library was used to help us programmatically change the browsers URL, and associate each state of the app with its own URL. Having access to URL is oftern overlooked, but it is very helpful when users want to share certain parts of the application if they want to link to a specific assignment or course signup page.
+\\How the client communicates with the server is not relevant for the chosen Flux architecture and React.js. The communication implemented in this solution is called WebSocket protocol, in short this protocol establishes a constant connection with the server which is used to transfer data both ways in real time, updates can be send to the client from the server, there is no need for client to poll for any data.
+\begin{figure}[h]
+\centering
+\input{./graphs/websocketprot.tex}
+\caption{General data flows in Flux architecture}
+\end{figure}
+ The connection is established after the initial GET request from the browser, client then asks for an "upgrade" to WebSocket protocol. The way client asks for data, is with a request string that represents the data payload that it is expecting to receive, the server associates every request with piece of data, client can also send additional payload such as username, limit for the size of the data e.g size of array list for pagination. More on WebSocket in section \ref{sec:websocket}.
+\subsection{User stories / Wireframes}
+User stories are a way to describe what application does, and what it is supposed to do in easy to read short descriptions. The focus here is to give a good foundation of what the applications is being developed for. Since there is a lot of functionality to be implemented, with the help of user stories is is possible to concentrate on one functionality described by that user story at a time. One example of a user story would be \emph{"As a teacher I want to be able to easily create groups for assignments, so that i don't have to approve student created groups."} fig: \ref{fig:groupmanagement}, this describes vaguely what a certain user would like to do with the application, but also can be created as a starting point for improvement to existing solution. It is also possible, by looking at this user story, to create a set of tasks that will guide through the steps of implementation. If there are parts of the system that need to be thought out again, or new solutions are needed to be in place before this functionality can be implemented, it is considered a part of the user story task.
+\\Wireframes are a crucial part of user interface design. The point of wireframes is to have something that is easier to change than the code to be developed. Before coming to the programming phase, one can iterate over a lot more design propositions, and is able to change things up easily during this initial or planning phase. Wireframes are foundation of the application being developed, they are not supposed to show the creative design, but rather reflect on the technological and use-related aspects of the application. Before the development of new user story takes action, sketches and drawings of user interface are being produced. This is done to eliminate flaws in the interface design before they are implemented, a couple of iterations of drawing are done and evaluated from the users perspective. When this initial phase is done, more sophisticated drawings or wireframes are being created. These more detailed drawings with descriptions of areas of the interface, describe what certain elements of this user interface do. Serving as a blue print for further developing of the interface.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1\linewidth]{groupmanagement}
+  \caption{Wireframes for Group management page \worry{export as svg or tex}}
   \label{fig:groupmanagement}
 \end{figure}
-\\Wireframe figure above was created as a result of a user story, next step is to create reflection of that wireframe in code, 
+Next step is to create reflection of that Wireframes in code.
 
-
-\section{Development process}
-\worry{not sure about this section, is it usefoul for the reader?}\\
-What enables us to finish the design as it was planned is good workflow, this is there are a couple of ways to go about it, they improve the effectivity and productivity of the process of developing new software solution.
-\subsection{Kanban / Scrum}
-\todo{explain short kanban and scrum}
-
-\section{Architecture}
-
-\subsection{Choice of software architecture}
-
-\subsection{MVP or Model View Controller}
-
-\subsection{Flux}
-
-\subsection{Other}
-
-\subsection{Backend}
-start
-\subsubsection{Server}
-\textbf{Go}
-\subsubsection{Database}
-\textbf{SQL}
-\textbf{noSQL}
-\subsection{Frontend}
-start
-\subsubsection{Angular}
+\section{Web app}
+Architecture of the Autograder system describes the high level structures developed while working on the application. Choice of software architecture, software models on both front and back-end are crucial aspects of creating good application.
+\subsection{Software architecture}
+Autograder is an application for teachers and students, the new version is going to be running on local university network and is going to be accessible from anywhere on the internet. Primary use for teachers is new creating courses in the system, that are associated with the courses at the university, each course has a GitHub repository associated with it, and configured to the needs of that course. This means that an implementation of GitHub integration needs to be created, this is mainly the focus of back-end part of the software, still the front-end, or web client, needs to be designed in such a way to enable the use of such integration. The client is not supposed to serve as an alternative view of GitHub repositories, GitHub is mainly used as a place to easily store source code, and its login authentication API. The client needs to be able to display courses that a student is enrolled into, assignments that the teacher has published to that course, that also involves group assignments.
+\\Although the data is stored in the database, manipulation of that data is done on the client side, and then sent further to the back-end for interpretation and updating the storage. Similarly it is also possible to update the client from the back-end, either directly or through the actions of another client. The user interface updates in real time, as an example, lets take a teacher that is assigning students to group assignments, teacher is using an interactive interface to manipulate the users into selected groups, the student is simultaneously notified in real time when he gets assigned to a new group without the need of refreshing the page, similar things would be new teachers in course, requests for teacher upgrade, deadline and slipdays updates. Teachers can be notified when a new student has enrolled to course, or one of the students has exceeded his slip-days for an assignment. Real time updates are possible due to the connection protocol used in the application. When a client connects to the Autograder server, client application requests for a protocol upgrade, from then on all data transfer is done through \emph{websocket protocol}\cite{websocket}. This enables the server to push its updates to all clients, without being explicitly asked about it by them.
+\\The reasoning behind real-time update system was that notifications and responsiveness of user interface was one of the primary reasons for developing this solution. Although one could argue that order methods of updating the UI and notifications would be sufficient, like polling or long-polling - that is frequent client requests for update from the server, websocket protocol has no obvious disadvantages to the presented solution, and at the same time opens possibilities for further upgrades of the system, like chat functionality, which could be utilized for questions related to assignments.
+\subsection{Front-end}
+Front-end web applications are written in JavaScript, or at least have to be transpiled to JavaScript for the browsers to be able to understand it. Applications in JS, are single threaded...
+\todo{single threaded approach}
+\subsection{Angular}
+\todo{discuss other methods than react, needs more research}
 \subsection{React}
+\todo{Would we use react for this purpose again?}
 
-\chapter{Design and Technology @depricated}
-Planning user interface involves a lot of time spent at the drawing board, without a lot of coding. This is necessary to avoid rewriting big shank's of code over and over again. Things like wireframes, use cases and user stories are used to build fundamentals for a new user interface.
-\section{Wireframes}\label{wireframes}
-Creating wireframes is a crucial part of user interface design. The point of wireframes is to have something that is easier to change than the code you are going to write. Before coming to the programming phase, one can iterate over a lot more design propositions, and is able to change things up easily during this initial or planning phase. One could call wireframes a foundation of the application you are developing, wireframes are not supposed to show the creative design, but rather reflect on the technological and use related aspects of the software.\\\\
-During this project a software development methodology called scrum was used, this helps manage product development process significantly. In scrum, planning phase never ends, there is a endless loop of planning and implementation as the project develops. This gives a bit more freedom while drawing wireframes, the focus is on one or two specific features of the software and iterating until the feature is finished.\\\\
-\section{User stories and use cases}\label{userStoriesAndUseCases}
-To achieve the goad of creating good user interface, a lot of work needs to be put in going through how the applications is going to be used in theory. We create a set of use cases, these describe individual functions that the user would want to execute. This can be shown in a form of a graph, that starts usually at the default state of the software and traverses and lists actions that are needed to achieve the goal.\\\\
-User stories are supposed to help develop good use cases, they are sentences that describe The type of a user, the goal and reasoning behind a given action. An example would be:\\\emph{As a administrator, I want to get to the users section, so that I can remove a user}.\\
-This gives a great starting point for creating good use case, user stories are created by comping up with the actions relevant to the purpose of the software. By looking at user stories, decision is made on which of the user stories are a priority. Next an appropriate use case is made.
-\section{ReactJS}\label{technologies}
-In this thesis a couple of new technologies and frameworks were used. ReactJS is a JavaScript library for building user interfaces, it abstracts away the DOM from a programmer, gives a programming model similar to OOP\footnote{Object oriented programming}  to generate appropriate html document. An additional extension of React, called react-bootstrap was used to make the creative design of the application easier. React-bootstrap is just a normal twitter bootstrap\footnote{twitter url} wrapped in syntax that reassembles that of React elements.\\\\
-There are a lot of problems with the solution involving ReactJS. First of all this library is created with so called single-page applications in mind, alternatively React could be used to implement smaller portions of a website, like a real time chat window, while the rest of a page is generated in a different way.\\\\
-First complication is the amount of computation that is needed for a large complicated application to be generated with React. While small application like messaging app or chat window works great with React, a bit more thought needs to go into design of much more complicated applications like Autograder. \\\\
-Application that was written with React is being compiled to one JavaScript file, this is the source file of the whole front-end of the application. This means that server is serving out one file and the rest is being compiled on the client side, the necessary data is being fetched from the server as it's needed, see section \ref{websocets} on websockets.\\\\
-The problem arises when deciding on what should be rendered and when. It's obvious that we do not show or render every application element at once, we need a way to split the rendering into \emph{views} in other words have multiple states of the application that are associated with given url. We can achieve that by having switch statements in out code that looks at the given url, and determines what part of the code should be evaluated and rendered. This might get complicated as the application grows, to help us manage both the url states and overall improve the code readability, another library that was build on top of React was used.\\\\
-React-router is a routing library that takes care of managing urls, and helps organize routes by simply looking at the nesting patter of the UI components that you want to render, furthermore it is possible to determine the parents and child elements by looking on either url or nesting patter in code, this helps make the code more readable and is helpful when debugging.
+\section{Server}
+Back-end solution is not the main focus of this application. Nonetheless a working temporary server needed to be put together, as well as database to store mock data and to test the logical functionality of the system on the front-end and the way the data is being communicated between the two ends.
+\subsection{Server}
+The server is written in Go, for this purpose there was no real  preference as to what language to use, but assumptions were made that the final server will also be written in Go, therefore it was an obvious choice. Client is designed with WebSocket in mind, the simplest way to implement that on server side is to use Gorilla websocket Go package that can handle WebSocket messages. This was implemented with almost no effort, but the next step is to create logic for handling all the different requests that come from the client. For this purpose, when a server receives a message through WebSocket, a new \emph{goroutine} is fired out, since they are very lightweigh a lot of requests can be potentially handled at the same time. Every requests goes through a simple multiplexer that figures out, based on the message header, what kind of request is made, then it uses the payload to retrieve specific data. As and exaple let's take a user that requested to see all its courses by going to the course overview page, that lists courses that the user is associated with.
 
-\section{WebSocets}\label{websocets}
-WebSocets is a protocol that enables two-way communication between a client that is running untrusted code, and a host that is configured to communicate from that code. With this one can send and receive event-driven responses without having to poll the server for a reply. The decision to use WebSocets was somehow indirect, while working with React, it became obvious that the old pattern for receiving data from server would not be optimal for the the way React works and the way the development of the Autograder goes.\\\\
-React works by listening to the changes on separate UI components, and updating their state in real time. When fetching data asynchronously, by using techniques like AJAX, the only way to update UI component is to poll the server for change and ask React to re-render on that basis. Although this is not a bad way to do things, and Autograder does not really need a lot of polling to work correctly, there are no obvious disadvantages of using WebSocets, on top of that, the way it works is more similar to the way React does things client side.\\\\
-The advantages of having constant connection to the server are that the contents on the page can be updated in real time when the server updates its state. One of the use cases that came up while discussing Autograder, was to have some sort of notification system built in the system. The problem was that in the prevois version of Autograder, it was almost impossible to tell whenever someone enrolled to a course or some other important event happend in the system that needed Admin og Teacher attention, without looking for that specific event. Despite the fact that notification systems are fully possible to implement by doing it AJAX way, it would still require an event on the client side to trigger the update and notify the user, with connection based communication the update would happend almost instantly.\\\\
-As mentioned before, WebSocets integrates pretty well with React, the way to do it, just simply listen to the incoming data through the WebSocet connection, and set the components underlying state - while react listens to the componetns state, it will render when changes are detected.
-\section{Bootstrap}\label{bootstrap}
-\lstset{
-  numbers=left,
-  stepnumber=1,    
-  firstnumber=1,
-  numberfirstline=true
-}
-\begin{lstlisting}
-<Button>
-   <div>
-     <a></a>
-   </div>
-</Butoon>
-\end{lstlisting}
+\begin{figure}[h]
+  \input{./graphs/serverwebsocket.tex}
+  \caption{How requests are handled on the server}
+  \label{fig:serverwebsocket}
+\end{figure}
+
+The server is also serving three static files, main.js, index.html, and style.css. These are retrieved by the client with the initial GET request, from then on server is not receivein any new GET requests but rather communicates through websocket. This is a bit different than traditionall communication with GET and POST. Also when the client goes directly to a specific URL like "http://www.autograder.no/teacher/results/dat100" server should respond only with the static data and not care about the path after the domainname / IP, since this part is taken care of by the client side routing, as explained in section \ref{sec:softwaresolution}. Further, when a user navigates through the application no GET requests are being made.
+\\ActionType that the multiplexer pivots at, is a string representing something similar to what a REST API would typically use. ActionType is a string describing an event, and Payload is the data that is needed to make the changes. Typical HTML form send through websocket, would look like that:
+
+\lstinputlisting[label=lst:websocketapi]{listings/websocketapi.js}
+
+This means in short that the client requests roles for username "tokams", server should respond with the same actionType, and as a payload insert relevant data.
+
+\subsection {Database}
+Database is another part not central to the  but just like the server, it was necessary to implement it so that it becomes easier to see the whole flow of the program.
+\\SQL database was designed first in a dia \emph{(drawing program)} \worry{and not changed since}
+

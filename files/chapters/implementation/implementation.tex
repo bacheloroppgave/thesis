@@ -1,0 +1,50 @@
+\chapter{Implementation}
+The implementation of the design and architecture is not always as straightforward as planned. Especially when working with new unfamiliar frameworks. A lot of work has been done in frameworks for the web, such as AngularJS. These frameworks usually use numeroud different implementations of MVC (Model-view-controller). ReactJS is associated with Flux, a relatively new pattern that describes data-flow in an application. Flux is unidirectional, which means that all data flows in one way and goes through a central de Dispatcher. (See diagram \worry{Fix links and figures here}
+\section{Client}
+
+\subsection{React.js}
+
+The client, in this case Web app, is a single threaded JavaScript program that executes on users browser. Rendering of the DOM is taken care of by React.js library that is managed and updated in a pattern called Flux, the communication with the server and database is done through WebSocket protocol.
+\\React.js can be written with pure js syntax, or it can be written with JSX, which is XML like syntax. Since this library is only used to visually represent the logic and curent state of the application, JSX helps to visualize how the component will look like by building it XML style like so:
+
+\lstinputlisting[caption=Easy to read tree structure of React components, label=lst:jsxsyntax]{listings/jsxsyntax.js}
+
+The tree structure represents parents and children of different components, this render function is responsible for rendering its components, components that are further down the tree have its own render methods that are responsible for delivering the contents of these components.
+\\React focuses on fast rendering of selected components, without the need for refreshing the page. Of course it doesn't magically works out of the box, one still needs to design the logic and data transfer in such a way to enable this real-time re-rendering of the components. As discussed in section \ref{sec:fluxmvc} \emph{Flux}, in this application flux architecture was used. This architecture is only a way to write your program, so that there is some structure to follow, and do specific things the same way. An example would be handling the user input from a specific component. React has a way to communicate between components, and in the beginning there were attempts to utilize this in order to send data between different components, like user input automatically updates some field. It is very simple to achieve in react, although the way to go about it, is not by sending data directly through, and between the components, rather have an external logic that could listen to one components change and update another. It becomes clear when the application grows, it is almost impossible to keep track of all the states and where the data travels. This leads to the next point - architecture Flux.
+
+\lstinputlisting[caption=React setup for listening to cache/data store, label=lst:componentlisteners]{listings/componentlisteners.js}
+
+In the code snippet above Listing \ref{lst:componentlisteners}, are three handles for when any given component \todo{explain what component is} is rendered initially line 4, it gathers the initial data, line 9 when component is rendered, a new listener is added, it is based on standard JS EventListener \cite{eventlistener}, it listeners to certain actions created by other objects, when such action that this particular component is interested occurs, local private function line 10 \_onChange(), is called. componentWillunmount just removes the listener form the component when the component is not being rendered.
+
+
+\lstinputlisting[caption=React render method rendering when the state is updated, label=lst:reactrender]{listings/reactrender.js}
+
+Listing \ref{lst:reactrender}, shows how an example HTML DOM element that would be rendered, it is a simple <div> that wraps other React components, and a .map() function on line 11, that loops through the student data, this data is retrieved from the cache store through the getInitialState() function on Listing \ref{lst:componentlisteners} line 4, and with the help of the EventEmitter's listeners that are implemented.
+
+\lstinputlisting[caption=React private component methods that create actions, label=lst:privatemethodscomponent]{listings/privatemethodscomponent.js}
+
+
+Listing \ref{lst:privatemethodscomponent}, shows the private methods of the component, on each call to this.setState() lines 2, 10, a new render cycle is initialized, and new data is being displayed. Those private methods are invoked through Listing \ref{lst:componentlisteners} EventListeners.
+
+\subsection{Flux}
+\subsection{WebSocket}
+
+\section{Server}
+\subsection{go / HTTP}
+\subsection{gorilla / WebSocket}
+\subsection{SQL driver}
+\subsection{Database}
+
+\begin{figure}[h]
+  \centering
+  \scalebox{0.4}{\scalefont{1.3}{\input{graphs/databaseer.tex}}}
+  \caption{Test database ER diagram}
+  \label{fig:groupmanagement}
+\end{figure}
+
+\subsection{Flux}
+
+\section{WebSocket}
+
+\section{Server}
+

@@ -1,7 +1,14 @@
-\documentclass[12pt,a4paper]{report}
+\documentclass[12pt]{report}
 % import packages:
+\usepackage{etex}
+\reserveinserts{28}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows,shapes}
+
 \usepackage{blindtext}
 \usepackage{graphicx}		% GRAFIKK (BILDER)
+\usepackage{epsfig}			% GRAFIKK (BILDER EPS-VECTOR FORMAT)
+
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{dirtree}
@@ -10,13 +17,58 @@
 \usepackage{graphicx}
 \usepackage{titlesec}
 \usepackage[margin=1.0in]{geometry}
+\usepackage{textcomp}
+\usepackage{upquote}
 \usepackage{listings}
+\usepackage{inconsolata}
+\usepackage{color}
+% Taken from Lena Herrmann at 
+% http://lenaherrmann.net/2010/05/20/javascript-syntax-highlighting-in-the-latex-listings-package
+\definecolor{lightgrey}{RGB}{240,240,240}
+\definecolor{darkgray}{rgb}{.1,.1,.1}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={function,return,var},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]",
+  morestring=[b]<>,
+  basicstyle=\ttfamily\small
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgrey},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+\usepackage{rotating}
+\usepackage{scalefnt}
 \usepackage{enumitem}
 \usepackage{wrapfig}
 \usepackage{gensymb}
 \usepackage{mathtools}
 \usepackage[hidelinks]{hyperref}
 \usepackage{pdfpages}
+\usepackage{setspace}
 \usepackage[english]{babel}
 \usepackage{xcolor}
 \newcommand\todo[1]{\textcolor{blue}{\textbf{\large{\\TODO: #1}}}}
@@ -26,7 +78,7 @@
 \tolerance = 5000 % LaTeX er normalt streng når det gjelder linjebrytingen.
 \hbadness = \tolerance % Vi vil være litt mildere, særlig fordi norsk har så
 \pretolerance = 2000
-
+\onehalfspacing
 \pagenumbering{gobble}
 \usepackage{xfrac}
 \usepackage{floatrow}
@@ -35,8 +87,8 @@
 \setlength{\parskip}{1em}
 \usepackage{tablefootnote}
 \usepackage{amsmath}
-\usepackage{amsfonts} %Trengs ikke
-\usepackage{amssymb} %Trengs ikke
+%\usepackage{amsfonts} %Trengs ikke
+%\usepackage{amssymb} %Trengs ikke
 \usepackage{siunitx}
 \usepackage{epstopdf}
 \usepackage{subfigure}
@@ -49,13 +101,17 @@
 \author{Thomas Darvik and Tomasz Gliniecki}
 \date{\today}
 \begin{document}
-\maketitle
+\import{chapters/titlepage/}{titlepage.tex}
+%\maketitle
 \pagenumbering{roman}
 \tableofcontents
 \pagenumbering{arabic}
-\import{chapters/intro/}{intro.tex}
+
+\import{chapters/introduction/}{introduction.tex}
 \import{chapters/motivation/}{motivation.tex}
-\import{chapters/background/}{background.tex}
+\import{chapters/background/}{background2.tex}
 \import{chapters/design/}{design.tex}
+\import{chapters/implementation/}{implementation.tex}
+\import{chapters/evaluation/}{evaluation.tex}
 \import{sources/}{sources.tex}
 \end{document}
