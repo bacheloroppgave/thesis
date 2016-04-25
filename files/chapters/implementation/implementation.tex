@@ -1,140 +1,50 @@
 \chapter{Implementation}
-Implementation of the design and architecture is not always straightforward. Especially when working on new unfamiliar frameworks. A lot of work has been done in frameworks such as Angular with MVP, other frameworsk would usually use MVP, or slight alterations of it. This was not the case with React.js and Flux which was chose for this application solution.
-
-The implementation of the design and architecture is not always as straightforward as planned. Especially when working with new unfamiliar frameworks. A lot of work has been done in frameworks for the web, such as AngularJS. These frameworks usually use MVC (Model-view-controller), or slight alterations of it. ReactJS uses Flux, a relatively new way of thinking about data-flow in an application. Flux is unidirectional, which means that all data flows in one way and is controlled by modules such as the Dispatcher. (See diagram \worry{Fix links and figures here}
-
-
-
-\section{Dataflow}
+The implementation of the design and architecture is not always as straightforward as planned. Especially when working with new unfamiliar frameworks. A lot of work has been done in frameworks for the web, such as AngularJS. These frameworks usually use numeroud different implementations of MVC (Model-view-controller). ReactJS is associated with Flux, a relatively new pattern that describes data-flow in an application. Flux is unidirectional, which means that all data flows in one way and goes through a central de Dispatcher. (See diagram \worry{Fix links and figures here}
+\section{Client}
+The client, in this case Web app, is a single threaded JavaScript program that executes on users browser. Rendering of the DOM is taken care of by React.js library that is managed and updated in a pattern called Flux, the communication with the server and database is done through WebSocket protocol.
 \subsection{React.js}
+React.js can be written with pure js syntax, or it can be written with JSX, which is XML like syntax. Since this library is only used to visually represent the logic and curent state of the application, JSX helps to visualize how the component will look like by building it XML style like so:
 
-React focuses on fast rendering of selected components, without the need to refresh the page. Traditionally data will be updated whenever the user updates the page. Modern websites rely on data flowing in an asynchronous manner, where new data can come in at any time. Using the architecture of Flux combined with React, it is simple to create websites that update in real time. However, this does not work out of the box, and coding must be done both on the backend and frontend to make this work. As discussed in section \ref{sec:flux} \emph{Flux}, the architecture is only a way to write the program. It is up to the writer to implement the code in a way that works. Imagine an input field on a webpage where you can write your name. The website has a field that greets the visitor upon entering the page, writing their name and pressing a submit button. Normally you would wait for an event triggered by the button, to update the DOM-elements of the input-field and the greeting text. In React, however, you have a Store, where all the data is stored. The greeter-text listens for a change in the store. The user inputs their name, which triggers a change-event in the store, which in turn updates the greeter.
+\lstinputlisting[caption=Easy to read tree structure of React components, label=lst:jsxsyntax]{listings/jsxsyntax.js}
 
-\worry{Legg inn figur om Flux}
+The tree structure represents parents and children of different components, this render function is responsible for rendering its components, those components that are further down the tree have its own render methods that are responsible for delivering the contents of these components.
+\\React focuses on fast rendering of selected components, without the need for refreshing the page. Of course it doesn't magically work out of the box, one still needs to design the logic and data transfer in such a way to enable this real-time re-rendering of the components. As discussed in section \ref{sec:fluxmvc} \emph{Flux}, in this application flux architecture was used. This architecture is only a way to write your program, so that there is some structure to follow, and do specific things the same way. An example would be handling the user input from a specific component. React has a way to communicate between components, and in the beginning there were attempts to utilize this in order to send data between different components, like user input automatically updates some field. It is very simple to achieve in react, although the way to go about it, is not by sending data directly through, and between the components, rather have an external logic that could listen to one components change and update another. It becomes clear when the application grows, it is almost impossible to keep track of all the states and where the data travels. This leads to the next point - architecture Flux.
 
-{\input{./graphics/simple.tex}
+\lstinputlisting[caption=React setup for listening to cache/data store, label=lst:componentlisteners]{listings/componentlisteners.js}
 
-The above figure shows how the components called Input field and Greeter talks together through the Store. The greeters job is simply to listen for changes in the store, while the input will update the store with the users name. This approach may seem slow and unnecessary, especially on a small application such as the greeter, but the need for a shared Store emerges when the applications grows. React is state-based, meaning it uses states as a way of handling versions of data. New data will update the state of components, which in turn will trigger a re-render of the component. 
-
-As of April 2016, ReactJS is in version 15.01. A new version of ReactJS has been announced, but it is not deployment ready as of now. React is written in JSX, a simplified JavaScript language with XML-layout. The JSX-file is transformed to pure JavaScript. In addition, the XML-attributes are transformed into arguments. Simplified syntax removes a lot of typing, and regular HTML DOM-elements are predefined in React. This means that most HTML-elements can be directly typed in the JSX without having to import or define new elements. Elements such as \emph{input}, \emph{div}, \emph{button} and many more are there out of the box. Below is a simple React component called \emph{SimpleComponent}. It has three methods;
-
-
-\begin{itemize}
-\item \emph{getInitialState:} fired before the component is renderd. This sets up
-values for later use. We define a variable called \emph{value}. 
-\item \emph{onChange:} fired when the corresponding element is changed. In this case the input-field.
-\item \emph{render:} renders the component with a return-statement
-\end{itemize}
+In the code snippet above Listing \ref{lst:componentlisteners}, are three handles for when any given component is rendered initially line 3, it gathers the initial data, line 8 when component is rendered, a new listener is added, it is based on standard JS EventEmitter \cite{eventlistener}, it listenes to certain actions emitted by other methods, when such action that this particular component is interested in occurs, local private function line 9 \emph{\_onChange()}, is called. \emph{componentWillunmount()} just removes the listener form the component when the component is not being rendered.
+Those three functions are ReactJS lifecycle methods, they are invoked right before the compoenent is rendered, after the component is rendered and right before the component will unmount
 
 
+\lstinputlisting[caption=React render method rendering when the state is updated, label=lst:reactrender]{listings/reactrender.js}
+
+Listing \ref{lst:reactrender}, shows how an example HTML DOM element would be rendered, it is a simple \emph{<div>} (line 9) that wraps other React components, and a \emph{.map()} function on line 11, that loops through the student data. This data is retrieved from the cache store through the \emph{getInitialState()} function from previous Listing \ref{lst:componentlisteners} line 4.
+
+\lstinputlisting[caption=React private component methods that create actions, label=lst:privatemethodscomponent]{listings/privatemethodscomponent.js}
 
 
-
-
-
-
-\begin{lstlisting}[caption=Simple React element with onClick-handlers, label=lst:simplecomponent]
-
-var SimpleComponent = React.createClass({
-  getInitialState: function() {
-    return {
-		value: "",
-    }
-  },
-  onChange: function(event) {
-  	this.setState({value: event.target.value});
-  }s
-  render: function() {
-	return(
-		<input 
-		  type="text"
-		  value={this.state.value}
-		  onChange={this.onChange}
-		/>	
-	);  
-  }  
-\end{lstlisting}
-
-In the example above, the value of the input field is connected to a state called value. The value is updated when the input's onChange-event is triggered (when the user types in the input). ... skriv mer her om basic ReactJS.
-
-Legg også inn annet om Flux her.
-
-
-\begin{lstlisting}[caption=React setup for listening to cache/data store, label=lst:componentlisteners]
-
-var StudentSelector = React.createClass({
-
-  getInitialState: function() {
-    StudentSelectorAPI.getAllStudents();
-    return getStateFromStores();
-  },
-
-  componentDidMount: function() {
-    StudentSelectorStore.addChangeListener(this._onChange);
-  },
-
-  componentWillunmount: function() {
-    StudentSelectorStore.ChangeListener(this._onChange);
-  },
-
-\end{lstlisting}
-
-In the codesnippet above Listing \ref{lst:componentlisteners}, are three handles for when any given component \todo{explain what component is} is rendered initially line 4, it gathers the initial data, line 9 when component is rendered, a new listener is added, it is based on standard JS EventListener \cite{eventlistener}, it listenes to certain actions created by other objects, when such action that this particular component is interested occurs, local private function line 10 \_onChange(), is called. componentWillunmount just removes the listener form the component when the component is not being rendered.
-\newpage
-\begin{lstlisting}[caption=React render method rendering when the state is updated, label=lst:reactrender]
-  render: function() {
-    var students = this.state.students;
-    var self = this;
-    return(
-      <div>
-        <StudentSelectorSearch
-        query={self.state.query}
-        searchFor={self._searchFor}
-        />
-          {
-            students.map( function(student) {
-              return(
-                  <StudentSelectorElement
-                  key={student.studentNumber}
-                  student={student}
-                  handleClick={self._onAddToGroup.bind(self, student)}
-                  />
-              );
-            })
-          }
-          </ListGroup>
-      </div>
-    );
-  },
-\end{lstlisting}
-
-Listing \ref{lst:reactrender}, shows how an example HTML DOM element that would be rendered, it is a simple <div> that wraps other React components, and a .map() function on line 11, that loops through the student data, this data is retrieved from the cache store through the getInitialState() funciton on Listing \ref{lst:componentlisteners} line 4, and with the help of the EventEmitter's listeners that are implemented.
-\newpage
-\begin{lstlisting} [caption=React private component methods that create actions, label=lst:privatemethodscomponent]
-  _onChange: function() {
-    this.setState(getStateFromStores());
-  },
-
-  _onAddToGroup: function(student) {
-    StudentSelectorActionCreators.addStudentToGroup(student);
-  },
-
-  _searchFor: function(event) {
-    this.setState({query: event.target.value})
-    StudentSelectorActionCreators.searchForStudent(event.target.value);
-  }
-});
-\end{lstlisting}
-
-
-Listing \ref{lst:privatemethodscomponent}, shows the pirvate methods of the component, on each call to this.setState() lines 2, 10, a new render cycle is initialized, and new data is being displayed. Those private methods are invoked through Listing \ref{lst:componentlisteners} EventListeners.
-
-
-
-
+Listing \ref{lst:privatemethodscomponent}, shows the private methods of the component, on each call to \emph{this.setState()} lines 2 and 10, a new render cycle is initialized, and new data is being displayed. Those private methods are invoked through Listing \ref{lst:componentlisteners} EventListeners.
+When a new render cycle is triggered, lifecycle method \emph{render} from Listing \ref{lst:reactrender} line 1, is triggered. React knows when new data is available thanks to the event listeners, there is no logic in React  components, exept the parent-child dependancies, it only renders whet it gets from external logic structures.
 \subsection{Flux}
+Flux was explained briefly in \ref{sec:fluxmvc}, main parts of this architecture are Action creators, based on JS EventEmitterm that are responsible for signaling either user interaction or server pushing new data. What happens when a user types something into the input field, goes first through an EventCreator. Methods of such EventCreator emit ActionTypes, which are simply global strings, and some data associated with that particular action, like the text from an input field.
+\lstinputlisting[caption=one of EventCreator methods responsible for emmiting \emph{QUERY\_FOR\_STUDENT} action, label=lst:emmitingaction]{listings/emmitingaction.js}
+Next part would be Stores, these are datastructuers that represent component's data. A store can represent a list of students, with data about each of the assignments they are assigned to, and whether or not they passed it. It is not neccesarly exacly how the data is stored on the server. How a store is assembled is usually through a set of helper methods, some parts of the data might already be on the client in other stores, like the list of students for a course could have been fetched when viewing course details, if that is the case, store would usually be set up to get that data from other store that has is, and then procede to either send API requests to the server for the missing data or even ask other stores. When implementing stores with dependancies, one has to be carefoul to not end up with circular dependencies, if such things occur, it is often easier to merge two Stores together, it usually solves the problem. But the reason to separate the stores is to have clearer code, vertical slices of the system that are independent logic chunks separate of eachother as much as possible.
+\\Helper methods mentioned earlier, are called \emph{utils}, these are either methods for converting the data received from the server to the form Store wants it, or methods that send requests for data through WebSocket. If we are interested to get information about assignments details for a particular student, we might have set up the request so that ir retrieves all the information available, this can still be sored in a store, but say view wants to only display the percentage score of this students lab, this is util methods would be used, to separate only the data the view is interested in, if this view will be expanded to show more information, it can get the neccesary data from the store directly without the need for another request to server.
+\subsection{WebSocket}
+How the data is fetched from the server through WebSocket is pretty straighforward, there is a simple API that tells the server what the client wants and vise-versa. On the client side, a structure called Socked is implemented, this is based on the ws protocol. Socket exposes a \emph{send()} method and \emph{message()} method. The first one is used to send over an API request to the server that looks like that:
+\lstinputlisting{listings/socketmsg.js}
+When something is supposed to be saved on the server, it would be usually done simralty, with the payload field consisting of multiple variables, like updating user information, woudl have an action type \emph{UPDATE\_USER\_INFO} and payload with fieldnames that correspond to the fields in the database, and an identification of that user. The latter method, \emph{message()} has callbacs that correspond to every message that went through \emph{send()}, and more, like actions that are specific only to the server.
 
-\section{Websockets}
 
-\section{Backend}
+\section{Server}
+\subsection{go / HTTP}
+\subsection{gorilla / WebSocket}
+\subsection{SQL driver}
+\subsection{Database}
 
+\begin{figure}[h]
+  \centering
+  \scalebox{0.4}{\scalefont{1.3}{\input{graphs/databaseer.tex}}}
+  \caption{Test database ER diagram}
+  \label{fig:groupmanagement}
+\end{figure}
