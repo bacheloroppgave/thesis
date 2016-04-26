@@ -33,7 +33,7 @@ Next part would be Stores, these are datastructuers that represent component's d
 \subsection{WebSocket}
 How the data is fetched from the server through WebSocket is pretty straighforward, there is a simple API that tells the server what the client wants and vise-versa. On the client side, a structure called Socked is implemented, this is based on the ws protocol. Socket exposes a \emph{send()} method and \emph{message()} method. The first one is used to send over an API request to the server that looks like that:
 \lstinputlisting{listings/socketmsg.js}
-When something is supposed to be saved on the server, it would be usually done simralty, with the payload field consisting of multiple variables, like updating user information, woudl have an action type \emph{UPDATE\_USER\_INFO} and payload with fieldnames that correspond to the fields in the database, and an identification of that user. The latter method, \emph{message()} has callbacs that correspond to every message that went through \emph{send()}, and more, like actions that are specific only to the server.
+When something is supposed to be saved on the server, it would be usually done simralty, with the payload field consisting of multiple variables, like updating user information, woudl have an action type \emph{UPDATE\_USER\_INFO} and payload with fieldnames that correspond to the fields in the database, and an identification of that user. The latter method, \emph{message()} has callbacs that correspond to every message that went through \emph{send()}, and more - like actions that are specific only to the server.
 
 
 \section{Server}
