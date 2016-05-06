@@ -1,0 +1,70 @@
+\chapter{Design and Architecture}
+In this chapter an application architecture called Flux will be explained in more detail with examples.  Also it will explain the whole system, the client the server, storage and communication. First the general architecture of client and server as a whole, and then focus on individual parts of the system in more detail, and explain the most interesting parts of the architecture. Reasonin behind some desig choices will albo be included.
+
+\section{Flux}
+To explain how Flux application architecture works and behaves, a couple of examples will be presented of differend complexity. Explanation will involve a minimal amount of code, but section \ref{sec:fluximplementation} in chapter \ref{cha:implementation} has more technical information. To get a more general feel of Flux and other architectures revisit section \ref{sec:fluxmvc} in chapter \ref{cha:beckground}.
+\subsection{Simple user action with Flux}\label{sex:simplefluxexample}
+The main idea of flux architecture is that it forces one directional dataflow through the system. Any action, be it user action or server action, from the systems perspecive, will originate from the same place, in Flux we call that place the dispatcher. When the focus is scalability, building simple things like removeing something from a lit, may seem cubersome when one needs to follow very strict rules, such as those proposed in Flux. It might seem that there is a lot of redundand code, but at the end it pays off since it gets easier to implement new functionality when one gets to know the architecture better and have set up all the neccesary nodes. This is very clear by looking at an example below.
+\\In Autograder, teachers sometimes have to remove users from a course, or even from the whole system, be is fake users, or dropouts. A list of users is provided for the user:
+\begin{figure}[h]
+ % \scalebox{1}{\input{./graphics/simpleremoveuser.tex}}
+  \scalebox{1}[1]{{\includegraphics[width=1\linewidth]{graphics/simpleremoveuser.png}}}
+  \caption{Representation of course student list view \worry{fix figure}}
+  \label{fig:simpleremoveuser}
+\end{figure}
+User interactions like pressing a button, triggers an action in the system. An action is a method of some \emph{ActionCreators} object. Those ActionCreators are associated with UI elements, they can have a long range of methods in them, depending on how comprehensive the UI elements are and how many interactive elements they have. In this case, example will explain one of the methods - sending an action for removeing the user from course.
+\\At any given time the application is in some \emph{state}, one could compare state to the information stored in URL, although state comprises of much more information than URL. The state has the information about who is pressing the button, what course is active etc. More on states in the next section \ref{sec:advancedfluxexample}. State is stored in objects called Stores. When an action to remove a student is being sent, it gets dispatched through a dispatcher (the origin of all changes), and the stores that are interested in this action update themselves according to the information in action payload slightly changing the state of the application.
+
+\begin{figure}[h]
+  \scalebox{0.8}{\input{./graphics/simplefluxremoveuser.tex}}
+  \caption{How removeing user happens with this architecture.}
+  \label{fig:simplefluxremoveuser}
+\end{figure}
+
+\subsection{Bigger example of user action with Flux}\label{sec:advancedfluxexample}
+What makes Flux great architecture is that, more complicated examples do not differ that much form the simpler examples. The data flow in Flux is one directional, two different views will not communicate directly with eachother, rather they will do so by creating actions, triggering store changes and consequently updating both views.
+\\To explain how other components communicate with eachother, and how stores and store dependancies work, it is necessay to look at a couple more UI components at the same time, and explore the communication between them. 
+
+\begin{figure}[h]
+ % \scalebox{1}{\input{./graphics/simpleremoveuser.tex}}
+  \scalebox{1}[1]{{\includegraphics[width=1\linewidth]{graphics/advancedlaboverview.png}}}
+  \caption{Group manager and actions that can be triggered by user}
+  \label{fig:advancedgroupmanager}
+\end{figure}
+
+\section{Web app}
+Architecture of the Autograder system describes the high level structures developed while working on the application. Choice of software architecture, software models on both front and back-end are crucial aspects of creating good application.
+\subsection{Software architecture}
+Autograder is an application for teachers and students, the new version is going to be running on local university network and is going to be accessible from anywhere on the internet. Primary use for teachers is new creating courses in the system, that are associated with the courses at the university, each course has a GitHub repository associated with it, and configured to the needs of that course. This means that an implementation of GitHub integration needs to be created, this is mainly the focus of back-end part of the software, still the front-end, or web client, needs to be designed in such a way to enable the use of such integration. The client is not supposed to serve as an alternative view of GitHub repositories, GitHub is mainly used as a place to easily store source code, and its login authentication API. The client needs to be able to display courses that a student is enrolled into, assignments that the teacher has published to that course, that also involves group assignments.
+\\Although the data is stored in the database, manipulation of that data is done on the client side, and then sent further to the back-end for interpretation and updating the storage. Similarly it is also possible to update the client from the back-end, either directly or through the actions of another client. The user interface updates in real time, as an example, lets take a teacher that is assigning students to group assignments, teacher is using an interactive interface to manipulate the users into selected groups, the student is simultaneously notified in real time when he gets assigned to a new group without the need of refreshing the page, similar things would be new teachers in course, requests for teacher upgrade, deadline and slipdays updates. Teachers can be notified when a new student has enrolled to course, or one of the students has exceeded his slip-days for an assignment. Real time updates are possible due to the connection protocol used in the application. When a client connects to the Autograder server, client application requests for a protocol upgrade, from then on all data transfer is done through \emph{websocket protocol}\cite{websocket}. This enables the server to push its updates to all clients, without being explicitly asked about it by them.
+\\The reasoning behind real-time update system was that notifications and responsiveness of user interface was one of the primary reasons for developing this solution. Although one could argue that order methods of updating the UI and notifications would be sufficient, like polling or long-polling - that is frequent client requests for update from the server, websocket protocol has no obvious disadvantages to the presented solution, and at the same time opens possibilities for further upgrades of the system, like chat functionality, which could be utilized for questions related to assignments.
+\subsection{Front-end}
+Front-end web applications are written in JavaScript, or at least have to be transpiled to JavaScript for the browsers to be able to understand it. Applications in JS, are single threaded...
+\todo{single threaded approach}
+\subsection{Angular}
+\todo{discuss other methods than react, needs more research}
+\subsection{React}
+\todo{Would we use react for this purpose again?}
+
+\section{Server}
+Back-end solution is not the main focus of this application. Nonetheless a working temporary server needed to be put together, as well as database to store mock data and to test the logical functionality of the system on the front-end and the way the data is being communicated between the two ends.
+\subsection{Server}
+The server is written in Go, for this purpose there was no real  preference as to what language to use, but assumptions were made that the final server will also be written in Go, therefore it was an obvious choice. Client is designed with WebSocket in mind, the simplest way to implement that on server side is to use Gorilla websocket Go package that can handle WebSocket messages. This was implemented with almost no effort, but the next step is to create logic for handling all the different requests that come from the client. For this purpose, when a server receives a message through WebSocket, a new \emph{goroutine} is fired out, since they are very lightweigh a lot of requests can be potentially handled at the same time. Every requests goes through a simple multiplexer that figures out, based on the message header, what kind of request is made, then it uses the payload to retrieve specific data. As and exaple let's take a user that requested to see all its courses by going to the course overview page, that lists courses that the user is associated with.
+
+\begin{figure}[h]
+  \input{./graphs/serverwebsocket.tex}
+  \caption{How requests are handled on the server}
+  \label{fig:serverwebsocket}
+\end{figure}
+
+The server is also serving three static files, main.js, index.html, and style.css. These are retrieved by the client with the initial GET request, from then on server is not receivein any new GET requests but rather communicates through websocket. This is a bit different than traditionall communication with GET and POST. Also when the client goes directly to a specific URL like "http://www.autograder.no/teacher/results/dat100" server should respond only with the static data and not care about the path after the domainname / IP, since this part is taken care of by the client side routing, as explained in section \ref{sec:softwaresolution}. Further, when a user navigates through the application no GET requests are being made.
+\\ActionType that the multiplexer pivots at, is a string representing something similar to what a REST API would typically use. ActionType is a string describing an event, and Payload is the data that is needed to make the changes. Typical HTML form send through websocket, would look like that:
+\worry{use form from course settings here}
+\lstinputlisting[label=lst:websocketapi]{listings/websocketapi.js}
+
+This means in short that the client requests roles for username "tokams", server should respond with the same actionType, and as a payload insert relevant data.
+
+\subsection {Database}
+Database is running on mysql-server, it's separate from the main go server, it communicates with the server with the help of go sql/package and a 3rd party mysql driver \cite{ziutek}. It is a relational database, that represents the data of users and courses. Although not necessary, it was helpfoul to implement test database solution, to explore the possibilities for back end, and se front to back flow of the data. Database was designed with standard ER diagrams first, and then set up on local machines.
+It is discuissed in a bit more technical way in section \ref{sec:database}, and the figure \ref{fig:databaseer}.
+
