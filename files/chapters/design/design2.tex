@@ -3,15 +3,17 @@ In this chapter an application architecture called Flux will be explained in mor
 
 \section{Flux}
 To explain how Flux application architecture works and behaves, a couple of examples will be presented of differend complexity. Explanation will involve a minimal amount of code, but section \ref{sec:fluximplementation} in chapter \ref{cha:implementation} has more technical information. To get a more general feel of Flux and other architectures revisit section \ref{sec:fluxmvc} in chapter \ref{cha:beckground}.
-\subsection{Simple user action with Flux}\label{sex:simplefluxexample}
-The main idea of flux architecture is that it forces one directional dataflow through the system. Any action, be it user action or server action, from the systems perspecive, will originate from the same place, in Flux we call that place the dispatcher. When the focus is scalability, building simple things like removeing something from a lit, may seem cubersome when one needs to follow very strict rules, such as those proposed in Flux. It might seem that there is a lot of redundand code, but at the end it pays off since it gets easier to implement new functionality when one gets to know the architecture better and have set up all the neccesary nodes. This is very clear by looking at an example below.
-\\In Autograder, teachers sometimes have to remove users from a course, or even from the whole system, be is fake users, or dropouts. A list of users is provided for the user:
+\subsubsection{The Dispatcher \worry{should be in background}}
+The Dispatchers role is to manage all the actions, it doesn't know where the action is going, neither what the payload is. The dispatcher is globally notifying the stores about the actions, and additionaly the stores can be set up to wait for other stores update themselves. With the Dispatcher \emph{waitFor()} method, a \emph{not ready flag} can be set on any particular store that depends on the data from another store. 
+\subsection{Simple user action with Flux}\label{sec:simplefluxexample}
+The main idea of flux architecture is that it forces one directional dataflow through the system. Any action, be it user action or server action, from the systems perspecive, will originate from the same place, in Flux we call that place the dispatcher. When the focus is scalability, building simple things like removeing something from a lit, may seem cubersome when one needs to follow very strict rules, such as those proposed in Flux. It might seem that there is a lot of redundand code, but at the end it pays off since it gets easier to implement new functionality when one gets to know the architecture better and have set up all the neccesary nodes. This is very clear by looking at an example below. In Autograder, teachers sometimes have to remove users from a course, or even from the whole system, be it fake users, or dropouts. A list of users is provided for the user:\\
 \begin{figure}[h]
  % \scalebox{1}{\input{./graphics/simpleremoveuser.tex}}
   \scalebox{1}[1]{{\includegraphics[width=1\linewidth]{graphics/simpleremoveuser.png}}}
-  \caption{Representation of course student list view \worry{fix figure}}
+  \caption{Representation of course student list view}
   \label{fig:simpleremoveuser}
 \end{figure}
+\newpage
 User interactions like pressing a button, triggers an action in the system. An action is a method of some \emph{ActionCreators} object. Those ActionCreators are associated with UI elements, they can have a long range of methods in them, depending on how comprehensive the UI elements are and how many interactive elements they have. In this case, example will explain one of the methods - sending an action for removeing the user from course.
 \\At any given time the application is in some \emph{state}, one could compare state to the information stored in URL, although state comprises of much more information than URL. The state has the information about who is pressing the button, what course is active etc. More on states in the next section \ref{sec:advancedfluxexample}. State is stored in objects called Stores. When an action to remove a student is being sent, it gets dispatched through a dispatcher (the origin of all changes), and the stores that are interested in this action update themselves according to the information in action payload slightly changing the state of the application.
 
@@ -22,15 +24,27 @@ User interactions like pressing a button, triggers an action in the system. An a
 \end{figure}
 
 \subsection{Bigger example of user action with Flux}\label{sec:advancedfluxexample}
-What makes Flux great architecture is that, more complicated examples do not differ that much form the simpler examples. The data flow in Flux is one directional, two different views will not communicate directly with eachother, rather they will do so by creating actions, triggering store changes and consequently updating both views.
-\\To explain how other components communicate with eachother, and how stores and store dependancies work, it is necessay to look at a couple more UI components at the same time, and explore the communication between them. 
+What makes Flux great architecture is that, more complicated examples do not differ that much form the simpler ones. The data flow in Flux is one directional, two different views will not communicate directly with eachother, rather they will do so by creating actions, triggering store changes and consequently updating both views.
+\\To explain how other components communicate with eachother, and how stores and store dependancies work, it is necessay to look at a couple more UI components at the same time, and explore the communication between them. Lets take a look at components responsible for managing groups for courses. There are three main views shown in figure \ref{fig:advancedgroupmanager}, one take care of switching between the courses, one lists available students that have no groups, and group list and manager. Here the top component, switching between courses, is independent of the two below, switching course triggers an API request for new list of students and groups. The buttons for adding students to course communicate with the righ components that lists the group.
 
 \begin{figure}[h]
  % \scalebox{1}{\input{./graphics/simpleremoveuser.tex}}
-  \scalebox{1}[1]{{\includegraphics[width=1\linewidth]{graphics/advancedlaboverview.png}}}
+  \scalebox{1}[1]{{\includegraphics[width=1\linewidth]{graphics/advancedgroupmanager.png}}}
   \caption{Group manager and actions that can be triggered by user}
+  \todo{fix figure}
   \label{fig:advancedgroupmanager}
 \end{figure}
+
+First a \emph{store} is created, a datastructure that will represent the two views. Lets call it \emph{GroupManagerStore}, this store will have to communicate with another store called \emph{ActiveCourseStore}, that store is responsible for holding data about the current active course in the state. The way this particular example is set up, GroupManagerStore depends on the data in ActiveCourseStore, but at the same time it is impossible for ActiveCourseStore to be ampty while GroupManagerStore requests data from it, because of the way the navigation works in this case. Additionaly a third store is used in the background, since the list of users or students is reused very often while navigating through the course, there is a separate store for student list called \emph{StudentsStore}, other stores that require a list of students will no longer have to request this data from the server, given that another store already requested student lists. For example, both GroupManagerStore and the store from previous example \ref{sec:simplefluxexample} would require a list of students.
+\\Given the state shown in figure \ref{fig:advancedgroupmanager}, the user selects a user to be added to the active course, lets go through the flow of data in that case.
+
+\begin{figure}[h]
+  \scalebox{0.8}{\input{./graphics/advancedfluxaddstudent.tex}}
+  \caption{How removeing user happens with this architecture.}
+  \label{fig:advancedfluxaddstudent}
+\end{figure}
+
+When the user presses the button, one of \emph{GroupManagerActionCreators} method is called, this dispatches the action via the Dispatcher. GroupManagerStore is dependant on the data from StudentsStore, but in current state StudentsStore is not empty so it returns immidietly \todo{write about how data is stored in stores, about utils etc.}
 
 \section{Web app}
 Architecture of the Autograder system describes the high level structures developed while working on the application. Choice of software architecture, software models on both front and back-end are crucial aspects of creating good application.
@@ -59,7 +73,7 @@ The server is written in Go, for this purpose there was no real  preference as t
 
 The server is also serving three static files, main.js, index.html, and style.css. These are retrieved by the client with the initial GET request, from then on server is not receivein any new GET requests but rather communicates through websocket. This is a bit different than traditionall communication with GET and POST. Also when the client goes directly to a specific URL like "http://www.autograder.no/teacher/results/dat100" server should respond only with the static data and not care about the path after the domainname / IP, since this part is taken care of by the client side routing, as explained in section \ref{sec:softwaresolution}. Further, when a user navigates through the application no GET requests are being made.
 \\ActionType that the multiplexer pivots at, is a string representing something similar to what a REST API would typically use. ActionType is a string describing an event, and Payload is the data that is needed to make the changes. Typical HTML form send through websocket, would look like that:
-\worry{use form from course settings here}
+\todo{use form from course settings here}
 \lstinputlisting[label=lst:websocketapi]{listings/websocketapi.js}
 
 This means in short that the client requests roles for username "tokams", server should respond with the same actionType, and as a payload insert relevant data.
