@@ -5,13 +5,24 @@ When designing the new Autograder front-end, it was necessary to develop other p
 \section{Planning phase}
 Planning the new Autograder took many iterations of design and layout. The programming phase is simplified if all the layout has been planned ahead. All actions, tasks and functions of the site must be mapped out. New functionality must also be incorporated into the new design. The next section will show how the new layout has been planned and designed.
 
-The more traditional way of designing a website is to start with wireframes. Wireframes are basic sketches or mockups of the design. The most basic forms does not include colors or advanced shapes. Simple boxes and rectangles are used to get a feel for how the page will look and function. The process starts with a revisit of the old Autograder front-end. All functions and tasks of all users must be mapped out. This includes functions such as how to approval of labs, signing in, making groups etc. The tasks are mapped using a technique called \emph{User Stories}. User stories are verbal guides to map all functionality. Stories come in the form \emph{"As a <role>, I want to <goal> so that <benefit>"}. Here are some of the user stories that Autograder has;
+The more traditional way of designing a website is to start with wireframes. Wireframes are basic sketches or mockups of the design. The most basic forms does not include colors or advanced shapes. Simple boxes and rectangles are used to get a feel for how the page will look and function. The process starts with a revisit of the old Autograder front-end. All functions and tasks of all users must be mapped out. This includes functions such as approval of labs, signing in, making groups etc. The tasks are mapped using a technique called \emph{User Stories}. User stories are verbal guides to map all functionality. Stories come in the form \emph{"As a <role>, I want to <goal> so that <benefit>"}. Here are some of the user stories that Autograder uses;
 
 \begin{itemize*}
 \item As a student i want to create new group, so that other students can join for group assignment.
-\item As an admin I want to list all current students so that I can manage permissions (admin,teacher,student)
+\item As an admin I want to list all current students so that I can manage permissions (admin,teacher,student).
 \item As a teacher I want to archive / delete course, so that I can see only relevant and active courses.
 \end{itemize*}
+
+
+User stories help plan the whole system. The order of which functions are implemented can be managed from the start. Less important functions can be developed later in the development. In Autograder's case, functions like listing labs for teacher will be a high priority user story. Functions like changing the group names can wait until the page is further in development. User stories are also used to make wireframes. Stories are devided in an intuitive way between the different pages on the site. Teachers, admins and students each have their own user stories. The stories are usually translated into wireframes with the client. In our case, we talked to Professor Hein Meling at UiS, which acted as the client for the new Autograder front-end. Using the feedback the was given, the site was redesigned. The list of student results went though four iterations, before settling on the design that is implemented in this version of Autograder.
+
+
+
+
+
+
+
+
 
 
 \section{Front-end}

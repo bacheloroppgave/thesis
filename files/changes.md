@@ -18,14 +18,14 @@ Changes made to background
 CHAPTER 1: Background
 - Intro (done)
 - Planning phase
-  -> Front-end
-  -> User stories, wireframes
-  -> Requirements
-  -> ReactJS .. React and React vs Angular
-  -> Flux and Flux vs MVC
-  -> Storage DB
-  -> Golang .. Go
-  -> WebSocket
+- User stories, wireframes
+- Requirements
+- Front-end
+- ReactJS .. React and React vs Angular
+- Flux and Flux vs MVC
+- Storage DB
+- Golang .. Go
+- WebSocket
 
 
 
