@@ -17,11 +17,10 @@ Changes made to background
 
 CHAPTER 1: Background
 - Intro (done)
-- Planning phase
-- User stories, wireframes
+- Planning phase, User stories and wireframes
 - Requirements
 - Front-end
-- ReactJS .. React and React vs Angular
+- ReactJS .. React and React vs Angular -- husk view vs component
 - Flux and Flux vs MVC
 - Storage DB
 - Golang .. Go
