@@ -17,7 +17,12 @@ Changes made to background
 
 CHAPTER 1: Background
 - Intro (done)
-- Planning phase, User stories and wireframes
+- Planning phase, User stories and wireframes.
+	-> Added figure that should maybe be changed (?)
+	-> Move some of the stuff from the design chapter to the background
+	-> The background can be used to go through each and every page.
+	-> We do not need to use the background chapter 
+		more than it should be used.
 - Requirements
 - Front-end
 - ReactJS .. React and React vs Angular -- husk view vs component
