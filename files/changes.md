@@ -17,19 +17,23 @@ Changes made to background
 
 CHAPTER 1: Background
 - Intro (done)
-- Planning phase, User stories and wireframes.
-	-> Added figure that should maybe be changed (?)
-	-> Move some of the stuff from the design chapter to the background
-	-> The background can be used to go through each and every page.
-	-> We do not need to use the background chapter 
-		more than it should be used.
-- Requirements
+- Requirements (move this?)
 - Front-end
-- ReactJS .. React and React vs Angular -- husk view vs component
+	-> Bootstrap
+	-> ReactJS
+	-> React vs Angular (short)
+	-> Get some stuff from the design-chapters
 - Flux and Flux vs MVC
 - Storage DB
 - Golang .. Go
 - WebSocket
+
+
+
+REPLACE:
+- Background_dump has a section called planning phase, that can be used in the design or something.
+
+
 
 
 
