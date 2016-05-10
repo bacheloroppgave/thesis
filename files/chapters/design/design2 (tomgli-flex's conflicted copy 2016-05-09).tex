@@ -3,25 +3,18 @@ In this chapter an application architecture called Flux will be explained in mor
 
 \section{Flux}
 To explain how Flux application architecture works and behaves, a couple of examples will be presented of differend complexity. Explanation will involve a minimal amount of code, but section \ref{sec:fluximplementation} in chapter \ref{cha:implementation} has more technical information. To get a more general feel of Flux and other architectures revisit section \ref{sec:fluxmvc} in chapter \ref{cha:beckground}.
-
-\subsection{Most important elements in Flux}
-\subsubsection*{ActionCreators}
+\subsubsection{The Dispatcher \worry{should be in background}}
+The Dispatchers role is to manage all the actions, it doesn't know where the action is going, neither what the payload is. The dispatcher is globally notifying the stores about the actions, and additionaly the stores can be set up to wait for other stores update themselves. With the Dispatcher \emph{waitFor()} method, a \emph{not ready flag} can be set on any particular store that depends on the data from another store. 
+\subsubsection{ActionCreators \worry{shoudl be in backgroud}}
 User interactions like pressing a button, triggers an action in the system. Thise action creators are associated with UI elements, they can have a long range of methods in them, depending on how comprehensive the UI elements are and how many interactive elements they have. \worry{look up flux definition <-}
 We often create a library of helper methods called action creators that not only create the action object, but also pass the action to the dispatcher.
-\todo{here}
-\subsubsection*{The Dispatcher}
-The Dispatchers role is to manage all the actions, it doesn't know where the action is going, neither what the payload is. The dispatcher is globally notifying the stores about the actions, and additionaly the stores can be set up to wait for other stores update themselves. With the Dispatcher \emph{waitFor()} method, a \emph{not ready flag} can be set on any particular store that depends on the data from another store. 
-\todo{here}
-\subsection*{State and stores}
+\subsection{State and stores \worry{shoudl be in backgroud}}
 one could compare state to the information stored in URL, although state comprises of much more information than URL.
 State is stored in objects called Stores.
-\todo{here}
-\subsection*{Views / Components}
-Views are implemented using React, they have so called \emph{lifecycle hooks} that scale well with Flux architecture. We use \emph{EventEmitter}
-\todo{here}
+
 \subsection{Simple user action with Flux}\label{sec:simplefluxexample}
-The main idea of flux architecture is that it forces one directional dataflow through the system. Any action created, whether through a person interacting with the application or through a web api call, from the systems perspecive, will always originate from the same place, in Flux we call that place the dispatcher. When the focus is scalability, building simple things like triggering a remove operation on a list, may seem cubersome when one needs to follow quite strict rules, such as those proposed in Flux. Following those rules pays off at the end, as it simplifies implementation process of other modules. The following example will try to explain the simplicity of Flux.
-\\One of the requirements of Autograder, is for teacher to be able to remove users or students from courses and/or the whole sysetm. For this purpuse a user list is presented for the teacher:
+The main idea of flux architecture is that it forces one directional dataflow through the system. Any action created, whether through a person interacting with the application or through a web api call, from the systems perspecive, will always originate from the same place, in Flux we call that place the dispatcher. When the focus is scalability, building simple things like triggering a remove operation on a list, may seem cubersome when one needs to follow quite strict rules, such as those proposed in Flux. At first glance it might look like there is a lot of redundand code, but at the end it pays off since it simplifies the impliementation process of other modules when one gets to know the architecture better and have set up all the neccesary parts of the architecture. This should be pretty clear when looking at the example presentet in this section.
+\\One of the requirements of Autograder, is for teacher to be able to remove users or students from courses and/or the whole system. For this purpuse one can utilize a list of users that is provided by going to the right place in the application:
 \begin{figure}[h]
  % \scalebox{1}{\input{./graphics/simpleremoveuser.tex}}
   \scalebox{1}[1]{{\includegraphics[width=1\linewidth]{graphics/simpleremoveuser.png}}}
@@ -29,7 +22,7 @@ The main idea of flux architecture is that it forces one directional dataflow th
   \label{fig:simpleremoveuser}
 \end{figure}
 
-At any given time the application is in some \emph{state}, the state has the information about who is pressing the button, what course is active and much more. When an action to remove a student is being sent, it gets dispatched through a dispatcher (the origin of all changes). The stores that are interested in this action update themselves according to the information in action's payload, slightly changing the state of the application. In this case, one of \emph{action creators} methods, will be sending an action for removeing the user from a course.
+At any given time the application is in some \emph{state}, the state has the information about who is pressing the button, what course is active etc. When an action to remove a student is being sent, it gets dispatched through a dispatcher (the origin of all changes). The stores that are interested in this action update themselves according to the information in action's payload, slightly changing the state of the application. In this case, example will explain one of the \emph{action creators} - sending an action for removeing the user from course.
 
 \begin{figure}[h]
   \scalebox{0.8}{\input{./graphics/simplefluxremoveuser.tex}}
@@ -37,11 +30,11 @@ At any given time the application is in some \emph{state}, the state has the inf
   \label{fig:simplefluxremoveuser}
 \end{figure}
 
-Pressing the button to remove a user, will call \emph{removeUser()} from ActionCreatorsCourseUsers, this method will return a object literal, with an \emph{actionType} and \emph{payload} (see Figure \ref{fig:simplefluxremoveuser}), and also pass it further to the Dispatcher. The payload is a coma separated list of variables, in this case only the user data would have to be sent which is stored in CourseStudentListStore. When the action reaches the store, the store then updates itself, it calls it private method to manipulate the data it stores. Here is where the \emph{EventEmitter} comes to play, when the stores private methods return, the event emitter assigned to that store emitts a \emph{change event}. React components are set up to trigger new render cycles when they receive that change event. What changed doesnt matter, components only needs to know that something changed. When new render cycle is triggered the view will use store's public methods to retrieve new data. This time around the store updated itself to remove the user, as a result the view will not render that user on this render cycle.
+Pressing the button to remove a user, will call \emph{removeUser()} 
 
-\subsection{Advanced Flux}\label{sec:advancedfluxexample}
+\subsection{Bigger example of user action with Flux}\label{sec:advancedfluxexample}
 What makes Flux a great architecture is that more complicated implementations do not differ that much form the simpler ones. The data flow in Flux is one directional, two different views will not communicate directly with eachother, rather they will do so by creating actions, triggering store changes and consequently updating both views. To explain how different views communicate, and how stores and store dependancies work, it is necessay to look at a bigger part of a page not just one single element, and explore the communication between views making up that page.
-\\Lets take a look at the views responsible for managing groups for courses. There are three main views shown in figure \ref{fig:advancedgroupmanager}, first takes care of switching between the courses, second lists available students that have no groups assigned, and the last one shows group list and manager. The first view at the top, is for switching between courses, it's independent of the two views below it. Switching course will change the state of the application consequently triggering an API request for new list of students and groups. The buttons for adding students to course, on the left view, and data associated with them, communicate with the righ view that lists the groups and participants.
+\\Lets take a look at views responsible for managing groups for courses. There are three main views shown in figure \ref{fig:advancedgroupmanager}, first takes care of switching between the courses, second lists available students that have no groups, and the last one shows group list and manager. The first view at the top, is for switching between courses, it's independent of the two views below, switching course will change the state of the application consequently triggering an API request for new list of students and groups. The buttons for adding students to course, on the left view, communicate with the righ view that lists the groups and participants.
 
 \begin{figure}[h]
  % \scalebox{1}{\input{./graphics/simpleremoveuser.tex}}
@@ -51,8 +44,8 @@ What makes Flux a great architecture is that more complicated implementations do
   \label{fig:advancedgroupmanager}
 \end{figure}
 
-Datastructure that will represent the two views, a store called \emph{GroupManagerStore}, will have to communicate with another store called \emph{ActiveCourseStore} - that store is responsible for holding data about the current active course in the state. The way this particular example is set up, GroupManagerStore depends on the data in ActiveCourseStore. However the sequence of user actions that will create that dependency is such that ActiveCouresStore is never empty when GroupManagerStore needs it's data, so we don't have to worry about implementing additional wait conditions here. This is because at any given time, at least one course is active, either user selected or default. In addition to those two stores, a third store is used in the background. Given that a teacher selected a course, he will most likely stay on that course in order to execute different changes in that course. This gives an oportunity to optimize the API requests to some degree. The student data for the current course can be reused  while the user navigates within a course. Therefore there is a separate store for student list called \emph{StudentsStore}, other stores that require a list of students will no longer have to request this data from the server, given that another store already requested student lists and the user didn't switch the course. For example, both GroupManagerStore and the store from previous example \ref{sec:simplefluxexample} would require a list of students, if navigation between views utilising those views will take place only one initial API request will be triggered.
-\\Given the state shown in figure \ref{fig:advancedgroupmanager}, the teacher selects a user to be added to the active course, lets go through the flow of data in that case.
+One of the main parts in Flux is a \emph{store}, a datastructure that will represent the two views. Lets call it \emph{GroupManagerStore}, this store will have to communicate with another store called \emph{ActiveCourseStore} - that store is responsible for holding data about the current active course in the state. The way this particular example is set up, GroupManagerStore depends on the data in ActiveCourseStore. However the sequence of user actions that will create that dependency is such that ActiveCouresStore is never empty when GroupManagerStore needs it's data, so we don't have to worry about implementing additional wait conditions here. This is because at any given time, at least one course is active, either user selected or default. In addition to those two stores, a third store is used in the background. Given that a user selected a course, he/she will most likely stay on that course and go through different options in that course like: student list, lab overwiev or group manager. The student data can be reused  while the user navigates within a course. Therefore there is a separate store for student list called \emph{StudentsStore}, other stores that require a list of students will no longer have to request this data from the server, given that another store already requested student lists and the user didn't switch the course. For example, both GroupManagerStore and the store from previous example \ref{sec:simplefluxexample} would require a list of students.
+\\Given the state shown in figure \ref{fig:advancedgroupmanager}, the user selects a user to be added to the active course, lets go through the flow of data in that case.
 
 \begin{figure}[h]
   \scalebox{0.8}{\input{./graphics/advancedfluxaddstudent.tex}}
@@ -60,17 +53,7 @@ Datastructure that will represent the two views, a store called \emph{GroupManag
   \label{fig:advancedfluxaddstudent}
 \end{figure}
 
-When the user presses the button, one of \emph{GroupManagerActionCreators} is called. The current state, based on the figure \ref{fig:advancedgroupmanager} includes data like:
-\\\emph{activeGroup:"Group2",activeCourse:"DAT310" \worry{fix figure and data}}\\
-activeGroup is located in GroupManagerStore, this data represents which group did the user choose, in order to add new student to it.
-
-\section{Application architecture}
-Shit something
-\begin{figure}[h]
-  \scalebox{1}{\input{./graphics/systemoverview.tex}}
-  \caption{Overview of the whole system, not implemented modules are grayed out.}
-  \label{fig:systemoverview}
-\end{figure}
+When the user presses the button, one of \emph{GroupManagerActionCreators} methods is called, this dispatches the action via the Dispatcher. GroupManagerStore is dependant on the data from StudentsStore, but in current state StudentsStore is not empty so it returns immidietly \todo{write about how data is stored in stores, about utils etc.}
 
 \newpage
 %OLD

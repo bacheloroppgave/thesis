@@ -62,7 +62,7 @@ Datastructure that will represent the two views, a store called \emph{GroupManag
 
 When the user presses the button, one of \emph{GroupManagerActionCreators} is called. The current state, based on the figure \ref{fig:advancedgroupmanager} includes data like:
 \\\emph{activeGroup:"Group2",activeCourse:"DAT310" \worry{fix figure and data}}\\
-activeGroup is located in GroupManagerStore, this data represents which group did the user choose, in order to add new student to it.
+activeGroup is located in GroupManagerStore, this data represents which group did the user choose, in order to add new student to it. 
 
 \section{Application architecture}
 Shit something
