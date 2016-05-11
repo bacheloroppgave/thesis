@@ -21,7 +21,14 @@ Hyper text markup language, or HTML, is a markup language used to build websites
 \caption{Graph of how React uses Virtual DOM to patch the DOM}
 \end{figure}
 
-As of April 2016, ReactJS is in version 15.01. A new version of ReactJS has been announced, but it is not deployment ready as of now. React is written in JSX, a simplified JavaScript language with XML-layout. The JSX-file is transformed to pure JavaScript. In addition, the XML-attributes are transformed into arguments. Simplified syntax removes a lot of typing, and regular HTML DOM-elements are predefined in React. This means that most HTML-elements can be directly typed in the JSX without having to import or define new elements. Elements such as \emph{input}, \emph{div}, \emph{button} and many more are there out of the box.
+As of April 2016, ReactJS is in version 15.01. A new version of ReactJS has been announced, but it is not deployment ready as of now. 
+
+React is written in JSX, a simplified JavaScript language with XML-layout. The components for the site is written as HTML-objects, such as \emph{Button}, \emph{Div}, \emph{Table} etc. The JSX syntax is transformed to JavaScript using tools such as Babel \worry{ref til Babel page}. Simplified syntax removes a lot of typing, and regular HTML DOM-elements are predefined in React. This means that most HTML-elements can be directly typed in the JSX without having to import or define new elements. Simple elements, such as a button with handlers can be written in a simple and intuitive format;
+
+
+
+
+
 
 \section{Back-end}
 To be able to make the front-end without using real datasets, it was necessary to create a functional server that can get data from the storage solution and serve it to the front-end. The original Autograder already use Go, short for Go language, as the programming language for the back-end. Go is very fast when it comes to web-servers. Making a webserver requires just a few lines of code, and handles multiple connections in go-routines, which is similar to threads. Therefore, it is not a hard choice when selecting the programming language of the back-end. The web-servers job is to be the link between the data stored in the system and the front-end. As mentioned, predefined protocols for communication, such as data structures created with JSON (JavaScript Object Notation) is used to communicate with the front-end. Sending packages with content that the front-end can decode and handle in a predefined way. Consequently, the back-end can be written in many programming languages without effecting the front-end or storage. \\Logic for roles, such as admin, teacher and student are also managed in the back-end. The logic behind the login page and authentication with Github is also managed back-end in the web-server. The Go language is a general-purpose language designed as a system programming language. It focuses heavily on concurrency and garbage-collection, and is therefore perfect for web-servers.

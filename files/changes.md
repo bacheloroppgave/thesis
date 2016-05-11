@@ -33,11 +33,6 @@ CHAPTER 1: Background
 REPLACE:
 - Background_dump has a section called planning phase, that can be used in the design or something.
 
-
-
-
-
-
 (mobile-ready page in the future [post-bachelor]) -> Write this in the evaluation or the last chapters
 
 
