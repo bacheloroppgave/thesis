@@ -1,9 +1,26 @@
 \chapter{Design and Architecture}
-In this chapter an application architecture called Flux will be explained in more detail with examples.  Also it will explain the whole system, the client the server, storage and communication. First the general architecture of client and server as a whole, and then focus on individual parts of the system in more detail, and explain the most interesting parts of the architecture. Reasonin behind some desig choices will albo be included.
+This chapter will cover two main objectives in this thesis. Firslty the working method, that is figuring out the requirements for the application and how to implement solutions for them most effectively. Next comes the description of the system including the major back-end parts that are not the focus of this thesis. And last but not least, detailed explanation of indivitual modules and the front-end architecture that holds it all together.
 
 \section{Working method}
+\todo{description}
 \subsection{Wireframes}
+\todo{wireframes}
 \subsection{Requirements collection and analysis}
+\todo{requirements analysis}
+
+\section{Application architecture}
+This section will walk through the most important elements of the system. What does it consists of and how do different parts communicate with eachoter. Where did focus lay while developing it, what was done for testing purposes and what for exploring future possibilities. Next the following subsections will go in a bit more detail on how the different parts worked individually, and explain how the API works in short.
+
+\subsection{The whole system}
+The focus of this thesis is strictly front-end, althoug the outline of the whole end goal should be mentioned and explained to give some context to the problem. Starting in the far back-end, the solution for server in the current Autograder is to have a virtual machine running that will host the Autograder "app". For this purpose "Docker" is used bla bla \todo{bla}
+
+\begin{figure}[h]
+  \scalebox{1}{\input{./graphics/systemoverview.tex}}
+  \caption{Overview of the whole system, not implemented modules are grayed out.}
+  \label{fig:systemoverview}
+\end{figure}
+
+\newpage
 
 \section{Flux}
 To explain how Flux application architecture works and behaves, a couple of examples will be presented of differend complexity. Explanation will involve a minimal amount of code, but section \ref{sec:fluximplementation} in chapter \ref{cha:implementation} has more technical information. To get a more general feel of Flux and other architectures revisit section \ref{sec:fluxmvc} in chapter \ref{cha:beckground}.
@@ -70,15 +87,7 @@ When the user presses the button, one of \emph{GroupManagerActionCreators} is ca
 \\\emph{activeGroup:"Group2",activeCourse:"DAT310" \worry{fix figure and data}}\\
 activeGroup field is located in GroupManagerStore, this data represents which group did the user activate, in order to add new student to it. Selected button will have the students data in it's payload, sending it thorugh the Dispatcher, the stores will wait for an actionType to be received. At this poing GroupManagerStore sees the actionType, and updates it's students field, the student in the payload gets matched with the existing one in the store and gets removed. Next an update is emitter with the help of EventEmitter, this triggers a new render cycle in the Rect components which consequently get the new data from the stores.
 
-\section{Application architecture}
-Shit something
-\begin{figure}[h]
-  \scalebox{1}{\input{./graphics/systemoverview.tex}}
-  \caption{Overview of the whole system, not implemented modules are grayed out.}
-  \label{fig:systemoverview}
-\end{figure}
 
-\newpage
 %OLD
 \section{Web app}
 Architecture of the Autograder system describes the high level structures developed while working on the application. Choice of software architecture, software models on both front and back-end are crucial aspects of creating good application.
