@@ -1,24 +1,30 @@
 \chapter{Design and Architecture}
 In this chapter an application architecture called Flux will be explained in more detail with examples.  Also it will explain the whole system, the client the server, storage and communication. First the general architecture of client and server as a whole, and then focus on individual parts of the system in more detail, and explain the most interesting parts of the architecture. Reasonin behind some desig choices will albo be included.
 
+\section{Working method}
+\subsection{Wireframes}
+\subsection{Requirements collection and analysis}
+
 \section{Flux}
 To explain how Flux application architecture works and behaves, a couple of examples will be presented of differend complexity. Explanation will involve a minimal amount of code, but section \ref{sec:fluximplementation} in chapter \ref{cha:implementation} has more technical information. To get a more general feel of Flux and other architectures revisit section \ref{sec:fluxmvc} in chapter \ref{cha:beckground}.
 
-\subsection{Most important elements in Flux}
-\subsubsection*{ActionCreators}
-User interactions like pressing a button, triggers an action in the system. Thise action creators are associated with UI elements, they can have a long range of methods in them, depending on how comprehensive the UI elements are and how many interactive elements they have. \worry{look up flux definition <-}
-We often create a library of helper methods called action creators that not only create the action object, but also pass the action to the dispatcher.
-\todo{here}
+\subsection{Architecture choises and Flux}
+\subsubsection*{Action creators}
+User interactions like pressing a button, trigger an action in the system. These actions are object literals containg new fields of data and specific action type. In flux it is usually helpfoul to create a library of helper methods called \emph{action creators} that not only create the action object, but also pass the action to the dispatcher. Library is often divided into files associated with UI elements, they can have a long range of methods in them, depending on how comprehensive the UI elements are and how many interactive elements they have.
+
 \subsubsection*{The Dispatcher}
-The Dispatchers role is to manage all the actions, it doesn't know where the action is going, neither what the payload is. The dispatcher is globally notifying the stores about the actions, and additionaly the stores can be set up to wait for other stores update themselves. With the Dispatcher \emph{waitFor()} method, a \emph{not ready flag} can be set on any particular store that depends on the data from another store. 
-\todo{here}
+The Dispatchers role is to manage all the actions, it doesn't know where the action is going, neither what the payload - new fields of data, is. The dispatcher is globally notifying the stores about the actions, and additionaly the stores can be set up to wait for other stores update themselves first. With the Dispatcher \emph{waitFor()} method, a \emph{not ready flag} can be set on any particular store that depends on the data from another store, this will make sure that if two stores are triggered by an action, the one that calls waitFor() on another store will execute last. 
+
 \subsection*{State and stores}
-one could compare state to the information stored in URL, although state comprises of much more information than URL.
-State is stored in objects called Stores.
-\todo{here}
+One could compare state to the information stored in URL, although state comprises of much more information than URL, states are associated with the URL to a degree. Each URL will represent some state, but there might be a big amount of small changes in the state without the URL changing. This is up to the developer to decide what states should have an URL associated with it. It should usually be a healthy balance betweeen the amount of states and URL changes.
+Applications state and logic is contained in \emph{stores}. Stores represent a view in a object like structure, each component in the view has its value in the store. Stores do not mirror the back-end database, they have utility class that they will use to transform the received data to how they see it fit into the store. The utilities will often be used when the data is gotten from another store. By choosing it to do it this way, the application is more prone to the server changing its API responses, if the usual payload changes slightly it can be transformed on the client-side without much effort.
+
+\subsection*{Getting initial data to the system}
+\todo{API requests and such}
+
 \subsection*{Views / Components}
-Views are implemented using React, they have so called \emph{lifecycle hooks} that scale well with Flux architecture. We use \emph{EventEmitter}
-\todo{here}
+Views and components are usually interchangable, but in the following examples, views are used to describe a chunk of a page consisting of multiple UI elements, while a component is an individual button of interactive element. Views are implemented using React library, this enables the use of so called \emph{lifecycle hooks} that help us trigger new \emph{render cycles} to update the views/components data. A render cycle means that the DOM will change with the help of React diff algorythm - explained before in chapter \ref{cha:flux} section \ref{sec:diffalgorygh}. This is done with the help of an \emph{EventEmitter}, it works by associating a \emph{callback function} with some \emph{string}. When the string is \emph{emitted} - this will trigger callbacks that are registered for that instance of the EventEmitter. Each store has its own instance of the EventEmitter, it will broadcast a \emph{change} string, and the views that registered for that EventEmitter will run the callback. The callback in this case will be a render method of the component, calling render method of a component is analogous with new triggeirng new render cycle.
+
 \subsection{Simple user action with Flux}\label{sec:simplefluxexample}
 The main idea of flux architecture is that it forces one directional dataflow through the system. Any action created, whether through a person interacting with the application or through a web api call, from the systems perspecive, will always originate from the same place, in Flux we call that place the dispatcher. When the focus is scalability, building simple things like triggering a remove operation on a list, may seem cubersome when one needs to follow quite strict rules, such as those proposed in Flux. Following those rules pays off at the end, as it simplifies implementation process of other modules. The following example will try to explain the simplicity of Flux.
 \\One of the requirements of Autograder, is for teacher to be able to remove users or students from courses and/or the whole sysetm. For this purpuse a user list is presented for the teacher:
@@ -51,7 +57,7 @@ What makes Flux a great architecture is that more complicated implementations do
   \label{fig:advancedgroupmanager}
 \end{figure}
 
-Datastructure that will represent the two views, a store called \emph{GroupManagerStore}, will have to communicate with another store called \emph{ActiveCourseStore} - that store is responsible for holding data about the current active course in the state. The way this particular example is set up, GroupManagerStore depends on the data in ActiveCourseStore. However the sequence of user actions that will create that dependency is such that ActiveCouresStore is never empty when GroupManagerStore needs it's data, so we don't have to worry about implementing additional wait conditions here. This is because at any given time, at least one course is active, either user selected or default. In addition to those two stores, a third store is used in the background. Given that a teacher selected a course, he will most likely stay on that course in order to execute different changes in that course. This gives an oportunity to optimize the API requests to some degree. The student data for the current course can be reused  while the user navigates within a course. Therefore there is a separate store for student list called \emph{StudentsStore}, other stores that require a list of students will no longer have to request this data from the server, given that another store already requested student lists and the user didn't switch the course. For example, both GroupManagerStore and the store from previous example \ref{sec:simplefluxexample} would require a list of students, if navigation between views utilising those views will take place only one initial API request will be triggered.
+Datastructure that will represent the two views, a store called \emph{GroupManagerStore}, will have to communicate with another store \emph{ActiveCourseStore} - that store is responsible for holding data about the current active course in the state. In this particular example, GroupManagerStore depends on the data in ActiveCourseStore. However we don't have to worry about ActiveCouresStore being empty, since there is always a course that is active. In addition to those two stores, a third store is used in the background. Given that a teacher selected a course, he will most likely stay on that course in order to execute different changes in that course. This gives an oportunity to optimize the API requests to some degree. The student data for the current course can be reused  while the user navigates within a course. Therefore there is a separate store for student list called \emph{StudentsStore}, other stores that require a list of students will no longer have to request this data from the server, given that another store already requested student lists and the user didn't switch the course. For example, both GroupManagerStore and the store from previous example \ref{sec:simplefluxexample} would require a list of students, if navigation between views utilising those views will take place only one initial API request will be triggered.
 \\Given the state shown in figure \ref{fig:advancedgroupmanager}, the teacher selects a user to be added to the active course, lets go through the flow of data in that case.
 
 \begin{figure}[h]
@@ -62,7 +68,7 @@ Datastructure that will represent the two views, a store called \emph{GroupManag
 
 When the user presses the button, one of \emph{GroupManagerActionCreators} is called. The current state, based on the figure \ref{fig:advancedgroupmanager} includes data like:
 \\\emph{activeGroup:"Group2",activeCourse:"DAT310" \worry{fix figure and data}}\\
-activeGroup is located in GroupManagerStore, this data represents which group did the user choose, in order to add new student to it.
+activeGroup field is located in GroupManagerStore, this data represents which group did the user activate, in order to add new student to it. Selected button will have the students data in it's payload, sending it thorugh the Dispatcher, the stores will wait for an actionType to be received. At this poing GroupManagerStore sees the actionType, and updates it's students field, the student in the payload gets matched with the existing one in the store and gets removed. Next an update is emitter with the help of EventEmitter, this triggers a new render cycle in the Rect components which consequently get the new data from the stores.
 
 \section{Application architecture}
 Shit something
@@ -99,11 +105,12 @@ The server is written in Go, for this purpose there was no real  preference as t
 The server is also serving three static files, main.js, index.html, and style.css. These are retrieved by the client with the initial GET request, from then on server is not receivein any new GET requests but rather communicates through websocket. This is a bit different than traditionall communication with GET and POST. Also when the client goes directly to a specific URL like "http://www.autograder.no/teacher/results/dat100" server should respond only with the static data and not care about the path after the domainname / IP, since this part is taken care of by the client side routing, as explained in section \ref{sec:softwaresolution}. Further, when a user navigates through the application no GET requests are being made.
 \\ActionType that the multiplexer pivots at, is a string representing something similar to what a REST API would typically use. ActionType is a string describing an event, and Payload is the data that is needed to make the changes. Typical HTML form send through websocket, would look like that:
 \todo{use form from course settings here}
-latex online collaboration\lstinputlisting[label=lst:websocketapi]{listings/websocketapi.js}
+latex online collaboration
+\lstinputlisting[label=lst:websocketapi]{listings/websocketapi.js}
 
 This means in short that the client requests roles for username "tokams", server should respond with the same actionType, and as a payload insert relevant data.
 
 \subsection {Database}
-Database is running on mysql-server, it's separate from the main go server, it communicates with the server with the help of go sql/package and a 3rd party mysql driver \cite{ziutek}. It is a relational database, that represents the data of users and courses. Although not necessary, it was helpfoul to implement test database solution, to explore the possibilities for back end, and se front to back flow of the data. Database was designed with standard ER diagrams first, and then set up on local machines.
+Database is running on mysql-server, it's separate from the main go server, it communicates with the server with the help of go sql/package and a 3rd party mysql driver \cite{ziutek}. It is a relational database, that represents the data of users and courses. Although not necessary, it was helpfoul to implement test database solution, to explore the possibilities for back-end, and se front to back flow of the data. Database was designed with standard ER diagrams first, and then set up on local machines.
 It is discuissed in a bit more technical way in section \ref{sec:database}, and the figure \ref{fig:databaseer}.
 
