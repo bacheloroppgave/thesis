@@ -27,9 +27,6 @@ React is written in JSX, a simplified JavaScript language with XML-layout. The c
 
 
 
-
-
-
 \section{Back-end}
 To be able to make the front-end without using real datasets, it was necessary to create a functional server that can get data from the storage solution and serve it to the front-end. The original Autograder already use Go, short for Go language, as the programming language for the back-end. Go is very fast when it comes to web-servers. Making a webserver requires just a few lines of code, and handles multiple connections in go-routines, which is similar to threads. Therefore, it is not a hard choice when selecting the programming language of the back-end. The web-servers job is to be the link between the data stored in the system and the front-end. As mentioned, predefined protocols for communication, such as data structures created with JSON (JavaScript Object Notation) is used to communicate with the front-end. Sending packages with content that the front-end can decode and handle in a predefined way. Consequently, the back-end can be written in many programming languages without effecting the front-end or storage. \\Logic for roles, such as admin, teacher and student are also managed in the back-end. The logic behind the login page and authentication with Github is also managed back-end in the web-server. The Go language is a general-purpose language designed as a system programming language. It focuses heavily on concurrency and garbage-collection, and is therefore perfect for web-servers.
 
