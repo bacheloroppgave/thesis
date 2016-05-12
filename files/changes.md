@@ -17,11 +17,12 @@ Changes made to background
 
 CHAPTER 1: Background
 - Intro (done)
-- Planning phase
-- User stories, wireframes
-- Requirements
+- Requirements (move this?)
 - Front-end
-- ReactJS .. React and React vs Angular
+	-> Bootstrap
+	-> ReactJS
+	-> React vs Angular (short)
+	-> Get some stuff from the design-chapters
 - Flux and Flux vs MVC
 - Storage DB
 - Golang .. Go
@@ -29,6 +30,8 @@ CHAPTER 1: Background
 
 
 
+REPLACE:
+- Background_dump has a section called planning phase, that can be used in the design or something.
 
 (mobile-ready page in the future [post-bachelor]) -> Write this in the evaluation or the last chapters
 
