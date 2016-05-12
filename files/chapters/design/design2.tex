@@ -14,11 +14,11 @@ The more traditional way of designing a website is to start with wireframes. Wir
 \item As a teacher I want to archive / delete course, so that I can see only relevant and active courses.
 \end{itemize*}
 
-(Note: A table of user stories can be found in Appendix \worry{Appendix ref for full list of user stories}).
+Note: A table of user stories can be found in appendix \ref{ap:userstories}.
 
 User stories help plan the whole system. The order of which functions are implemented can be managed from the start. In Autograder's case, functions like listing labs for the teacher will be a high priority user story. Functions like changing the group names can wait until a later point in development. Spreadsheets can be a good way of writing down all the user stires. Each role of the page, i.e students, teachers and admins can be placed in different columns. User stories for each column is then written in rows. For the new Autograder front-end, Trello was used. Trello's card design allows for easy grouping of cards, as well as an interface for drag and drop. This makes the job of managing the user stories much more simple, and it can also be used throughout the development as a TODO list.
 
-\begin{figure}[h!]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{./graphics/trello.png}
     \caption{Autograder's Trello page. Comprised of user stories, it was used as a TODO-list in the development process. Note: this is meant as an illustrative figure.}
@@ -37,13 +37,15 @@ The wireframes are not to be confused with the design process. The wireframes ar
 This section will walk through the most important elements of the system. What does it consists of and how do different parts communicate with eachother. Where did focus lay while developing it, what was done for testing purposes and what for exploring future possibilities. Next the following subsections will go in a bit more detail on how the different parts worked individually, and briefly explain how the API works.
 
 \subsection{The whole system}
-The focus of this thesis is mostly front-end, although all the other partrs should be mentioned and explained to give some context to the problem. Starting in the far back-end, the solution for server in the current Autograder is to have a virtual machine running that will host the Autograder "app". For this purpose "Docker" is used which lets the system admin run multiple applications in securely isolated containers. The docker engine is running on a host server with host OS. This solution lets the administrator run multiple applications on the same host server
+The focus of this thesis is mostly front-end, although all the other partrs should be mentioned and explained to give some context to the problem. Starting in the far back-end, the solution for server in the current Autograder is to have a virtual machine running that will host the Autograder "app". For this purpose "Docker" \cite{docker} is used which lets the system admin run multiple applications in securely isolated containers. The docker engine is running on a host server with host OS. This solution lets the administrator run multiple applications on the same host server. The other crutial part that will have to be implemented on the server-side is GitHub integration. This is done with the help of GitHub API, it can be used to link github users with Autograder users and enable fetching the delivered code via GitHub to Autograder system. The API will also serve as authentication service for the users. Users of autograder will log in with their GitHub accounts using GitHub's OAuth \cite{githuboauth} and give access to some of their information to Autograder.
 
 \begin{figure}[h]
   \scalebox{1}{\input{./graphics/systemoverview.tex}}
   \caption{Overview of the whole system, not implemented modules are grayed out.}
   \label{fig:systemoverview}
 \end{figure}
+
+The diagram above shown in figure \ref{fig:sustemoverview} represents the model of the whole Autograder system together with server solution, database, and github integration. When the user goes to the Autograder page, it will use the integrated GithHub authentication to login and access the page. When the Authentication is confirmed, server can communicate with the remote repositories, fetch the data and run the tests on the assignments. GitHub is used soely for storing the students code, data is only being obtained from the service new changed are pushed to GitHub. When the server figures out what data to get and associates it with the correct user data from the database, and the test return, it can update the front-end client through. Communication with the client happens through websocket. For this purpose a library called gorilla/websocket \cite{gorilla} was used. As explained earlier, the server implemented in this thesis is only used for testing out the client communication. For database solution, we communicate with MySQL server that runs locally, it is a separate process of the main Autograder server. The communication between server ans the database is done thorugh Go libraries using SQL. Request from client-side would be first sent thorugh websocket as JSON to the server, then a function call to the database is invoked, next the database returns with no errors, and the correct response is send back to the client through the server.  
 
 \begin{figure}[h]
   \scalebox{1}{\input{./graphics/clientoverview.tex}}

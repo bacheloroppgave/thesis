@@ -27,7 +27,8 @@ The purpose of having React is to simplify and minimize the amount of code that 
 
 \lstinputlisting[label=lst:simple_jsx]{listings/simple_jsx.js}
 
-
+\section{Flux vs MVC}
+\todo{legg inn figur om flux og skriv om flux (fra design)}
 \section{Back-end}
 To be able to make the front-end without using data from the old system, it is necessary to create a functional server that can get data from the storage solution and serve it to the front-end. The original Autograder already use Go as the programming language for the back-end. One of Go's strong points is building web servers. Making a webserver requires just a few lines of Go code. The connections are handled in seperate go-routines (imagine threads). Since multiple clients will be connecting to the server, and the Go-code is easily typed and is good performance-wise, it is not a hard choice when selecting the programming language of the back-end. 
 
