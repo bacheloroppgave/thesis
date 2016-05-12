@@ -93,16 +93,17 @@
 \usepackage{epstopdf}
 \usepackage{subfigure}
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\usepackage[toc,page]{appendix}
 
 \graphicspath{{pictures/}}
-
 
 \title{Autograder frontend}
 \author{Thomas Darvik and Tomasz Gliniecki}
 \date{\today}
 \begin{document}
+
 \import{chapters/titlepage/}{titlepage.tex}
-%\maketitle
+
 \pagenumbering{roman}
 \tableofcontents
 \pagenumbering{arabic}
@@ -110,8 +111,9 @@
 \import{chapters/introduction/}{introduction2.tex}
 \import{chapters/motivation/}{motivation2.tex}
 \import{chapters/background/}{background2.tex}
-\import{chapters/design/}{design.tex}
+\import{chapters/design/}{design2.tex}
 \import{chapters/implementation/}{implementation.tex}
 \import{chapters/evaluation/}{evaluation.tex}
+\import{appendix/}{appendix.tex}
 \import{sources/}{sources.tex}
 \end{document}
