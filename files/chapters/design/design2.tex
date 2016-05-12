@@ -1,23 +1,66 @@
 \chapter{Design and Architecture}
-This chapter will cover two main objectives in this thesis. Firslty the working method, that is figuring out the requirements for the application and how to implement solutions for them most effectively. Next comes the description of the system including the major back-end parts that are not the focus of this thesis. And last but not least, detailed explanation of indivitual modules and the front-end architecture that holds it all together.
+This chapter will cover two main objectives in this thesis. Firslty the working method, that is figuring out the requirements for the application, and how to implement solutions for them most effectively. Also to give some context to the whole system, we will give some background on how the fully working system could be set up. And last but not least, detailed explanation of indivitual modules that were implemented and the front-end architecture that holds it all together.
 
-\section{Working method}
-\todo{description}
+\section{Planning phase}
+Planning the new Autograder took many iterations of design and layout. The programming phase is simplified if most parts of the user interface has been planned ahead. All actions, tasks and functions of the site must be mapped out. New functionality must also be incorporated into the new design. The next section will show how the new layout has been planned and designed.
+
+
+\subsection{User stories}
+The more traditional way of designing a website is to start with wireframes. Wireframes are basic sketches or mockups of the design. The most basic forms does not include colors or advanced shapes. Simple boxes and rectangles are used to get a feel for how the page will look and function. The process starts with a revisit of the old Autograder front-end. All functions and tasks of all users must be mapped out. This includes functions such as approval of labs, signing in, making groups etc. More basic functions like getting students from the server, listing them and so on is also written down. The tasks are mapped using a technique called \emph{User Stories}. User stories are verbal guides to map all functionality. Stories come in the form \emph{``As a <role>, I want to <goal> so that <benefit>''}. Here are some of the user stories that Autograder uses;
+
+\begin{itemize*}
+\item As a student I want to create new group, so that other students can join for group assignment.
+\item As an admin I want to list all current students so that I can manage permissions (admin,teacher,student).
+\item As a teacher I want to archive / delete course, so that I can see only relevant and active courses.
+\end{itemize*}
+
+(Note: A table of user stories can be found in Appendix \worry{Appendix ref for full list of user stories}).
+
+User stories help plan the whole system. The order of which functions are implemented can be managed from the start. In Autograder's case, functions like listing labs for the teacher will be a high priority user story. Functions like changing the group names can wait until a later point in development. Spreadsheets can be a good way of writing down all the user stires. Each role of the page, i.e students, teachers and admins can be placed in different columns. User stories for each column is then written in rows. For the new Autograder front-end, Trello was used. Trello's card design allows for easy grouping of cards, as well as an interface for drag and drop. This makes the job of managing the user stories much more simple, and it can also be used throughout the development as a TODO list.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./graphics/trello.png}
+    \caption{Autograder's Trello page. Comprised of user stories, it was used as a TODO-list in the development process. Note: this is meant as an illustrative figure.}
+    \label{fig:View of the trello page we used in the development process}
+\end{figure}
+
 \subsection{Wireframes}
-\todo{wireframes}
+The user stories are written down as cards. The user stories are then transformed into Wireframes are drawn as simple layouts with pen and paper. The client is present in the process to make sure the client and developers are on the same page. In our case, we talked to Professor Hein Meling at UiS, which acted as the client for the new Autograder. Pages such as the results view \worry{ref til figur/wireframe} went though many iterations before landing on the final layout. Not having to spend time on programming the site and changing the code, one can easily visualize the whole user interface before programming.
+
+The wireframes are not to be confused with the design process. The wireframes are guides for user experience, not design. Having used the old Autograder system, we could use this previous experience to remake some of the layout. As said in the introduction \worry{ref til introduction}, limitations in the grading process was the main concern. Presenting the wireframes to the client will also make it easier to make rapid changes to the design, using a low-fidelity approach, with sketches and mock-ups. When the initial phase is done, more sophisticated drawings or wireframes are being created. These more detailed drawings with description of areas of the interface, describe what certain elements of the user interface does. Serving as a blueprint for further development. The next step in the process is to reflect the wireframes in code.
+
 \subsection{Requirements collection and analysis}
 \todo{requirements analysis}
 
 \section{Application architecture}
-This section will walk through the most important elements of the system. What does it consists of and how do different parts communicate with eachoter. Where did focus lay while developing it, what was done for testing purposes and what for exploring future possibilities. Next the following subsections will go in a bit more detail on how the different parts worked individually, and explain how the API works in short.
+This section will walk through the most important elements of the system. What does it consists of and how do different parts communicate with eachother. Where did focus lay while developing it, what was done for testing purposes and what for exploring future possibilities. Next the following subsections will go in a bit more detail on how the different parts worked individually, and briefly explain how the API works.
 
 \subsection{The whole system}
-The focus of this thesis is strictly front-end, althoug the outline of the whole end goal should be mentioned and explained to give some context to the problem. Starting in the far back-end, the solution for server in the current Autograder is to have a virtual machine running that will host the Autograder "app". For this purpose "Docker" is used bla bla \todo{bla}
+The focus of this thesis is mostly front-end, although all the other partrs should be mentioned and explained to give some context to the problem. Starting in the far back-end, the solution for server in the current Autograder is to have a virtual machine running that will host the Autograder "app". For this purpose "Docker" is used which lets the system admin run multiple applications in securely isolated containers. The docker engine is running on a host server with host OS. This solution lets the administrator run multiple applications on the same host server
 
 \begin{figure}[h]
   \scalebox{1}{\input{./graphics/systemoverview.tex}}
   \caption{Overview of the whole system, not implemented modules are grayed out.}
   \label{fig:systemoverview}
+\end{figure}
+
+\begin{figure}[h]
+  \scalebox{1}{\input{./graphics/clientoverview.tex}}
+  \caption{Client communication with the server, API requests are being sendt through WebSocket in JSON format}
+  \label{fig:clientoverview}
+\end{figure}
+
+\begin{figure}[h]
+  \scalebox{1}{\input{./graphics/serveroverview.tex}}
+  \caption{Shows how requests ar being receive and requests sent. JSON being received at WebSocket and then sent through API.}
+  \label{fig:serveroverview}
+\end{figure}
+
+\begin{figure}[h]
+  \scalebox{1}{\input{./graphics/databaseoverview.tex}}
+  \caption{Communication with database, showing Go database/sql library and third party MySQL server driver \cite{ziutekdriver}}
+  \label{fig:databaseoverview}
 \end{figure}
 
 \newpage
@@ -86,7 +129,6 @@ Datastructure that will represent the two views, a store called \emph{GroupManag
 When the user presses the button, one of \emph{GroupManagerActionCreators} is called. The current state, based on the figure \ref{fig:advancedgroupmanager} includes data like:
 \\\emph{activeGroup:"Group2",activeCourse:"DAT310" \worry{fix figure and data}}\\
 activeGroup field is located in GroupManagerStore, this data represents which group did the user activate, in order to add new student to it. Selected button will have the students data in it's payload, sending it thorugh the Dispatcher, the stores will wait for an actionType to be received. At this poing GroupManagerStore sees the actionType, and updates it's students field, the student in the payload gets matched with the existing one in the store and gets removed. Next an update is emitter with the help of EventEmitter, this triggers a new render cycle in the Rect components which consequently get the new data from the stores.
-
 
 %OLD
 \section{Web app}
