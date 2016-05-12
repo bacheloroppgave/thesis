@@ -4,9 +4,7 @@ var Component = React.createClass({
 	},
 	render: function() {
 		<div>		
-			<button>
-				Click me!
-			</button>
+			<button onClick={this.onClick}>Click me!</button>
 		</div>	
 	}
 });
