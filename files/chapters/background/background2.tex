@@ -1,20 +1,18 @@
 \chapter{Background}
 When designing the new Autograder front-end, it was necessary to develop other parts of the system for emulating dummy-data for the project. One of the most conventional ways of doing this is to create a database that stores the dummy-data, and have a server serve the front-end with that data. The system works in many ways as the fully functional Autograder, with predefined protocols for communications so that the new front-end can be implemented and deployed with a relatively small amount of effort. Making these protocols require us to both think about the current needs and future needs. Even though the system is currently up and running, many new ways of communicating with the new front-end is planned and will be implemented in the new system. It is however, no small task to create these sub-systems. We will go though some of the technologies we are using in this chapter.
 
-\section{Front-end}
-Making the new Autograder requires a solid framework for HTML and CSS that removed the need to hard-code every DOM-element (Document object model), and make future expanding to make the application mobile friendly easier. It was decided early on to use \textit{Twitter Bootstrap} [ref to about page]. The framework is in it's third iteration (soon 4th with Bootstrap 4.0 Alpha being shipped early 2016). Bootstrap removes the need to make all the elements of the page, by using predefined components placed on the page. The framework comes with build in styling, so the job of the designer (or rather lack of designers) is made easier. Compared to vanilla coding in HTML and CSS, the framework can remove countless of hours of coding, and the results look clean and functional. \\As with the JavaScript and data binding, we use React. React is an open source JavaScript library designed and maintained by Facebook \worry{ref here}. The framework provides a view for data rendered as HTML, and maintains a state that can change depending on the data that comes from the server. This removes a lot of overhead programming that the developers usually have to think about. If the data in the server changes, the change is reflected on the frontpage in realtime. Say for example that the users rights are changed from Student to Teacher. The frontend will have to reflect that change, and show data relevant for a teacher. With React, this change can be made without having to update the page manually. The document object model, DOM for short, is always updated. Updating of elements and data on the page is one of Reacts strongest sides, therefore, it is a very good library for Autograder frontend. \\The choice between ReactJS and AngularJS (the other big JavaScript-library in the industry) is really based on preference. The component based pipeline that React offers is very appealing when the website will recycle a lot of the same elements. The new frontend can be compared to a single-page-application, where the different pages are loaded in without refreshing the page. Normally this requires a lot of loading and unloading of elements, and ReactJS already have this build in to the framework. \\ReactJS uses Virtual DOM to run its Tree Diff algorythm and figures out what parts of the DOM should be rendered, this enables quick re-rendering of only relevant for the change components.
+\section{Front-end}s
 One of the goals of the new Autograder front-end is to create a better and faster experience for the end-user. This means reflecting on the old design and expierence, and revisit the technologies and code written in the old Autograder front-end. This section describes the libraries and frameworks used for the new front-end.
 
-\subsection{Bootstrap}
-Hyper text markup language, or HTML, is a markup language used to build websites. Content is placed inside of different document object models, or DOM-elements. The different boxes of content is styled using a cascading style sheet, or CSS. Making the websites and layouts can take a lot of time. To simplify this, there are many open source project that supply off-the-shelf elements. Since we have experience with Bootstrap from earlier projects, it was decided that we would use Bootstrap 3.0 for the new front-end. The framework is in it's third iteration (soon 4th with Bootstrap 4.0 Alpha being shipped early 2016). The framework comes with build in styling, so the job of the designer (or rather lack of designers) is made easier. Compared to vanilla coding in HTML and CSS, the framework can remove countless of hours of coding, and the results look clean and functional.
+\subsection{HTML, CSS and Bootstrap}
+Hyper text markup language, or HTML, is a markup language used to build websites. Content is placed inside of different document object models, or DOM-elements. The different boxes of content is styled using a cascading style sheet, or CSS. Making the websites and layouts can take a lot of time. To simplify this, there are many open source project that supply off-the-shelf elements. Since we have experience with Bootstrap from earlier projects, it was decided that we would use Bootstrap 3.0 for the new front-end. The framework is in it's third iteration (soon 4th with Bootstrap 4.0 Alpha being shipped early 2016). The framework comes with build in styling, so the job of the designer (or rather lack of designers) is made easier. Compared to vanilla coding in HTML and CSS, the framework can remove countless of hours of coding, and the results look clean and functional. A grid system is also used for layout. The website is made responsive through a column-system that can change based on the client's screensize. The site becomes more mobile-friendy out of the box, however, it is not a fully optimized. The code must be tweaked to make the site optimized for all devices. With Autograder, the grid layout is used on all pages, but this will be covered in chapter \worry{Ref til chapter}
+
+\todo{Lett inn referanser og alt sånt}
 
 \subsection{ReactJS}
-Since the front-end communicates with a server, data will come in asynchronously and must trigger a re-render of the DOM-elements if the data that comes in is new. This process of updating and binding data can be implemented using libraries such as ReactJS. React is an open source JavaScript library designed and maintained by Facebook \worry{ref here}. The framework provides a view for data rendered as HTML, and maintains a state that can change depending on the data that comes from the server. This removes a lot of overhead programming that the developers usually have to think about. If the data in the server changes, the change are reflected on the page in real-time. Say for example that the users rights are changed from Student to Teacher. The front-end will have to reflect that change, and show data relevant for a teacher. With React, this change can be made without having to update the page manually. 
+JavaScript is used to manipulate content on a website. Binding a data model and the DOM is necessary to have an always up-to-date website. Handlers for buttons and inputs are also handled in JavaScript. Handling all event listeners and functions connected to the DOM can be hard, especially when the application is as big as Autograder. Since the front-end communicates with a server, data will come in asynchronously and must trigger a re-render of the DOM-elements. This process of updating and binding data can be implemented using libraries such as ReactJS. React is an open source JavaScript library designed and maintained by Facebook \worry{ref here}. The library provides a view for data rendered as HTML, and maintains a state that can change depending on the data that comes from the server. This removes a lot of overhead programming for the developers. If the data in the server changes, the change are reflected on the page in real-time. Say for example that the users rights are changed from Student to Teacher. The front-end will have to reflect that change, and show data relevant for a teacher. With React, this change can be made without having to update the page manually. 
 
-
-The choice between ReactJS and AngularJS (the other big JavaScript-library in the industry) is really based on preference. The component based pipeline that React offers is very appealing when the website will recycle a lot of the same elements. The new front-end can be compared to a single-page-application, where the different pages are loaded in without refreshing the page. Elements not used will not be rendered, and a lot of data is cached. Navigating between pages will therefore be very fast and the content up to date. Consequently, a lot of elements must be loaded and unloaded, however, this is one of React's stronges sides. 
-
-ReactJS uses Virtual DOM to run its Tree Diff algorythm and figures out what parts of the DOM should be rendered, this enables quick re-rendering of only relevant for the change components. Components also hold methods such as \emph{componentWillMount} and \emph{componentShouldMount} to enable a greater control of data and elements being rendered on the page.
+The choice between ReactJS and AngularJS (the other big JavaScript-library in the industry) is really based on preference. The component based pipeline that React offers is very appealing when the website will recycle a lot of the same elements. The new front-end can be compared to a single-page-application, where the different pages are loaded in without refreshing the page. Navigating between pages will therefore be very fast since the page will not be reloaded and the content up to date. Consequently, a lot of elements must be loaded and unloaded. React uses Virtual DOM to run its Tree Diff algorithm and figures out what parts of the DOM should be rendered, this enables quick re-rendering of only relevant for the change components. Components also hold methods such as \emph{componentWillMount()} and \emph{componentShouldMount()} to enable a greater control of data and elements being rendered on the page.
 
 \begin{figure}[h]
 \centering
@@ -22,13 +20,10 @@ ReactJS uses Virtual DOM to run its Tree Diff algorythm and figures out what par
 \caption{Graph of how React uses Virtual DOM to patch the DOM}
 \end{figure}
 
-
-The purpose of having React is to simplify and minimize the amount of code that the developers have to write. To do so, React is written in JSX, a simplified JavaScript language with XML-layout. The components for the site is written as components, such as \emph{Button}, \emph{Div}, \emph{Table} etc. The JSX syntax is transformed to JavaScript using tools such as Babel \worry{ref til Babel page}. This means that most HTML-elements can be directly typed in the JSX without having to import or define new elements. Simple elements, such as a button with handlers can be written in a simplified syntax. Code snippet \worry{snippet ref} shows the JSX syntax for a button;
+The purpose of having React is to simplify and minimize the amount of code that the developers have to write. To do so, React is written in JSX, a simplified JavaScript language with XML-layout. The components for the site is written as components, such as \emph{Button}, \emph{Div}, \emph{Table} etc. The JSX syntax is transformed to JavaScript using tools such as Babel \worry{ref til Babel page}. This means that most HTML-elements can be directly typed in the JSX without having to import or define new elements. Simple elements, such as a button with handlers can be written in a simplified syntax. Code snippet \worry{snippet ref} shows the JSX syntax for a button as an example;
 
 \lstinputlisting[label=lst:simple_jsx]{listings/simple_jsx.js}
 
-\section{Flux vs MVC}
-\todo{legg inn figur om flux og skriv om flux (fra design)}
 \section{Back-end}
 To be able to make the front-end without using data from the old system, it is necessary to create a functional server that can get data from the storage solution and serve it to the front-end. The original Autograder already use Go as the programming language for the back-end. One of Go's strong points is building web servers. Making a webserver requires just a few lines of Go code. The connections are handled in seperate go-routines (imagine threads). Since multiple clients will be connecting to the server, and the Go-code is easily typed and is good performance-wise, it is not a hard choice when selecting the programming language of the back-end. 
 
@@ -36,3 +31,46 @@ The web-servers job is to be the link between the data stored in the system and 
 
 \section{Storage solution}
 Even though the scope of the assignment is the front-end, a storage solution was necessary. The original system uses key-value-store, which is great for storing data which can be found using a key or index. The key-value-store is really fast when searching for keys, but lack the relational structure that Autograder needs. The new Autograder need a system that can store relations between roles and courses. Therefore, the solution that is used is a relational database. The database is filled with dummy-data from the beginning, so that the front-end and server can work with data. The dummy-data will represent real data, and look like the data that the real front-end will produce. The data can simply be replaced by real data later on if the new front-end is implemented in the existing Autograder-environment. \\The data is stored in the relational database, and can be retrieved using MySQL. The data retrieved using string-based commands, such as \emph{"GET * FROM user\_database"}. This is a very practical way of getting data, and combining this with Go can help make the back-end modular. A modular back-end can simplify the process of expanding the system in the future.
+
+\section{Flux}
+
+\todo{Fix references}
+
+The next section explains briefly the system architecture used in the new Autograder front-end. A deeper explanation can be found in chapter \worry{Flux chapter in implementation}.  
+\worry{Ref facebook.github.io/flux/docs/overview.html <- FIX LINK} Flux will also be compared to the more traditional Model-view-controller architecture used by most programs today.
+
+\section{What is Flux}
+
+
+\todo{Bring in the Flux architecture figure}
+
+
+
+
+
+\section{Flux vs MVC}
+Model-view-controller, or MVC, is used by most companies in the industry today. The architecture is devided into three main roles;
+
+\begin{itemize}  
+\item \emph{Model:} Manages the behavior and data of the application
+\item \emph{View:} Represents the model in the user interface
+\item \emph{Controller:} Handles manipulation of the data and triggers the view to update\ldots 
+\end{list_type}
+
+The data flow is bidirectional, meaning that the data will be sent to and from the view. Changes in the data can be hard to trace, and debugging the code can be a pain. Even though the architecture is most widely used in the industry, does not mean it works best for large code bases. Autograder will have data flowing around in the system at any given time. Tracing this flow of information is vital, since cascading effects can cause massive problem in the grading process.. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
