@@ -4,7 +4,6 @@ This chapter will cover two main objectives in this thesis. Firslty the working 
 \section{Planning phase}
 Planning the new Autograder took many iterations of design and layout. The programming phase is simplified if most parts of the user interface has been planned ahead. All actions, tasks and functions of the site must be mapped out. New functionality must also be incorporated into the new design. The next section will show how the new layout has been planned and designed.
 
-
 \subsection{User stories}
 The more traditional way of designing a website is to start with wireframes. Wireframes are basic sketches or mockups of the design. The most basic forms does not include colors or advanced shapes. Simple boxes and rectangles are used to get a feel for how the page will look and function. The process starts with a revisit of the old Autograder front-end. All functions and tasks of all users must be mapped out. This includes functions such as approval of labs, signing in, making groups etc. More basic functions like getting students from the server, listing them and so on is also written down. The tasks are mapped using a technique called \emph{User Stories}. User stories are verbal guides to map all functionality. Stories come in the form \emph{``As a <role>, I want to <goal> so that <benefit>''}. Here are some of the user stories that Autograder uses;
 
@@ -34,9 +33,9 @@ The wireframes are not to be confused with the design process. The wireframes ar
 \todo{requirements analysis}
 
 \section{Application architecture}
-This section will walk through the most important elements of the system. What does it consists of and how do different parts communicate with eachother. Where did focus lay while developing it, what was done for testing purposes and what for exploring future possibilities. Next the following subsections will go in a bit more detail on how the different parts worked individually, and briefly explain how the API works.
+Architecture of the Autograder system describes the high level structures developed while working on the application. Choice of software architecture, software models on both front and back-end are crucial aspects of creating good application. This section will walk through the most important elements of the system. What does it consists of and how do different parts communicate with eachother. Where did focus lay while developing it, what was done for testing purposes and what for exploring future possibilities. Next the following subsections will go in a bit more detail on how the different parts worked individually, and briefly explain how the API works.
 
-\subsection{The whole system}
+\subsection{The Autograder server and client}
 The focus of this thesis is mostly front-end, although all the other partrs should be mentioned and explained to give some context to the problem. Starting in the far back-end, the solution for server in the current Autograder is to have a virtual machine running that will host the Autograder "app". For this purpose "Docker" \cite{docker} is used which lets the system admin run multiple applications in securely isolated containers. The docker engine is running on a host server with host OS. This solution lets the administrator run multiple applications on the same host server. The other crutial part that will have to be implemented on the server-side is GitHub integration. This is done with the help of GitHub API, it can be used to link github users with Autograder users and enable fetching the delivered code via GitHub to Autograder system. The API will also serve as authentication service for the users. Users of autograder will log in with their GitHub accounts using GitHub's OAuth \cite{githuboauth} and give access to some of their information to Autograder.
 
 \begin{figure}[h]
@@ -45,27 +44,51 @@ The focus of this thesis is mostly front-end, although all the other partrs shou
   \label{fig:systemoverview}
 \end{figure}
 
-The diagram above shown in figure \ref{fig:sustemoverview} represents the model of the whole Autograder system together with server solution, database, and github integration. When the user goes to the Autograder page, it will use the integrated GithHub authentication to login and access the page. When the Authentication is confirmed, server can communicate with the remote repositories, fetch the data and run the tests on the assignments. GitHub is used soely for storing the students code, data is only being obtained from the service new changed are pushed to GitHub. When the server figures out what data to get and associates it with the correct user data from the database, and the test return, it can update the front-end client through. Communication with the client happens through websocket. For this purpose a library called gorilla/websocket \cite{gorilla} was used. As explained earlier, the server implemented in this thesis is only used for testing out the client communication. For database solution, we communicate with MySQL server that runs locally, it is a separate process of the main Autograder server. The communication between server ans the database is done thorugh Go libraries using SQL. Request from client-side would be first sent thorugh websocket as JSON to the server, then a function call to the database is invoked, next the database returns with no errors, and the correct response is send back to the client through the server.  
+The diagram shown in figure \ref{fig:systemoverview} represents the model of the whole Autograder system together with server solution, database, and github integration. When the user goes to the Autograder page, it will use the integrated GithHub authentication to login and access the page. When the Authentication is confirmed, server can communicate with the remote repositories, fetch the data and run the tests on the assignments. GitHub is used soely for storing the students code, data is only being obtained from the service new changed are pushed to GitHub. When the server figures out what data to get and associates it with the correct user data from the database, and the test return, it can update the front-end client through. Communication with the client happens through websocket. For this purpose a library called gorilla/websocket \cite{gorilla} was used. As explained earlier, the server implemented in this thesis is only used for testing out the client communication. For database solution, we communicate with MySQL server that runs locally, it is a separate process of the main Autograder server. The communication between server ans the database is done thorugh Go libraries using SQL. Request from client-side would be first sent thorugh websocket as JSON to the server, then a function call to the database is invoked, next the database returns with no errors, and the correct response is send back to the client through the server.  
 
+\subsection{The client}
+Web client for the Autograder is written in JavaScript, with the help of React library. Together with Flux architecture, React gives a very good framework for building application-specific software with responsive interface. The web client utilizes a WebSocket protocol to exchange data with the server. When the client requests some information, an API is used to construct the message, then wrapped in JSON format and send through opened WebSocket connection.
 \begin{figure}[h]
   \scalebox{1}{\input{./graphics/clientoverview.tex}}
   \caption{Client communication with the server, API requests are being sendt through WebSocket in JSON format}
   \label{fig:clientoverview}
 \end{figure}
+This is pretty standard way of doing the communication, except for the protocol used for communication with the server. Since WebSocket is based on a constant connection between client and the server, it is very easy to push updates both ways without much overhead. Since the goal with the new Autograder front-end was better responsiveness and more friendly user interface, combining some of the newest technologies like React and WebSocket together with Flux an architecture was an obvous choice.
 
+\subsection{The web-server}
+
+Back-end solution is not the main focus of this application. Nonetheless a working temporary server needed to be put together, as well as database to store mock data and to test the logical functionality of the system on the front-end and the way the data is being communicated between the two ends.
 \begin{figure}[h]
   \scalebox{1}{\input{./graphics/serveroverview.tex}}
   \caption{Shows how requests ar being receive and requests sent. JSON being received at WebSocket and then sent through API.}
   \label{fig:serveroverview}
 \end{figure}
 
+The server is written in Go, for this purpose there was no real  preference as to what language to use, but assumptions were made that the final server will also be written in Go, therefore it was an obvious choice. Client is designed with WebSocket in mind, the simplest way to implement that on server side is to use Gorilla websocket Go package that can handle WebSocket messages. This was implemented with almost no effort, but the next step is to create logic for handling all the different requests that come from the client. For this purpose, when a server receives a message through WebSocket, a new \emph{goroutine} is fired up, since they are very lightweigh a lot of requests can be potentially handled at the same time. Every requests goes through a simple multiplexer that figures out, based on the message header, what kind of request is made, then it uses the payload to retrieve specific data. As an exaple, let's take a user that requested to see all its courses by going to the course overview page, that lists courses that the user is associated with.
+
+\begin{figure}[h]
+  \input{./graphs/serverwebsocket.tex}
+  \caption{How requests are handled on the server}
+  \label{fig:serverwebsocket}
+\end{figure}
+
+The server is also serving three static files, main.js, index.html, and style.css. These are retrieved by the client with the initial GET request, from then on server is not receiving any new GET requests but rather communicates through websocket. This is a bit different than traditional communication with GET and POST. Also when the client goes directly to a specific URL like "http://www.autograder.no/teacher/results/dat100" server should respond only with the static data and not care about the path after the domainname / IP, since this part is taken care of by the client-side routing, as explained in Section \ref{sec:softwaresolution}. Further, when a user navigates through the application no GET requests are being made.
+\\\emph{actionType} that the multiplexer uses to choose switch case, is a string representing something similar to what a REST API would typically use. An actionType is a string describing an event, and the payload is the data that is needed to make the changes. A typical HTML form sent through websocket, would look like that:
+\todo{use form from course settings here}
+latex online collaboration
+\lstinputlisting[label=lst:websocketapi]{listings/websocketapi.js}
+
+This means in short that the client requests roles for username "tokams", server should respond with the same actionType, and as a payload insert relevant data.
+
+\newpage
+\subsection{Database solution}
+Database is running on mysql-server, it's separate from the main go server, it communicates with the server with the help of go sql/package and a 3rd party mysql driver \cite{ziutek}. It is a relational database, that represents the data of users and courses. Although not necessary, it was helpfoul to implement test database solution, to explore the possibilities for back-end, and se front to back flow of the data. Database was designed with standard ER diagrams first, and then set up on local machines.
+It is discuissed in a bit more technical way in section \ref{sec:database}, and the figure \ref{fig:databaseer}.
 \begin{figure}[h]
   \scalebox{1}{\input{./graphics/databaseoverview.tex}}
   \caption{Communication with database, showing Go database/sql library and third party MySQL server driver \cite{ziutekdriver}}
   \label{fig:databaseoverview}
 \end{figure}
-
-\newpage
 
 \section{Flux}
 To explain how Flux application architecture works and behaves, a couple of examples will be presented of differend complexity. Explanation will involve a minimal amount of code, but section \ref{sec:fluximplementation} in chapter \ref{cha:implementation} has more technical information. To get a more general feel of Flux and other architectures revisit section \ref{sec:fluxmvc} in chapter \ref{cha:beckground}.
@@ -134,7 +157,7 @@ activeGroup field is located in GroupManagerStore, this data represents which gr
 
 %OLD
 \section{Web app}
-Architecture of the Autograder system describes the high level structures developed while working on the application. Choice of software architecture, software models on both front and back-end are crucial aspects of creating good application.
+
 \subsection{Software architecture}
 Autograder is an application for teachers and students, the new version is going to be running on local university network and is going to be accessible from anywhere on the internet. Primary use for teachers is new creating courses in the system, that are associated with the courses at the university, each course has a GitHub repository associated with it, and configured to the needs of that course. This means that an implementation of GitHub integration needs to be created, this is mainly the focus of back-end part of the software, still the front-end, or web client, needs to be designed in such a way to enable the
  use of such integration. The client is not supposed to serve as an alternative view of GitHub repositories, GitHub is mainly used as a place to easily store source code, and its login authentication API. The client needs to be able to display courses that a student is enrolled into, assignments that the teacher has published to that course, that also involves group assignments.
@@ -143,27 +166,3 @@ Autograder is an application for teachers and students, the new version is going
 \subsection{Front-end}
 Front-end web applications are written in JavaScript, or at least have to be transpiled to JavaScript for the browsers to be able to understand it. Applications in JS, are single threaded...
 \todo{single threaded approach}
-
-\section{Server}
-Back-end solution is not the main focus of this application. Nonetheless a working temporary server needed to be put together, as well as database to store mock data and to test the logical functionality of the system on the front-end and the way the data is being communicated between the two ends.
-\subsection{Server}
-The server is written in Go, for this purpose there was no real  preference as to what language to use, but assumptions were made that the final server will also be written in Go, therefore it was an obvious choice. Client is designed with WebSocket in mind, the simplest way to implement that on server side is to use Gorilla websocket Go package that can handle WebSocket messages. This was implemented with almost no effort, but the next step is to create logic for handling all the different requests that come from the client. For this purpose, when a server receives a message through WebSocket, a new \emph{goroutine} is fired out, since they are very lightweigh a lot of requests can be potentially handled at the same time. Every requests goes through a simple multiplexer that figures out, based on the message header, what kind of request is made, then it uses the payload to retrieve specific data. As and exaple let's take a user that requested to see all its courses by going to the course overview page, that lists courses that the user is associated with.
-
-\begin{figure}[h]
-  \input{./graphs/serverwebsocket.tex}
-  \caption{How requests are handled on the server}
-  \label{fig:serverwebsocket}
-\end{figure}
-
-The server is also serving three static files, main.js, index.html, and style.css. These are retrieved by the client with the initial GET request, from then on server is not receivein any new GET requests but rather communicates through websocket. This is a bit different than traditionall communication with GET and POST. Also when the client goes directly to a specific URL like "http://www.autograder.no/teacher/results/dat100" server should respond only with the static data and not care about the path after the domainname / IP, since this part is taken care of by the client side routing, as explained in section \ref{sec:softwaresolution}. Further, when a user navigates through the application no GET requests are being made.
-\\ActionType that the multiplexer pivots at, is a string representing something similar to what a REST API would typically use. ActionType is a string describing an event, and Payload is the data that is needed to make the changes. Typical HTML form send through websocket, would look like that:
-\todo{use form from course settings here}
-latex online collaboration
-\lstinputlisting[label=lst:websocketapi]{listings/websocketapi.js}
-
-This means in short that the client requests roles for username "tokams", server should respond with the same actionType, and as a payload insert relevant data.
-
-\subsection {Database}
-Database is running on mysql-server, it's separate from the main go server, it communicates with the server with the help of go sql/package and a 3rd party mysql driver \cite{ziutek}. It is a relational database, that represents the data of users and courses. Although not necessary, it was helpfoul to implement test database solution, to explore the possibilities for back-end, and se front to back flow of the data. Database was designed with standard ER diagrams first, and then set up on local machines.
-It is discuissed in a bit more technical way in section \ref{sec:database}, and the figure \ref{fig:databaseer}.
-
