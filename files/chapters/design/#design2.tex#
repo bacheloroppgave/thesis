@@ -1,0 +1,168 @@
+\chapter{Design and Architecture}
+This chapter will cover two main objectives in this thesis. Firslty the working method, that is figuring out the requirements for the application, and how to implement solutions for them most effectively. Also to give some context to the whole system, we will give some background on how the fully working system could be set up. And last but not least, detailed explanation of indivitual modules that were implemented and the front-end architecture that holds it all together.
+
+\section{Planning phase}
+Planning the new Autograder took many iterations of design and layout. The programming phase is simplified if most parts of the user interface has been planned ahead. All actions, tasks and functions of the site must be mapped out. New functionality must also be incorporated into the new design. The next section will show how the new layout has been planned and designed.
+
+\subsection{User stories}
+The more traditional way of designing a website is to start with wireframes. Wireframes are basic sketches or mockups of the design. The most basic forms does not include colors or advanced shapes. Simple boxes and rectangles are used to get a feel for how the page will look and function. The process starts with a revisit of the old Autograder front-end. All functions and tasks of all users must be mapped out. This includes functions such as approval of labs, signing in, making groups etc. More basic functions like getting students from the server, listing them and so on is also written down. The tasks are mapped using a technique called \emph{User Stories}. User stories are verbal guides to map all functionality. Stories come in the form \emph{``As a <role>, I want to <goal> so that <benefit>''}. Here are some of the user stories that Autograder uses;
+
+\begin{itemize*}
+\item As a student I want to create new group, so that other students can join for group assignment.
+\item As an admin I want to list all current students so that I can manage permissions (admin,teacher,student).
+\item As a teacher I want to archive / delete course, so that I can see only relevant and active courses.
+\end{itemize*}
+
+Note: A table of user stories can be found in appendix \ref{ap:userstories}.
+
+User stories help plan the whole system. The order of which functions are implemented can be managed from the start. In Autograder's case, functions like listing labs for the teacher will be a high priority user story. Functions like changing the group names can wait until a later point in development. Spreadsheets can be a good way of writing down all the user stires. Each role of the page, i.e students, teachers and admins can be placed in different columns. User stories for each column is then written in rows. For the new Autograder front-end, Trello was used. Trello's card design allows for easy grouping of cards, as well as an interface for drag and drop. This makes the job of managing the user stories much more simple, and it can also be used throughout the development as a TODO list.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./graphics/trello.png}
+    \caption{Autograder's Trello page. Comprised of user stories, it was used as a TODO-list in the development process. Note: this is meant as an illustrative figure.}
+    \label{fig:View of the trello page we used in the development process}
+\end{figure}
+
+\subsection{Wireframes}
+The user stories are written down as cards. The user stories are then transformed into Wireframes are drawn as simple layouts with pen and paper. The client is present in the process to make sure the client and developers are on the same page. In our case, we talked to Professor Hein Meling at UiS, which acted as the client for the new Autograder. Pages such as the results view \worry{ref til figur/wireframe} went though many iterations before landing on the final layout. Not having to spend time on programming the site and changing the code, one can easily visualize the whole user interface before programming.
+
+The wireframes are not to be confused with the design process. The wireframes are guides for user experience, not design. Having used the old Autograder system, we could use this previous experience to remake some of the layout. As said in the introduction \worry{ref til introduction}, limitations in the grading process was the main concern. Presenting the wireframes to the client will also make it easier to make rapid changes to the design, using a low-fidelity approach, with sketches and mock-ups. When the initial phase is done, more sophisticated drawings or wireframes are being created. These more detailed drawings with description of areas of the interface, describe what certain elements of the user interface does. Serving as a blueprint for further development. The next step in the process is to reflect the wireframes in code.
+
+\subsection{Requirements collection and analysis}
+\todo{requirements analysis}
+
+\section{Application architecture}
+Architecture of the Autograder system describes the high level structures developed while working on the application. Choice of software architecture, software models on both front and back-end are crucial aspects of creating good application. This section will walk through the most important elements of the system. What does it consists of and how do different parts communicate with eachother. Where did focus lay while developing it, what was done for testing purposes and what for exploring future possibilities. Next the following subsections will go in a bit more detail on how the different parts worked individually, and briefly explain how the API works.
+
+\subsection{The Autograder server and client}
+The focus of this thesis is mostly front-end, although all the other partrs should be mentioned and explained to give some context to the problem. Starting in the far back-end, the solution for server in the current Autograder is to have a virtual machine running that will host the Autograder "app". For this purpose "Docker" \cite{docker} is used which lets the system admin run multiple applications in securely isolated containers. The docker engine is running on a host server with host OS. This solution lets the administrator run multiple applications on the same host server. The other crutial part that will have to be implemented on the server-side is GitHub integration. This is done with the help of GitHub API, it can be used to link github users with Autograder users and enable fetching the delivered code via GitHub to Autograder system. The API will also serve as authentication service for the users. Users of autograder will log in with their GitHub accounts using GitHub's OAuth \cite{githuboauth} and give access to some of their information to Autograder.
+
+\begin{figure}[h]
+  \scalebox{1}{\input{./graphics/systemoverview.tex}}
+  \caption{Overview of the whole system, not implemented modules are grayed out.}
+  \label{fig:systemoverview}
+\end{figure}
+
+The diagram shown in figure \ref{fig:systemoverview} represents the model of the whole Autograder system together with server solution, database, and github integration. When the user goes to the Autograder page, it will use the integrated GithHub authentication to login and access the page. When the Authentication is confirmed, server can communicate with the remote repositories, fetch the data and run the tests on the assignments. GitHub is used soely for storing the students code, data is only being obtained from the service new changed are pushed to GitHub. When the server figures out what data to get and associates it with the correct user data from the database, and the test return, it can update the front-end client through. Communication with the client happens through websocket. For this purpose a library called gorilla/websocket \cite{gorilla} was used. As explained earlier, the server implemented in this thesis is only used for testing out the client communication. For database solution, we communicate with MySQL server that runs locally, it is a separate process of the main Autograder server. The communication between server ans the database is done thorugh Go libraries using SQL. Request from client-side would be first sent thorugh websocket as JSON to the server, then a function call to the database is invoked, next the database returns with no errors, and the correct response is send back to the client through the server.  
+
+\subsection{The client}
+Web client for the Autograder is written in JavaScript, with the help of React library. Together with Flux architecture, React gives a very good framework for building application-specific software with responsive interface. The web client utilizes a WebSocket protocol to exchange data with the server. When the client requests some information, an API is used to construct the message, then wrapped in JSON format and send through opened WebSocket connection.
+\begin{figure}[h]
+  \scalebox{1}{\input{./graphics/clientoverview.tex}}
+  \caption{Client communication with the server, API requests are being sendt through WebSocket in JSON format}
+  \label{fig:clientoverview}
+\end{figure}
+This is pretty standard way of doing the communication, except for the protocol used for communication with the server. Since WebSocket is based on a constant connection between client and the server, it is very easy to push updates both ways without much overhead. Since the goal with the new Autograder front-end was better responsiveness and more friendly user interface, combining some of the newest technologies like React and WebSocket together with Flux an architecture was an obvous choice.
+
+\subsection{The web-server}
+
+Back-end solution is not the main focus of this application. Nonetheless a working temporary server needed to be put together, as well as database to store mock data and to test the logical functionality of the system on the front-end and the way the data is being communicated between the two ends.
+\begin{figure}[h]
+  \scalebox{1}{\input{./graphics/serveroverview.tex}}
+  \caption{Shows how requests ar being receive and requests sent. JSON being received at WebSocket and then sent through API.}
+  \label{fig:serveroverview}
+\end{figure}
+
+The server is written in Go, for this purpose there was no real  preference as to what language to use, but assumptions were made that the final server will also be written in Go, therefore it was an obvious choice. Client is designed with WebSocket in mind, the simplest way to implement that on server side is to use Gorilla websocket Go package that can handle WebSocket messages. This was implemented with almost no effort, but the next step is to create logic for handling all the different requests that come from the client. For this purpose, when a server receives a message through WebSocket, a new \emph{goroutine} is fired up, since they are very lightweigh a lot of requests can be potentially handled at the same time. Every requests goes through a simple multiplexer that figures out, based on the message header, what kind of request is made, then it uses the payload to retrieve specific data. As an exaple, let's take a user that requested to see all its courses by going to the course overview page, that lists courses that the user is associated with.
+
+\begin{figure}[h]
+  \input{./graphs/serverwebsocket.tex}
+  \caption{How requests are handled on the server}
+  \label{fig:serverwebsocket}
+\end{figure}
+
+The server is also serving three static files, main.js, index.html, and style.css. These are retrieved by the client with the initial GET request, from then on server is not receiving any new GET requests but rather communicates through websocket. This is a bit different than traditional communication with GET and POST. Also when the client goes directly to a specific URL like "http://www.autograder.no/teacher/results/dat100" server should respond only with the static data and not care about the path after the domainname / IP, since this part is taken care of by the client-side routing, as explained in Section \ref{sec:softwaresolution}. Further, when a user navigates through the application no GET requests are being made.
+\\\emph{actionType} that the multiplexer uses to choose switch case, is a string representing something similar to what a REST API would typically use. An actionType is a string describing an event, and the payload is the data that is needed to make the changes. A typical HTML form sent through websocket, would look like that:
+\todo{use form from course settings here}
+latex online collaboration
+\lstinputlisting[label=lst:websocketapi]{listings/websocketapi.js}
+
+This means in short that the client requests roles for username "tokams", server should respond with the same actionType, and as a payload insert relevant data.
+
+\newpage
+\subsection{Database solution}
+Database is running on mysql-server, it's separate from the main go server, it communicates with the server with the help of go sql/package and a 3rd party mysql driver \cite{ziutek}. It is a relational database, that represents the data of users and courses. Although not necessary, it was helpfoul to implement test database solution, to explore the possibilities for back-end, and se front to back flow of the data. Database was designed with standard ER diagrams first, and then set up on local machines.
+It is discuissed in a bit more technical way in section \ref{sec:database}, and the figure \ref{fig:databaseer}.
+\begin{figure}[h]
+  \scalebox{1}{\input{./graphics/databaseoverview.tex}}
+  \caption{Communication with database, showing Go database/sql library and third party MySQL server driver \cite{ziutekdriver}}
+  \label{fig:databaseoverview}
+\end{figure}
+
+\section{Flux}
+To explain how Flux application architecture works and behaves, a couple of examples will be presented of differend complexity. Explanation will involve a minimal amount of code, but section \ref{sec:fluximplementation} in chapter \ref{cha:implementation} has more technical information. To get a more general feel of Flux and other architectures revisit section \ref{sec:fluxmvc} in chapter \ref{cha:beckground}.
+
+\subsection{Architecture choises and Flux}
+\subsubsection*{Action creators}
+User interactions like pressing a button, trigger an action in the system. These actions are object literals containg new fields of data and specific action type. In flux it is usually helpfoul to create a library of helper methods called \emph{action creators} that not only create the action object, but also pass the action to the dispatcher. Library is often divided into files associated with UI elements, they can have a long range of methods in them, depending on how comprehensive the UI elements are and how many interactive elements they have.
+
+\subsubsection*{The Dispatcher}
+The Dispatchers role is to manage all the actions, it doesn't know where the action is going, neither what the payload - new fields of data, is. The dispatcher is globally notifying the stores about the actions, and additionaly the stores can be set up to wait for other stores update themselves first. With the Dispatcher \emph{waitFor()} method, a \emph{not ready flag} can be set on any particular store that depends on the data from another store, this will make sure that if two stores are triggered by an action, the one that calls waitFor() on another store will execute last. 
+
+\subsection*{State and stores}
+One could compare state to the information stored in URL, although state comprises of much more information than URL, states are associated with the URL to a degree. Each URL will represent some state, but there might be a big amount of small changes in the state without the URL changing. This is up to the developer to decide what states should have an URL associated with it. It should usually be a healthy balance betweeen the amount of states and URL changes.
+Applications state and logic is contained in \emph{stores}. Stores represent a view in a object like structure, each component in the view has its value in the store. Stores do not mirror the back-end database, they have utility class that they will use to transform the received data to how they see it fit into the store. The utilities will often be used when the data is gotten from another store. By choosing it to do it this way, the application is more prone to the server changing its API responses, if the usual payload changes slightly it can be transformed on the client-side without much effort.
+
+\subsection*{Getting initial data to the system}
+\todo{API requests and such}
+
+\subsection*{Views / Components}
+Views and components are usually interchangable, but in the following examples, views are used to describe a chunk of a page consisting of multiple UI elements, while a component is an individual button of interactive element. Views are implemented using React library, this enables the use of so called \emph{lifecycle hooks} that help us trigger new \emph{render cycles} to update the views/components data. A render cycle means that the DOM will change with the help of React diff algorythm - explained before in chapter \ref{cha:flux} section \ref{sec:diffalgorygh}. This is done with the help of an \emph{EventEmitter}, it works by associating a \emph{callback function} with some \emph{string}. When the string is \emph{emitted} - this will trigger callbacks that are registered for that instance of the EventEmitter. Each store has its own instance of the EventEmitter, it will broadcast a \emph{change} string, and the views that registered for that EventEmitter will run the callback. The callback in this case will be a render method of the component, calling render method of a component is analogous with new triggeirng new render cycle.
+
+\subsection{Simple user action with Flux}\label{sec:simplefluxexample}
+The main idea of flux architecture is that it forces one directional dataflow through the system. Any action created, whether through a person interacting with the application or through a web api call, from the systems perspecive, will always originate from the same place, in Flux we call that place the dispatcher. When the focus is scalability, building simple things like triggering a remove operation on a list, may seem cubersome when one needs to follow quite strict rules, such as those proposed in Flux. Following those rules pays off at the end, as it simplifies implementation process of other modules. The following example will try to explain the simplicity of Flux.
+\\One of the requirements of Autograder, is for teacher to be able to remove users or students from courses and/or the whole sysetm. For this purpuse a user list is presented for the teacher:
+\begin{figure}[h]
+ % \scalebox{1}{\input{./graphics/simpleremoveuser.tex}}
+  \scalebox{1}[1]{{\includegraphics[width=1\linewidth]{graphics/simpleremoveuser.png}}}
+  \caption{Wireframe representation of course student list view}
+  \label{fig:simpleremoveuser}
+\end{figure}
+
+At any given time the application is in some \emph{state}, the state has the information about who is pressing the button, what course is active and much more. When an action to remove a student is being sent, it gets dispatched through a dispatcher (the origin of all changes). The stores that are interested in this action update themselves according to the information in action's payload, slightly changing the state of the application. In this case, one of \emph{action creators} methods, will be sending an action for removeing the user from a course.
+
+\begin{figure}[h]
+  \scalebox{0.8}{\input{./graphics/simplefluxremoveuser.tex}}
+  \caption{How removeing user happens with this architecture.}
+  \label{fig:simplefluxremoveuser}
+\end{figure}
+
+Pressing the button to remove a user, will call \emph{removeUser()} from ActionCreatorsCourseUsers, this method will return a object literal, with an \emph{actionType} and \emph{payload} (see Figure \ref{fig:simplefluxremoveuser}), and also pass it further to the Dispatcher. The payload is a coma separated list of variables, in this case only the user data would have to be sent which is stored in CourseStudentListStore. When the action reaches the store, the store then updates itself, it calls it private method to manipulate the data it stores. Here is where the \emph{EventEmitter} comes to play, when the stores private methods return, the event emitter assigned to that store emitts a \emph{change event}. React components are set up to trigger new render cycles when they receive that change event. What changed doesnt matter, components only needs to know that something changed. When new render cycle is triggered the view will use store's public methods to retrieve new data. This time around the store updated itself to remove the user, as a result the view will not render that user on this render cycle.
+
+\subsection{Advanced Flux}\label{sec:advancedfluxexample}
+What makes Flux a great architecture is that more complicated implementations do not differ that much form the simpler ones. The data flow in Flux is one directional, two different views will not communicate directly with eachother, rather they will do so by creating actions, triggering store changes and consequently updating both views. To explain how different views communicate, and how stores and store dependancies work, it is necessay to look at a bigger part of a page not just one single element, and explore the communication between views making up that page.
+\\Lets take a look at the views responsible for managing groups for courses. There are three main views shown in figure \ref{fig:advancedgroupmanager}, first takes care of switching between the courses, second lists available students that have no groups assigned, and the last one shows group list and manager. The first view at the top, is for switching between courses, it's independent of the two views below it. Switching course will change the state of the application consequently triggering an API request for new list of students and groups. The buttons for adding students to course, on the left view, and data associated with them, communicate with the righ view that lists the groups and participants.
+
+\begin{figure}[h]
+ % \scalebox{1}{\input{./graphics/simpleremoveuser.tex}}
+  \scalebox{1}[1]{{\includegraphics[width=1\linewidth]{graphics/advancedgroupmanager.png}}}
+  \caption{Group manager and actions that can be triggered by user}
+  \todo{fix figure}
+  \label{fig:advancedgroupmanager}
+\end{figure}
+
+Datastructure that will represent the two views, a store called \emph{GroupManagerStore}, will have to communicate with another store \emph{ActiveCourseStore} - that store is responsible for holding data about the current active course in the state. In this particular example, GroupManagerStore depends on the data in ActiveCourseStore. However we don't have to worry about ActiveCouresStore being empty, since there is always a course that is active. In addition to those two stores, a third store is used in the background. Given that a teacher selected a course, he will most likely stay on that course in order to execute different changes in that course. This gives an oportunity to optimize the API requests to some degree. The student data for the current course can be reused  while the user navigates within a course. Therefore there is a separate store for student list called \emph{StudentsStore}, other stores that require a list of students will no longer have to request this data from the server, given that another store already requested student lists and the user didn't switch the course. For example, both GroupManagerStore and the store from previous example \ref{sec:simplefluxexample} would require a list of students, if navigation between views utilising those views will take place only one initial API request will be triggered.
+\\Given the state shown in figure \ref{fig:advancedgroupmanager}, the teacher selects a user to be added to the active course, lets go through the flow of data in that case.
+
+\begin{figure}[h]
+  \scalebox{0.8}{\input{./graphics/advancedfluxaddstudent.tex}}
+  \caption{How removeing user happens with this architecture.}
+  \label{fig:advancedfluxaddstudent}
+\end{figure}
+
+When the user presses the button, one of \emph{GroupManagerActionCreators} is called. The current state, based on the figure \ref{fig:advancedgroupmanager} includes data like:
+\\\emph{activeGroup:"Group2",activeCourse:"DAT310" \worry{fix figure and data}}\\
+activeGroup field is located in GroupManagerStore, this data represents which group did the user activate, in order to add new student to it. Selected button will have the students data in it's payload, sending it thorugh the Dispatcher, the stores will wait for an actionType to be received. At this poing GroupManagerStore sees the actionType, and updates it's students field, the student in the payload gets matched with the existing one in the store and gets removed. Next an update is emitter with the help of EventEmitter, this triggers a new render cycle in the Rect components which consequently get the new data from the stores.
+
+%OLD
+\section{Web app}
+
+\subsection{Software architecture}
+Autograder is an application for teachers and students, the new version is going to be running on local university network and is going to be accessible from anywhere on the internet. Primary use for teachers is new creating courses in the system, that are associated with the courses at the university, each course has a GitHub repository associated with it, and configured to the needs of that course. This means that an implementation of GitHub integration needs to be created, this is mainly the focus of back-end part of the software, still the front-end, or web client, needs to be designed in such a way to enable the
+ use of such integration. The client is not supposed to serve as an alternative view of GitHub repositories, GitHub is mainly used as a place to easily store source code, and its login authentication API. The client needs to be able to display courses that a student is enrolled into, assignments that the teacher has published to that course, that also involves group assignments.
+\\Although the data is stored in the database, manipulation of that data is done on the client side, and then sent further to the back-end for interpretation and updating the storage. Similarly it is also possible to update the client from the back-end, either directly or through the actions of another client. The user interface updates in real time, as an example, lets take a teacher that is assigning students to group assignments, teacher is using an interactive interface to manipulate the users into selected groups, the student is simultaneously notified in real time when he gets assigned to a new group without the need of refreshing the page, similar things would be new teachers in course, requests for teacher upgrade, deadline and slipdays updates. Teachers can be notified when a new student has enrolled to course, or one of the students has exceeded his slip-days for an assignment. Real time updates are possible due to the connection protocol used in the application. When a client connects to the Autograder server, client application requests for a protocol upgrade, from then on all data transfer is done through \emph{websocket protocol}\cite{websocket}. This enables the server to push its updates to all clients, without being explicitly asked about it by them.
+\\The reasoning behind real-time update system was that notifications and responsiveness of user interface was one of the primary reasons for developing this solution. Although one could argue that order methods of updating the UI and notifications would be sufficient, like polling or long-polling - that is frequent client requests for update from the server, websocket protocol has no obvious disadvantages to the presented solution, and at the same time opens possibilities for further upgrades of the system, like chat functionality, which could be utilized for questions related to assignments.
+\subsection{Front-end}
+Front-end web applications are written in JavaScript, or at least have to be transpiled to JavaScript for the browsers to be able to understand it. Applications in JS, are single threaded...
+\todo{single threaded approach}
