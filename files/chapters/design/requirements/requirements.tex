@@ -1,9 +1,37 @@
 \subsection{Requirements collection and analysis}
-\todo{List requirements \worry{section ikke klar}}
-\todo{Autograder API,}
+Wireframes and user stories are part of the process of analyzing and finding the requirements for the Autograder application. Our process of finding these requirements include talking to the client, Hein Meling at UiS. The requirements analysis is used to find expectations from the client, as well as the end users. Having used the Autograder system in a previous course at UiS, we were familiar with it's functions. Having talked to other students, we already had a clear view of the biggest limitations, as well as ways to improve the overall feel of the front-end. We used these requirements in the development process. The prototype of the new Autograder front-end meets many of the requirements. The rest will be implemented and expanded in future work.
 
-Wireframes and user stories together are used in a process of analyzing and refining requirements for the application. Requirements collection and analysis was used while developing Autograder. 
-\\In our case, we talked to Professor Hein Meling at UiS, which acted as the client for the new Autograder. Pages such as the results view \worry{ref til figur/wireframe} went though many iterations before landing on the final layout. Wireframes are a great way, one can easily visualize the whole user interface before programming, thus minimizing the amount of rewriting the code.
-\\As said in the introduction \worry{ref til introduction}, limitations in the grading process was the main concern. Presenting the wireframes to the client will also make it easier to make rapid changes to the design, using a low-fidelity approach, with sketches and mock-ups. When the initial phase is done, more sophisticated drawings or wireframes are being created. These more detailed drawings with description of areas of the interface, describe what certain elements of the user interface does. Serving as a blueprint for further development. The next step in the process is to reflect the wireframes in code.
-\\The client is not supposed to serve as an alternative view of GitHub repositories, GitHub is mainly used as a place to easily store source code, and its login authentication API. The client needs to be able to display courses that a student is enrolled into, assignments that the teacher has published to that course, that also involves group assignments.
+\subsubsection{User interface requirements}
+\begin{itemize}
+\item Users must be able to view the courses they can attend and request access to the courses.
+\item Lab progress must be shown in a simple and intuitive way for teachers and students.
+\item 
+\end{itemize}
 
+\subsubsection{Dummy data server requirements}
+\begin{itemize}
+\item A connection with the storage system must be set up.
+\item Data must be transformed from the storage's format to a front-end compatible format.
+\item The data must be in a format that makes the transition from dummy-server to real server as easy as possible
+\item Data must come in using predefined methods, to prevent anomalies both server- and storage-side.
+\item The server will handle multiple connections, and must be able to handle these in a concurrent way without overwriting data for other users.
+\item Results for labs will be shown, however, the code will be stored in GitHub. Autograder is not suppost to serve as an alternative view of GitHub repositories.
+\end{itemize}
+
+\subsubsection{Dummy data storage requirements}
+\begin{itemize}
+\item Data must be in the same format as expected Autograder storage.
+\item The database must be relational to the point where it can mimic real world Autograder users.
+\item Getting the data from the storage must be simple, with predefined ways of communicating and handling the data that comes in.
+\end{itemize}
+
+\subsubsection{Security requirements}
+Security is not the scope of this thesis, nor the new Autograder front-end prototype. Future work must include authentifications for users.
+
+\subsubsection{API requirements}
+\begin{itemize}
+\item Predefined ways of communicating with the server through an API should be present.
+\item The protocols used in the communication should be in a fixed format.
+\end{itemize}
+\subsubsection{Requirements for using the system}
+No requirements should be necessary for students using the system. The system should be intuitive enough for any user to use it.
