@@ -27,14 +27,7 @@ User stories help to better plan the development of the system. The order of wha
 The user stories are written down as cards. The user stories are then transformed into Wireframes. Wireframes are basic sketches or mockups of the design. The most basic forms doesn't include colors or advanced shapes. Simple boxes and rectangles are used to get a feel for how the page will look and function.
 \\The wireframes are not to be confused with the design process. The wireframes are guides for user experience, not design. Having used the old Autograder system, we could use this previous experience to remake some of the layout. 
 
-\subsection{Requirements collection and analysis}
-\todo{List requirements \worry{section ikke klar}}
-\todo{Autograder API,}
-
-Wireframes and user stories together are used in a process of analyzing and refining requirements for the application. Requirements collection and analysis was used while developing Autograder. 
-\\In our case, we talked to Professor Hein Meling at UiS, which acted as the client for the new Autograder. Pages such as the results view \worry{ref til figur/wireframe} went though many iterations before landing on the final layout. Wireframes are a great way, one can easily visualize the whole user interface before programming, thus minimizing the amount of rewriting the code.
-\\As said in the introduction \worry{ref til introduction}, limitations in the grading process was the main concern. Presenting the wireframes to the client will also make it easier to make rapid changes to the design, using a low-fidelity approach, with sketches and mock-ups. When the initial phase is done, more sophisticated drawings or wireframes are being created. These more detailed drawings with description of areas of the interface, describe what certain elements of the user interface does. Serving as a blueprint for further development. The next step in the process is to reflect the wireframes in code.
-\\The client is not supposed to serve as an alternative view of GitHub repositories, GitHub is mainly used as a place to easily store source code, and its login authentication API. The client needs to be able to display courses that a student is enrolled into, assignments that the teacher has published to that course, that also involves group assignments.
+\input{requirements/requirements.tex}
 
 \section{Application architecture}
 Architecture of the Autograder system describes the high level structures developed while working on the application. Choice of software architecture, software models on both front and back-end are crucial aspects of creating good application. This section will walk through the most important elements of the system. What does it consists of and how do different parts communicate with each other. Where did focus lay while developing it, what was done for testing purposes and what for exploring future possibilities. Next the following subsections will go in a bit more detail on how the different parts worked individually, and briefly explain how the Autograder API works.
