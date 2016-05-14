@@ -12,7 +12,7 @@ Hyper text markup language, or HTML, is a markup language used to build websites
 \subsection{ReactJS}
 JavaScript is used to manipulate content on a website. Binding a data model and the DOM is necessary to have an always up-to-date website. Handlers for buttons and inputs are also handled in JavaScript. Handling all event listeners and functions connected to the DOM can be hard, especially when the application is as big as Autograder. Since the front-end communicates with a server, data will come in asynchronously and must trigger a re-render of the DOM-elements. This process of updating and binding data can be implemented using libraries such as ReactJS. React is an open source JavaScript library designed and maintained by Facebook \worry{ref here}. The library provides a view for data rendered as HTML, and maintains a state that can change depending on the data that comes from the server. This removes a lot of overhead programming for the developers. If the data in the server changes, the change are reflected on the page in real-time. Say for example that the users rights are changed from Student to Teacher. The front-end will have to reflect that change, and show data relevant for a teacher. With React, this change can be made without having to update the page manually. 
 
-The choice between ReactJS and AngularJS (the other big JavaScript-library in the industry) is really based on preference. The component based pipeline that React offers is very appealing when the website will recycle a lot of the same elements. The new front-end can be compared to a single-page-application, where the different pages are loaded in without refreshing the page. Navigating between pages will therefore be very fast since the page will not be reloaded and the content up to date. Consequently, a lot of elements must be loaded and unloaded. React uses Virtual DOM to run its Tree Diff algorithm and figures out what parts of the DOM should be rendered, this enables quick re-rendering of only relevant for the change components. Components also hold methods such as \emph{componentWillMount()} and \emph{componentShouldMount()} to enable a greater control of data and elements being rendered on the page.
+The choice between ReactJS and AngularJS (the other major JavaScript-library in the industry) is really based on preference. The component based pipeline that React offers is very appealing when the website will recycle a lot of the same elements. The new front-end can be compared to a single-page-application, where the different pages are loaded in without refreshing the page. Navigating between pages will therefore be very fast since the page will not be reloaded and the content up to date. Consequently, a lot of elements must be loaded and unloaded. React uses Virtual DOM to run its Tree Diff algorithm and figures out what parts of the DOM should be rendered, this enables quick re-rendering of only relevant for the change components. Components also hold methods such as \emph{componentWillMount()} and \emph{componentShouldMount()} to enable a greater control of data and elements being rendered on the page.
 
 \begin{figure}[h]
 \centering
@@ -20,35 +20,20 @@ The choice between ReactJS and AngularJS (the other big JavaScript-library in th
 \caption{Graph of how React uses Virtual DOM to patch the DOM}
 \end{figure}
 
-The purpose of having React is to simplify and minimize the amount of code that the developers have to write. To do so, React is written in JSX, a simplified JavaScript language with XML-layout. The components for the site is written as components, such as \emph{Button}, \emph{Div}, \emph{Table} etc. The JSX syntax is transformed to JavaScript using tools such as Babel \worry{ref til Babel page}. This means that most HTML-elements can be directly typed in the JSX without having to import or define new elements. Simple elements, such as a button with handlers can be written in a simplified syntax. Code snippet \worry{snippet ref} shows the JSX syntax for a button as an example;
+The purpose of having React is to simplify and minimize the amount of code that the developers have to write. The most used elements of a web page can be written as compact \emph{tags} like \emph{Button}, \emph{Div}, \emph{Table} etc. The JSX syntax is transformed to JavaScript using tools such as Babel \worry{ref til Babel page}. This means that most HTML-elements can be directly typed in the JSX without having to import or define new elements. Simple elements, such as a button with handlers can be written in a simplified syntax. Code snippet \worry{snippet ref} shows the JSX syntax for a button as an example;
 
 \lstinputlisting[label=lst:simple_jsx]{listings/simple_jsx.js}
 
 \section{Back-end}
-To be able to make the front-end without using data from the old system, it is necessary to create a functional server that can get data from the storage solution and serve it to the front-end. The original Autograder already use Go as the programming language for the back-end. One of Go's strong points is building web servers. Making a webserver requires just a few lines of Go code. The connections are handled in seperate go-routines (imagine threads). Since multiple clients will be connecting to the server, and the Go-code is easily typed and is good performance-wise, it is not a hard choice when selecting the programming language of the back-end. 
+To be able to build the front-end without using data from the old system, it is necessary to create a functional server that can get data from the storage solution and serve it to the front-end. The original Autograder already use Go as the programming language for the back-end. One of Go's strong points is building web servers. Making a webserver requires just a few lines of Go code. The connections are handled with goroutines, which are lightweights threads, one connection per goroutine. Since multiple clients will be connecting to the server, and the Gocode is easily typed and is good performance-wise, it is not a hard choice when selecting the programming language for the back-end. 
 
-The web-servers job is to be the link between the data stored in the system and the front-end. As mentioned, predefined protocols for communication, such as data structures created with JSON (JavaScript Object Notation) is used to communicate with the front-end. Sending packages with content that the front-end can decode and handle in a predefined way. Consequently, the back-end can be written in many programming languages without effecting the front-end or storage. Logic for roles, such as admin, teacher and student are also managed in the back-end. Since the object of this thesis is to make a new front-end for the Autograder server, login and other functions are not implemented as of now. That will be the focus in future work. Login and a connection the the storage solution should however, be implemented in the back-end systems at a later point. 
+The web-servers job is to be the link between the data stored in the database and the front-end. As mentioned earlier, predefined protocols for communication, such as data structures created with JSON (JavaScript Object Notation) are used to communicate with the front-end. Sending packets with content that the front-end can decode and handle in a predefined way. Consequently, the back-end can be written in many programming languages without effecting the front-end or storage. Logic for roles, such as admin, teacher and student are also managed in the back-end. Since the object of this thesis is to make a new front-end for the Autograder server, some back-end specific funcitonality like login system and GitHub integration are not implemented as of now. That will be the focus in future work.
 
 \section{Storage solution}
-Even though the scope of the assignment is the front-end, a storage solution was necessary. The original system uses key-value-store, which is great for storing data which can be found using a key or index. The key-value-store is really fast when searching for keys, but lack the relational structure that Autograder needs. The new Autograder need a system that can store relations between roles and courses. Therefore, the solution that is used is a relational database. The database is filled with dummy-data from the beginning, so that the front-end and server can work with data. The dummy-data will represent real data, and look like the data that the real front-end will produce. The data can simply be replaced by real data later on if the new front-end is implemented in the existing Autograder-environment. \\The data is stored in the relational database, and can be retrieved using MySQL. The data retrieved using string-based commands, such as \emph{"GET * FROM user\_database"}. This is a very practical way of getting data, and combining this with Go can help make the back-end modular. A modular back-end can simplify the process of expanding the system in the future.
+Even though the scope of the assignment is mostly front-end development, a storage solution was necessary. The original Autograder system uses key-value store, which is great for storing data which can be found using a key. The key-value-store is really fast when searching for keys, but lacks the relational structure that Autograder needs. The new Autograder needs a system that can store relations between roles and courses. Therefore, the solution that is used here is a relational database. The database is filled with dummy data as it is needed, so that the front-end and server can work with data as it were real. The dummy data will represent real data, and look like the data that the real front-end will produce. The data can simply be replaced by real data later on if the new front-end is implemented in the existing Autograder-environment.
+\\The data is stored in the relational database, and can be retrieved from MySQL-server. The data is retrieved using string-based commands, such as \emph{"GET * FROM user\_database"}. This is a very practical way of getting data, and combining this with Go can help make the back-end modular. A modular back-end can simplify the process of expanding the system in the future.
 
-\section{Flux}
-
-\todo{Fix references}
-
-The next section explains briefly the system architecture used in the new Autograder front-end. A deeper explanation can be found in chapter \worry{Flux chapter in implementation}.  
-\worry{Ref facebook.github.io/flux/docs/overview.html <- FIX LINK} Flux will also be compared to the more traditional Model-view-controller architecture used by most programs today.
-
-\section{What is Flux}
-
-
-\todo{Bring in the Flux architecture figure}
-
-
-
-
-
-\section{Flux vs MVC}
+\section{Flux and MVC architectures}
 Model-view-controller, or MVC, is used by most companies in the industry today. The architecture is devided into three main roles;
 
 \begin{itemize}  
@@ -59,18 +44,34 @@ Model-view-controller, or MVC, is used by most companies in the industry today. 
 
 The data flow is bidirectional, meaning that the data will be sent to and from the view. Changes in the data can be hard to trace, and debugging the code can be a pain. Even though the architecture is most widely used in the industry, does not mean it works best for large code bases. Autograder will have data flowing around in the system at any given time. Tracing this flow of information is vital, since cascading effects can cause massive problem in the grading process.. 
 
+\section{Flux and MVC}\label{sec:fluxmvc}
+To make it as simple as possible to follow our implementation and design decisions, the next part of the chapter will describe briefly how React can be implemented with an application architecture called Flux. MVC and Flux will also be compared, as they are two most popular architectures for user interface design.
 
+ReactJS or React has been chosen as the main library for building the UI of the new Autograder. Traditional UI for the web follows a pattern called MVC. In MVC the model usually represents a dataset, while the view is the user interface. The controller handles the data between the model and the view. Writing JavaScript with an MVC pattern works well, however, logic for updating the UI can be very complex and the task of handling all states can be daunting. The team behind React chose to use Flux as the main application architecture for React. It is possible to use a MVC-type pattern for simple components, but as we experienced, it gets tricky when the application complexity grows. The next part of the chapter will describe how Flux works compared to MVC.
+\\Even though Autograder is not as huge and complicated as some sites it's still not a small application. There are many elements that depend on data from different places. Data has to be collected from the database, and placed in the store. The UI must also show the newest version of the data, all without refreshing the page. One example would be the main part of the Autograder which is the lab overview where teachers can have an easy access to all the assignments and see individual results for students.
+\\
+\begin{figure}[h]
+  {\includegraphics[width=1\linewidth]{./graphs/laboverviewteacher}}
+  \caption{The view that teacher sees when looking at all the labs in a given course}
+  \label{fig:laboverviewteacher}
+\end{figure}
+The center section is a table of all the lab results for every student, to the right there is a expanded view of a selected lab (marked with gray).
+Simple flowchart represented with MVC style design:
+\begin{figure}[h]
+\centering
+\scalebox{0.9}{\input{./graphs/modelmvc.tex}}
+\caption{Example of how the MVC architecture behaves}
+\end{figure}
+\\In short, the figure represents only one specific case for implementing certain functionality, there is no general pattern in which data flows through the system, in this case: views signal controller, controller updates model, model notifies about its changes to the controller, then the controller updates the views. This is pretty straight forward, but as the application grows and more components and interactive elements are added it quickly becomes difficult to visualize the flow.
+\\Flux was design with simplicity in mind, although the pattern may not appear that different from MVC at first, a key difference is that in Flux the data flow is defined, and every action is forced to the beginning of the system:
+\begin{figure}[h]
+\centering
+\scalebox{0.8}{{\input{./graphs/modelflux.tex}}}
+\caption{General data flow in Flux architecture}
+\end{figure}
+\\Here a user action is triggered, the dispatcher which is a global central hub of the system, reads what \emph{type} of action is being sent, and notifies the stores about it. Each store represents the data for one or more views. When an action is triggered and reaches store, store then updates itself with the \emph{change} that was associated with the action, when it is done, it notifies the views about the change. Views when they get notified, they get the data from the stores by accessing it through public store getter methods.
+This pattern is very scalable, if we were to add more components, by looking at the graph we only need another box, that sends a User action that will further down the graph modify new or the same store. It becomes easier to manage different components, because everything will at some point go through that central hub called the Dispatcher, this is the starting point of every new \emph{state} that the component is in. Since every feature follows same pattern, its easy to grasp the general idea of the application by looking at any particular implementation of any feature, and replicate it with ease. The main difference between Flux and MVC is that flux forces unidirectional dataflow, this might seem unnecessary at first, and it is when it comes to small applications, but nevertheless it simplifies the maintenance of the codebase in the long run.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+\subsection{Why Flux}
+Flux, like MVC, is just a pattern (think blueprint). It shows how the data will flow in the system. The code must still be written from the ground up in most cases. As said, the data flows unidirectionally, which makes handling states very simple. However, Flux in it self is just another design pattern. Combined with React, the strong sides of the pattern shines. React is state-driven, which is perfect for Flux.
+\worry{Write more here..}
