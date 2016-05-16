@@ -1,17 +1,16 @@
-render: function(){
-    var self = this;
-    return (
-	    <Col xs={12} className="whitebox">
-	        <Col xs={4}>
-	            <StandardSettings/>
-	        </Col>
-	        <Col xs={4}>
-	            <Assignments/>
-	        </Col>
-	        <Col xs={4}>
-	            <CIOptions/>
-	        </Col>
-	    </Col>
-    )
-}
+render: function() {
+   const innerSearch = <Glyphicon glyph="search"/>;
+   var students = this.state.students; 
+   return(
+      <Col xs={12}>
+        <Col xs={resultSize} className="infoboxleft">
+            <StudentResultsList students={students}/>
+        </Col>
+        <Col xs={labSize} className="infoboxright">
+            <Labview/>
+        </Col>
+      </Col>
+    );
+  }
 });
+

@@ -1,0 +1,65 @@
+\chapter{Implementation}\label{cha:implementation}
+The implementation of the design and architecture is not always as straightforward as planned. Especially when working with new unfamiliar frameworks. A lot of work has been done in frameworks such as AngularJS since it has been around for longest. These frameworks usually use numerous different implementations of MVC (Model-view-controller). React developers advise to use React together with the Flux architecture.
+\section{Client}\label{sec:client}
+The client, in this case a Web application, is a single threaded JavaScript program that executes on users browser. Rendering of the DOM is taken care of by React library that is managed and updated useing Flux architecture, the communication with the server and database is done through WebSocket protocol. This section will go though how React is implemented to facilitate Flux architecture, by going through a flow of data in one of the views. A general dataflow figure was presented in Chapter \ref{cha:} section \ref{sec:} the presented example will follow this flow.
+\subsection{ReactJS}\label{sec:reactjs}
+React can be written with pure JavaScript syntax, or it can be written with JSX, which is XML like syntax. Since this library is only used to visually represent the logic and current state of the application, JSX helps to visualize how the component will look like by building it XML style. The DOM elements rendered in the web browser are function calls that put together data and create a HTML document.
+
+\lstinputlisting[caption=Render method with easy to read tree structure of React components, label=lst:jsxsyntax]{listings/jsxsyntax.js}
+
+The structure represents the components that are visible for the user. \emph{StudentResultsList} and \emph{Labview} are interactive elements on the page. The render function is inside another component, the parent component of these two. Each of these two components implements it's own \emph{render} function. This creates a tree structure of the components, where data can travel along the branches, by being passed on further like on line 7.
+\\The variables passed into the component, are obtained from the current state - see line 3, this data can change on each render cycle. Each React component has a set of \emph{lifecycle hooks}, as explained in Section \ref{sec:}, these help trigger render cycles of react component by triggering a call to render method. Implementation of the lifecycle hooks for the view in Listing above is presented here:
+
+\lstinputlisting[caption=React setup for listening to cache/data store, label=lst:componentlisteners]{listings/componentlisteners.js}
+
+In the code snippet above, there are three handlers. First is for when the component is rendered initially, it will get the data it needs from the stores he is assigned to. When this method returns, the render method from Listing \ref{lst:reactrender} will run, and render the DOM. Methods \emph{componentDidMount} and \emph{componentWillUnmount}, are methods that register the component to the relevan stores. The \emph{ChangeListener} seen here is exmplained in the earlier Section \ref{sec:}, this is how each view or component know when the change in the stores are happening.
+
+\lstinputlisting[caption=React render method rendering when the state is updated, label=lst:reactrender]{listings/reactrender.js}
+
+Listing \ref{lst:reactrender} shows how a HTML DOM element is rendered. The student list that was passed on to the \emph{StudentResultsList} in Listing \ref{lsd:jsxsyntax} is used here to render each student and his data into another component. On line 11, render method iterates through the students and creates a compoenent for each of them on line 13. The data on line 2 is the data stored in the store, on each render cycle this data is updated, and changes are reflected in the new render of the DOM.
+
+\subsection{Flux}
+Flux was explained briefly in \ref{sec:}, one of the modules in Flux are action creators, methods that return object literals - strings representing an actionType.
+
+\lstinputlisting[caption=One of action creators responsible for emitting \emph{QUERY\_FOR\_STUDENT} action, label=lst:emmitingaction]{listings/emmitingaction.js}
+
+A helper method like that, is either used in the component's lifeccycle hook methods or connected with interactive user elements. Calling an ActionCreators method like that, will dispach an action into the system via the dispatcher. The payload of that action is in the code snipped above on line 4. The dispatcher will emitt this object literal:
+
+\lstinputlisting[label=lst:payloadactioncreator]{listings/payloadactioncreator.js}
+
+This action is triggered when a user searches for the student in the list. After dipaching, stores that are listening to this actionType, will receive the payload:
+
+\lstinputlisting[caption=Switch case in a store catching an action type, label=lst:receivepayload]{listings/receivepayload.js}
+
+The stores are data structures that represent component's data. A store can represent a list of students, with data about each of the assignments they are assigned to, and whether or not they passed it. It is not necessarily exactly how the data is stored on the server. How a store is assembled is usually through a set of helper methods, some parts of the data might already be on the client in other stores, like the list of students for a course could have been fetched when viewing course details, if that is the case, store would usually be set up to get that data from other store that has is, and then proceeds to either send API requests to the server for the missing data or even ask other stores. When implementing stores with dependencies, one has to be careful to not end up with circular dependencies, if such things occur, it is often easier to merge two Stores together, it usually solves the problem. But the reason to separate the stores is to have clearer code, vertical slices of the system that are independent logic chunks separate of each other as much as possible.
+\\Helper methods mentioned earlier, are called \emph{utils} and are placed in utility classes, these are methods for converting the data received from the server to the datastructure the store wants it in. If we are interested to get information about assignments details for a particular student, we might have set up the request so that it retrieves all the information available, this can still be stored in a store, but say view wants to only display the percentage score of this students lab, this is where util methods would be used. The percentage data would be extracted from the store before sending it to the view. If this view will be expanded to show more information, it can get the necessary data from the store directly without the need for another request to server, also views can share the store which will enable easier communication between stores and less dependancy issues.
+\subsection{WebSocket}\label{sec:websocket}
+How the data is fetched from the server through WebSocket is pretty straightforward, there is a simple API that tells the server what the client wants and vise versa. On the client side, a structure called Socked is implemented, this is based on the WebSocket protocol. Socket exposes a \emph{send()} method and \emph{message()} method. The first one is used to send over an API request to the server that looks like that:
+\lstinputlisting{listings/socketmsg.js}
+When something is supposed to be saved on the server, it would be usually done similarly, with the payload field consisting of multiple variables, like updating user information, would have an action type \emph{UPDATE\_USER\_INFO} and payload with field names that correspond to the fields in the database, and an identification of that user. The latter method, \emph{message()} has callbacks that correspond to every message that was sent through \emph{send()}, and more - like actions that are specific only to the server. Every message is basically JSON representation of values or objects, but its mostly just some kindo of associative array of values.
+
+\section{Server}
+This section will briefly go through how the server was implemented, this is only a test server and was meant to just work, and either echo back whatever was sent to it, or in some cases return data from database.
+\subsection{Go http and WebSocket}
+The server is serving only static files, the main javascript file, and .html + .css file. This is done with the help of go http package. As mentioned earlier, it was suggested to use gorilla mux, for multiplexing of client requests, but since all communication is done through WebSocket it wasn't implemented optimally, as the only request that client makes normally is the initial handshake and upgrade, see figure \ref{fig:wstimeline} Timeline of WebSocket protocol. So the server responds to the initial request, upgrades to websocket connection, and handles the client somewhere else.
+
+WebSocket implementation also uses gorilla package called gorilla/websocket, \emph{WriteMessage()} and \emph{ReadMessage()} methods are used similarly to how it is done on the client side with \emph{send()} and \emph{message()}. When new request is received through upgraded WebSocket connection, the message gets read: 
+\lstinputlisting[caption=How the server receives and responds to the request, label=lst:shortmuxgo]{listings/goreadmessage.go}
+
+Message is read, transformed into go types the used to retrieve the relevant data on line 11. When the data is ready, it gets transformed into JSON and send back through the WebSocket line 14.
+
+\subsection{SQL driver}
+\todo{}
+\subsection{Database}\label{sec:database}
+\todo{}
+
+%\begin{landscape}
+%\begin{figure}[h]
+\begin{sidewaysfigure}
+  \centering
+  \scalebox{0.6}{\scalefont{1.4}{\input{graphs/databaseer.tex}}}
+  \caption{Test database ER diagram}
+  \label{fig:databaseer}
+\end{sidewaysfigure}
+%\end{figure}
+%\end{landscape}

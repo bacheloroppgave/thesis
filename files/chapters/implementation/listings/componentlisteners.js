@@ -1,7 +1,6 @@
-var StudentSelector = React.createClass({
+var CoursePakeLabs = React.createClass({
 
   getInitialState: function() {
-    StudentSelectorAPI.getAllStudents();
     return getStateFromStores();
   },
 
@@ -9,6 +8,12 @@ var StudentSelector = React.createClass({
     StudentSelectorStore.addChangeListener(this._onChange);
   },
 
-  componentWillunmount: function() {
+  componentWillUnmount: function() {
     StudentSelectorStore.ChangeListener(this._onChange);
   },
+.
+.
+.
+  _onChange: function() {
+    this.setState(getStateFromStores());
+  }
