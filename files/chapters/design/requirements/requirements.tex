@@ -1,15 +1,16 @@
 \subsection{Requirements collection and analysis}
-Finding the requirements for Autograders new front-end is an important part of the development process. Our process of finding these requirements include talking to the client, Hein Meling at UiS. The requirements analysis is used to find expectations from the client, as well as the end users. Having used the Autograder system in a previous course at UiS, we were familiar with it's functions. 
-Having discussed the user interface with other students, we already had some thoughts on how we could improve the front-end. Requirements for the new front-end was written down, mostly in the form of user stories from the beginning. Some of these requirements are not implemented in the Autograder prototype.
+Finding the requirements for Autograder's new front-end is an important part of the development process. Our process of finding these requirements include talking to the client, Hein Meling at UiS. Having used the Autograder system in a previous course at UiS, we were familiar with it's functions. 
+Having discussed the user interface with other students, we already had some thoughts on how to improve the front-end. Requirements for the new front-end was written down, mostly in the form of user stories from the beginning. Some of the requirements for the new Autograder front-end, and dummy-data back-end are listed below.
 
 \subsubsection{User interface requirements}
 \begin{itemize}
-\item Users must be able to view the courses they can attend and request access to the courses.
-\item Users must be able to select a course they attend and view progress of assignments and labs.
-\item The progress, both for student and teachers, must be shown in an intuitive way.
+\item Users must be able to view the courses they can attend and request accessto new courses.
+\item Users must be able to select a course they attend and view progress of assignments.
+\item The progress of student assignments must be shown, both for students and teachers.
 \item Teachers must be able to approve and remove approval of assignments.
 \item Both students and teachers must have a way of rebuilding the labs (button).
-\item System maintainers and admins must be able to view all courses, students and teachers.
+\item System maintainers and admins must be able to view all courses, students and teachers in the Autograder system.
+\item Autograder is not suppost to serve as an alternative view of GitHub repositories, and must work together with GitHub to view the source code of labs.
 \end{itemize}
 
 \subsubsection{Dummy data server requirements}
@@ -19,14 +20,13 @@ Having discussed the user interface with other students, we already had some tho
 \item The server will handle multiple connections, and must be able to handle these in a concurrent way without overwriting data for other users.
 \item Data must be transformed from the storage's format to a front-end compatible format.
 \item The data must be in a format that makes the transition from dummy-server to real server as easy as possible.
-\item Data must come in using predefined methods, to prevent anomalies both server- and storage-side. Unexpected connections to the server must be handled.
-\item Autograder is not suppost to serve as an alternative view of GitHub repositories, and must work together with GitHub to view the source code of labs.
+\item Data must come in using predefined methods, to prevent anomalies both server- and storage-side. Unexpected queries to the server must be handled.
 \end{itemize}
 
 \subsubsection{Dummy data storage requirements}
 \begin{itemize}
 \item The database must be relational to the point where it can mimic real world Autograder users and relations.
-\item Getting the data from the storage must be simple, with predefined ways of communicating and handling the data that comes in.
+\item Getting and setting data from the storage solution myst be done through queries (SQL).
 \end{itemize}
 
 \subsubsection{Security requirements}
@@ -34,8 +34,7 @@ Security is not the scope of this thesis, nor the new Autograder front-end proto
 
 \subsubsection{API requirements}
 \begin{itemize}
-\item 
+\item Handling of server data and storage data will happen though API calls.
 \item The protocols used in the communication should be in a fixed format.
 \end{itemize}
-\subsubsection{Requirements for using the system}
-No requirements should be necessary for students using the system. Layout and design should guide the user through the process naturally.
+
