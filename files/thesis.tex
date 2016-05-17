@@ -95,6 +95,11 @@
 \usepackage{siunitx}
 \usepackage{epstopdf}
 \usepackage{subfigure}
+
+\usepackage{pdfpages}
+
+
+
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 \usepackage[toc,page]{appendix}
 
@@ -103,14 +108,14 @@
 \title{Autograder frontend}
 \author{Thomas Darvik and Tomasz Gliniecki}
 \date{\today}
-\begin{document}
 
+\begin{document}
+\includepdf[pages={1}]{frontpagebach.pdf}
 \import{chapters/titlepage/}{titlepage.tex}
 
 \pagenumbering{roman}
 \tableofcontents
 \pagenumbering{arabic}
-
 \import{chapters/introduction/}{introduction3.tex}
 \import{chapters/motivation/}{motivation3.tex}
 \import{chapters/background/}{background3.tex}

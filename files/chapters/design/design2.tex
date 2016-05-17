@@ -28,6 +28,7 @@ The user stories are written down as cards. The user stories are then transforme
 \\The wireframes are not to be confused with the design process. The wireframes are guides for user experience, not design. Having used the old Autograder system, we could use this previous experience to remake some of the layout. 
 
 \input{requirements/requirements.tex}
+\input{wireframes/wireframes.tex}
 
 \section{Application architecture}
 Architecture of the Autograder system describes the high level structures developed while working on the application. Choice of software architecture, software models on both front and back-end are crucial aspects of creating good application. This section will walk through the most important elements of the system. What does it consists of and how do different parts communicate with each other. Where did focus lay while developing it, what was done for testing purposes and what for exploring future possibilities. Next the following subsections will go in a bit more detail on how the different parts worked individually, and briefly explain how the Autograder API works.
@@ -94,7 +95,7 @@ It is discussed in a bit more technical way in section \ref{sec:database}, and t
 \end{figure}
 
 In the case of the data extraction, the client will usually send a request to the server first. The server will have to then authenticate the user through OAuth. Depending on what kind of request is send, the server will usually pull new data from the the users GitHub repository, combine the data with whats in the database and send the response back to the client. The way communication with database happens in this implementation, is with the Go\emph{go/sql} package that gives very nice abstractions for things like transactions and concurrency control. Unfortunately the build in package doesn't provide means of connection to the database, this is way a third-party MySQL driver had to be used \cite{ziutek}. The one that was chosen was one of the \emph{pure Go} drives recommended in the Go documentation. Database and server communicate by exchanging SQL commands.
-\section{Flux}
+\section{Flux}\label{sec:designflux}
 To explain how Flux application architecture works and behaves, a couple of examples with variable complexity will be presented. Explanation will involve a minimal amount of code, but section \ref{sec:fluximplementation} in chapter \ref{cha:implementation} has more technical information. To get a more general feel of Flux and other architectures revisit section \ref{sec:fluxmvc} in chapter \ref{cha:beckground}.
 
 \subsection{Architecture choices and Flux}

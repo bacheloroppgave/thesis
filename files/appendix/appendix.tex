@@ -1,5 +1,5 @@
 \begin{appendices}
-\chapter{User stories and cards}\label{ap:userstories}
+\chapter{User stories and cards}\label{app:userstories}
 
 \subsection*{User userstories}
 \begin{itemize*}
@@ -44,5 +44,20 @@
 \item As a teacher I want to archive / delete course, so that I can see only relevant and active courses.
 \item As a teacher I want to export grades and student numbers for a course, so that I can see grades separately.
 \end{itemize*}
-\end{appendices}
 
+\chapter{Database}\label{app:database}
+\section*{SQL code and ER diagram}
+\lstinputlisting[caption=SQL code for initial database tables and relations, label=lst:databasesql]{listings/database.sql}
+\newpage
+%\begin{landscape}
+%\begin{figure}[h]
+\begin{sidewaysfigure}
+  \centering
+  \scalebox{0.6}[0.6]{\scalefont{1.4}{\input{graphs/databaseer.tex}}}
+  \caption{Test database ER diagram}
+  \label{fig:databaseer}
+\end{sidewaysfigure}
+%\end{figure}
+%\end{landscape}
+
+\end{appendices}

@@ -8,7 +8,7 @@
 	case ReceiveRawRoles:
 	.
 	.
-	data := getData()
+	data := getData(request.info}
 	.
 	response := json.Marshal(Response{actionType, data})
 	socket.WriteMessage(msgType, response)

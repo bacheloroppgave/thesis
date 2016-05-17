@@ -1,9 +1,40 @@
 \subsection{Requirements collection and analysis}
-\todo{List requirements \worry{section ikke klar}}
-\todo{Autograder API,}
+Finding the requirements for Autograder's new front-end is an important part of the development process. Our process of finding these requirements include talking to the client, Hein Meling at UiS. Having used the Autograder system in a previous course at UiS, we were familiar with it's functions. 
+Having discussed the user interface with other students, we already had some thoughts on how to improve the front-end. Requirements for the new front-end was written down, mostly in the form of user stories from the beginning. Some of the requirements for the new Autograder front-end, and dummy-data back-end are listed below.
 
-Wireframes and user stories together are used in a process of analyzing and refining requirements for the application. Requirements collection and analysis was used while developing Autograder. 
-\\In our case, we talked to Professor Hein Meling at UiS, which acted as the client for the new Autograder. Pages such as the results view \worry{ref til figur/wireframe} went though many iterations before landing on the final layout. Wireframes are a great way, one can easily visualize the whole user interface before programming, thus minimizing the amount of rewriting the code.
-\\As said in the introduction \worry{ref til introduction}, limitations in the grading process was the main concern. Presenting the wireframes to the client will also make it easier to make rapid changes to the design, using a low-fidelity approach, with sketches and mock-ups. When the initial phase is done, more sophisticated drawings or wireframes are being created. These more detailed drawings with description of areas of the interface, describe what certain elements of the user interface does. Serving as a blueprint for further development. The next step in the process is to reflect the wireframes in code.
-\\The client is not supposed to serve as an alternative view of GitHub repositories, GitHub is mainly used as a place to easily store source code, and its login authentication API. The client needs to be able to display courses that a student is enrolled into, assignments that the teacher has published to that course, that also involves group assignments.
+\subsubsection{User interface requirements}
+\begin{itemize}
+\item Users must be able to view the courses they can attend and request accessto new courses.
+\item Users must be able to select a course they attend and view progress of assignments.
+\item The progress of student assignments must be shown, both for students and teachers.
+\item Teachers must be able to approve and remove approval of assignments.
+\item Both students and teachers must have a way of rebuilding the labs (button).
+\item System maintainers and admins must be able to view all courses, students and teachers in the Autograder system.
+\item Autograder is not suppost to serve as an alternative view of GitHub repositories, and must work together with GitHub to view the source code of labs.
+\end{itemize}
+
+\subsubsection{Dummy data server requirements}
+\begin{itemize}
+\item A connection with the storage system must be set up.
+\item A connection with the client must be set up for multiple connections at a time.
+\item The server will handle multiple connections, and must be able to handle these in a concurrent way without overwriting data for other users.
+\item Data must be transformed from the storage's format to a front-end compatible format.
+\item The data must be in a format that makes the transition from dummy-server to real server as easy as possible.
+\item Data must come in using predefined methods, to prevent anomalies both server- and storage-side. Unexpected queries to the server must be handled.
+\end{itemize}
+
+\subsubsection{Dummy data storage requirements}
+\begin{itemize}
+\item The database must be relational to the point where it can mimic real world Autograder users and relations.
+\item Getting and setting data from the storage solution myst be done through queries (SQL).
+\end{itemize}
+
+\subsubsection{Security requirements}
+Security is not the scope of this thesis, nor the new Autograder front-end prototype. Future work must include authentifications for users.
+
+\subsubsection{API requirements}
+\begin{itemize}
+\item Handling of server data and storage data will happen though API calls.
+\item The protocols used in the communication should be in a fixed format.
+\end{itemize}
 

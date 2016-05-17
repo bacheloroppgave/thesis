@@ -16,7 +16,7 @@ In the code snippet above, there are three handlers. First is for when the compo
 
 \lstinputlisting[caption=React render method rendering when the state is updated, label=lst:reactrender]{listings/reactrender.js}
 
-Listing \ref{lst:reactrender} shows how a HTML DOM element is rendered. The student list that was passed on to the \emph{StudentResultsList} in Listing \ref{lsd:jsxsyntax} is used here to render each student and his data into another component. On line 11, render method iterates through the students and creates a compoenent for each of them on line 13. The data on line 2 is the data stored in the store, on each render cycle this data is updated, and changes are reflected in the new render of the DOM.
+Listing \ref{lst:reactrender} shows how a HTML DOM element is rendered. The student list that was passed on to the \emph{StudentResultsList} in Listing \ref{lst:jsxsyntax} is used here to render each student and his data into another component. On line 11, render method iterates through the students and creates a compoenent for each of them on line 13. The data on line 2 is the data stored in the store, on each render cycle this data is updated, and changes are reflected in the new render of the DOM.
 
 \subsection{Flux}
 Flux was explained briefly in \ref{sec:}, one of the modules in Flux are action creators, methods that return object literals - strings representing an actionType.
@@ -31,35 +31,37 @@ This action is triggered when a user searches for the student in the list. After
 
 \lstinputlisting[caption=Switch case in a store catching an action type, label=lst:receivepayload]{listings/receivepayload.js}
 
-The stores are data structures that represent component's data. A store can represent a list of students, with data about each of the assignments they are assigned to, and whether or not they passed it. It is not necessarily exactly how the data is stored on the server. How a store is assembled is usually through a set of helper methods, some parts of the data might already be on the client in other stores, like the list of students for a course could have been fetched when viewing course details, if that is the case, store would usually be set up to get that data from other store that has is, and then proceeds to either send API requests to the server for the missing data or even ask other stores. When implementing stores with dependencies, one has to be careful to not end up with circular dependencies, if such things occur, it is often easier to merge two Stores together, it usually solves the problem. But the reason to separate the stores is to have clearer code, vertical slices of the system that are independent logic chunks separate of each other as much as possible.
+The stores are data structures that represent component's data. A store can represent a list of students, with data about each of the assignments they are assigned to, and whether or not they passed it. It is not necessarily exactly how the data is stored on the server. How a store is assembled is usually through a set of helper methods, some parts of the data might already be on the client in other stores, like the list of students for a course could have been fetched when viewing course details earlier, if that is the case, store would usually be set up to get that data from other store that has is, and then proceeds to either send API requests to the server for the missing data or even ask other stores.
 \\Helper methods mentioned earlier, are called \emph{utils} and are placed in utility classes, these are methods for converting the data received from the server to the datastructure the store wants it in. If we are interested to get information about assignments details for a particular student, we might have set up the request so that it retrieves all the information available, this can still be stored in a store, but say view wants to only display the percentage score of this students lab, this is where util methods would be used. The percentage data would be extracted from the store before sending it to the view. If this view will be expanded to show more information, it can get the necessary data from the store directly without the need for another request to server, also views can share the store which will enable easier communication between stores and less dependancy issues.
+
+\lstinputlisting[caption=Utility method for extractign \emph{some} data from the received data, label=lst:utilstoremethod]{listings/utilstoremethod.js}
+
+In this code snippet, we can se a function that will take a student array and return just selected fields from the objects of the original array.
+
 \subsection{WebSocket}\label{sec:websocket}
 How the data is fetched from the server through WebSocket is pretty straightforward, there is a simple API that tells the server what the client wants and vise versa. On the client side, a structure called Socked is implemented, this is based on the WebSocket protocol. Socket exposes a \emph{send()} method and \emph{message()} method. The first one is used to send over an API request to the server that looks like that:
 \lstinputlisting{listings/socketmsg.js}
-When something is supposed to be saved on the server, it would be usually done similarly, with the payload field consisting of multiple variables, like updating user information, would have an action type \emph{UPDATE\_USER\_INFO} and payload with field names that correspond to the fields in the database, and an identification of that user. The latter method, \emph{message()} has callbacks that correspond to every message that was sent through \emph{send()}, and more - like actions that are specific only to the server. Every message is basically JSON representation of values or objects, but its mostly just some kindo of associative array of values.
-
+When something is supposed to be saved on the server, it would be usually done similarly, with the payload field consisting of multiple variables, like updating user information, would have an action type \emph{UPDATE\_USER\_INFO} and payload with field names that correspond to the fields in the database, and an identification of that user. The latter method, \emph{message()} has callbacks that correspond to every message that was sent through \emph{send()}, and more - like actions that are specific only to the server. Every message is basically an object literal wrapped in JSON format that represents values or objects.
+\subsection{Autograder API}
+The API works with requests and responses, to get a deeper understanding one would have to look and compare all the requests and responses. But the general idea of API implemented with websocked is preddy standard. Let's send and receive the following JSON with websocket:
+A request to the server would look like 
+\lstinputlisting{listings/socketmsg.js}
+The response could be
+\lstinputlisting{listings/response.json}
+Unlike in RESTful HTTP calls, both request and response consist only of the pure data that needs to be sent, there is no overhead on each request like in HTTP since the connection is established and used throughout the session. The main idea is to use the same actionType in case of simple request. When the API response comes back into the Fluch architecture, the Socket implementation will decide what \emph{action creators} method will be called on \emph{message()}. The action gets dispatched into the system, and a store that is interested in this action will receive the payload and update itself.
+\lstinputlisting[caption=Store switch case catching the action from dispatcher, label=lst:storeupdate]{listings/storeupdate.js}
 \section{Server}
 This section will briefly go through how the server was implemented, this is only a test server and was meant to just work, and either echo back whatever was sent to it, or in some cases return data from database.
 \subsection{Go http and WebSocket}
-The server is serving only static files, the main javascript file, and .html + .css file. This is done with the help of go http package. As mentioned earlier, it was suggested to use gorilla mux, for multiplexing of client requests, but since all communication is done through WebSocket it wasn't implemented optimally, as the only request that client makes normally is the initial handshake and upgrade, see figure \ref{fig:wstimeline} Timeline of WebSocket protocol. So the server responds to the initial request, upgrades to websocket connection, and handles the client somewhere else.
+The server is serving only static files, the main JavaScript file, .html and .css file. This is done with the help of go http package. As mentioned earlier, it was suggested to use gorilla mux, for multiplexing of client requests, but since all communication is done through WebSocket it wasn't implemented optimally, as the only request that client makes normally is the initial handshake and upgrade, see figure \ref{fig:} Timeline of WebSocket protocol. So the server responds to the initial request, upgrades to WebSocket connection, and handles the client somewhere else.
 
 WebSocket implementation also uses gorilla package called gorilla/websocket, \emph{WriteMessage()} and \emph{ReadMessage()} methods are used similarly to how it is done on the client side with \emph{send()} and \emph{message()}. When new request is received through upgraded WebSocket connection, the message gets read: 
-\lstinputlisting[caption=How the server receives and responds to the request, label=lst:shortmuxgo]{listings/goreadmessage.go}
+\lstinputlisting[caption=How the server receives and responds to the request, label=lst:goreadmessage]{listings/goreadmessage.go}
 
-Message is read, transformed into go types the used to retrieve the relevant data on line 11. When the data is ready, it gets transformed into JSON and send back through the WebSocket line 14.
+Listing \ref{lst:goreadmessage}, message is read, transformed into Go struct into a \emph{request} struct on line 4, then used to retrieve the relevant data on line 11. When the data is ready, it gets transformed into JSON and send back through the WebSocket line 14.
 
 \subsection{SQL driver}
-\todo{}
-\subsection{Database}\label{sec:database}
-\todo{}
+To communicate with the database mysql-server, a third-party driver had to be used, as the build in Go package doesn't provide this functionality. ziutek/mymysql \cite{ziutek} driver was used for this purpose. This packgage provides a couple of SQL communication abstractions for retrieveing data, but for this purpose the Go database/sql package was used, while ziutek/mymysql stod for the link between Autograder server and mysql-server. 
 
-%\begin{landscape}
-%\begin{figure}[h]
-\begin{sidewaysfigure}
-  \centering
-  \scalebox{0.6}{\scalefont{1.4}{\input{graphs/databaseer.tex}}}
-  \caption{Test database ER diagram}
-  \label{fig:databaseer}
-\end{sidewaysfigure}
-%\end{figure}
-%\end{landscape}
+\subsection{Database}\label{sec:database}
+The database solution is a relational MySQL database running on mysql-server. All the neccesary tables were created in SQL, and a Go function for initializing the database was created. To see the ER model of the database see Appendix \ref{app:database}. 
