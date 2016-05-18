@@ -1,67 +1,61 @@
 \chapter{Implementation}\label{cha:implementation}
-The implementation of the design and architecture is not always as straightforward as planned. Especially when working with new unfamiliar frameworks. A lot of work has been done in frameworks such as AngularJS since it has been around for longest. These frameworks usually use numerous different implementations of MVC (Model-view-controller). React developers advise to use React together with the Flux architecture.
+The implementation of the design and architecture is not always as straightforward as planned. Especially when working with new unfamiliar frameworks. A lot of work has been done in frameworks such as AngularJS since it has been around for longest. These frameworks usually use numerous different implementations of MVC (Model-View-Controller). React developers advise to use React together with the Flux architecture.
 \section{Client}\label{sec:client}
 The client, in this case a Web application, is a single threaded JavaScript program that executes on users browser. Rendering of the DOM is taken care of by React library that is managed and updated useing Flux architecture, the communication with the server and database is done through WebSocket protocol. This section will go though how React is implemented to facilitate Flux architecture, by going through a flow of data in one of the views. A general dataflow figure was presented in Chapter \ref{cha:} section \ref{sec:} the presented example will follow this flow.
 \subsection{ReactJS}\label{sec:reactjs}
-React can be written with pure JavaScript syntax, or it can be written with JSX, which is XML like syntax. Since this library is only used to visually represent the logic and current state of the application, JSX helps to visualize how the component will look like by building it XML style. The DOM elements rendered in the web browser are function calls that put together data and create a HTML document.
-
+The user interface is written with React, the logic is handled with JavaScript, with the help of React and it's \emph{lifecycle hooks} (see Chapter \ref{cha:} Section \ref{sec:})  a responsive user interface was implemented. This section will explain how React gets the data and makes the user interface update in real time.
 \lstinputlisting[caption=Render method with easy to read tree structure of React components, label=lst:jsxsyntax]{listings/jsxsyntax.js}
-
-The structure represents the components that are visible for the user. \emph{StudentResultsList} and \emph{Labview} are interactive elements on the page. The render function is inside another component, the parent component of these two. Each of these two components implements it's own \emph{render} function. This creates a tree structure of the components, where data can travel along the branches, by being passed on further like on line 7.
-\\The variables passed into the component, are obtained from the current state - see line 3, this data can change on each render cycle. Each React component has a set of \emph{lifecycle hooks}, as explained in Section \ref{sec:}, these help trigger render cycles of react component by triggering a call to render method. Implementation of the lifecycle hooks for the view in Listing above is presented here:
-
-\lstinputlisting[caption=React setup for listening to cache/data store, label=lst:componentlisteners]{listings/componentlisteners.js}
-
-In the code snippet above, there are three handlers. First is for when the component is rendered initially, it will get the data it needs from the stores he is assigned to. When this method returns, the render method from Listing \ref{lst:reactrender} will run, and render the DOM. Methods \emph{componentDidMount} and \emph{componentWillUnmount}, are methods that register the component to the relevan stores. The \emph{ChangeListener} seen here is exmplained in the earlier Section \ref{sec:}, this is how each view or component know when the change in the stores are happening.
-
+The function presented above represents the components that are visible for the user. \emph{StudentResultsList} and \emph{Labview} on line 7 and 10 respectively are interactive elements on the page. Tree structure in React works by having parent - child relationship between components. Each component has it's own render function. Data can travel along the branches in the tree, what Flux does is forcing the data flow down the tree structure, the components still can communicate, but the data will have to go out and back in to the root of the tree.
+\\The variables passed into the component, are obtained from the current state - see line 3, this data can change on each render cycle.
 \lstinputlisting[caption=React render method rendering when the state is updated, label=lst:reactrender]{listings/reactrender.js}
-
-Listing \ref{lst:reactrender} shows how a HTML DOM element is rendered. The student list that was passed on to the \emph{StudentResultsList} in Listing \ref{lst:jsxsyntax} is used here to render each student and his data into another component. On line 11, render method iterates through the students and creates a compoenent for each of them on line 13. The data on line 2 is the data stored in the store, on each render cycle this data is updated, and changes are reflected in the new render of the DOM.
-
-\subsection{Flux}
+Listing \ref{lst:reactrender} shows how a HTML DOM element is rendered, this is the element from \ref{lst:jsxsyntax} line 7. The student list that was passed on to the \emph{StudentResultsList} in Listing \ref{lst:jsxsyntax} is used here to render each student and his data into another component. On line 11, render method iterates through the students and creates a compoenent for each of them on line 13. The data on line 2 is the data stored in the store, on each render cycle this data is updated, and changes are reflected in the new render of the DOM.
+\\Each React component has a set of \emph{lifecycle hooks}, these help trigger render cycles of react component by triggering a call to render method. Implementation of the lifecycle hooks for the view in Listing above is presented here:
+\lstinputlisting[caption=React setup for listening to cache/data store, label=lst:componentlisteners]{listings/componentlisteners.js}
+In the code snippet above, there are three handlers. First is for when the component is rendered initially on line 3, it will get the data it needs from the stores he is assigned to. When this method returns, the render method from Listing \ref{lst:reactrender} will run, and render the DOM. Methods \emph{componentDidMount} and \emph{componentWillUnmount}, are methods that register the component to the relevan stores. The \emph{ChangeListener} seen on line 8 and 12 is explained also in the earlier Section \ref{sec:}, this is how each view or component know when the change in the stores are happening.
+\subsection{Flux}\label{sec:fluximplementation}
 Flux was explained briefly in \ref{sec:}, one of the modules in Flux are action creators, methods that return object literals - strings representing an actionType.
-
 \lstinputlisting[caption=One of action creators responsible for emitting \emph{QUERY\_FOR\_STUDENT} action, label=lst:emmitingaction]{listings/emmitingaction.js}
-
-A helper method like that, is either used in the component's lifeccycle hook methods or connected with interactive user elements. Calling an ActionCreators method like that, will dispach an action into the system via the dispatcher. The payload of that action is in the code snipped above on line 4. The dispatcher will emitt this object literal:
-
+A helper method like that, is either used in the component's lifecycle hooks method or connected with interactive user elements. Calling an ActionCreator's method, will dispach an action into the system via the dispatcher. The payload of that action is in the code snipped above on line 4. The dispatcher will emitt this object literal:
 \lstinputlisting[label=lst:payloadactioncreator]{listings/payloadactioncreator.js}
-
 This action is triggered when a user searches for the student in the list. After dipaching, stores that are listening to this actionType, will receive the payload:
-
 \lstinputlisting[caption=Switch case in a store catching an action type, label=lst:receivepayload]{listings/receivepayload.js}
-
+Here the store updated itself with its own private methods on line 2 and 3, and then uses EventEmitter to emit the change for the React components/views this triggers next render cycle for them.
 The stores are data structures that represent component's data. A store can represent a list of students, with data about each of the assignments they are assigned to, and whether or not they passed it. It is not necessarily exactly how the data is stored on the server. How a store is assembled is usually through a set of helper methods, some parts of the data might already be on the client in other stores, like the list of students for a course could have been fetched when viewing course details earlier, if that is the case, store would usually be set up to get that data from other store that has is, and then proceeds to either send API requests to the server for the missing data or even ask other stores.
-\\Helper methods mentioned earlier, are called \emph{utils} and are placed in utility classes, these are methods for converting the data received from the server to the datastructure the store wants it in. If we are interested to get information about assignments details for a particular student, we might have set up the request so that it retrieves all the information available, this can still be stored in a store, but say view wants to only display the percentage score of this students lab, this is where util methods would be used. The percentage data would be extracted from the store before sending it to the view. If this view will be expanded to show more information, it can get the necessary data from the store directly without the need for another request to server, also views can share the store which will enable easier communication between stores and less dependancy issues.
 
+\begin{figure}[h]
+\centering
+\scalebox{1}{{\input{./graphics/storedep.tex}}}
+\caption{Stores can share data, the database seves it in it's own way.}
+\end{figure}
+
+Helper methods mentioned earlier, are called \emph{utils} and are placed in utility classes, these are methods for converting the data received from the server to the datastructure the store wants it in. If we are interested to get information about assignments details for a particular student, we might have set up the request so that it retrieves all the information available, this can still be stored in a store, but say view wants to only display the percentage score of this students lab, this is where util methods would be used. The percentage data would be extracted from the store before sending it to the view. If this view will be expanded to show more information, it can get the necessary data from the store directly without the need for another request to server, also views can share the store which will enable easier communication between stores and less dependancy issues.
 \lstinputlisting[caption=Utility method for extractign \emph{some} data from the received data, label=lst:utilstoremethod]{listings/utilstoremethod.js}
-
 In this code snippet, we can se a function that will take a student array and return just selected fields from the objects of the original array.
 
 \subsection{WebSocket}\label{sec:websocket}
-How the data is fetched from the server through WebSocket is pretty straightforward, there is a simple API that tells the server what the client wants and vise versa. On the client side, a structure called Socked is implemented, this is based on the WebSocket protocol. Socket exposes a \emph{send()} method and \emph{message()} method. The first one is used to send over an API request to the server that looks like that:
+How the data is fetched from the server through WebSocket is pretty straightforward, there is a simple API that tells the server what the client wants and vise versa. On the client side, a structure called Socket is implemented, this is based on the WebSocket protocol. Socket exposes a \emph{send()} method and \emph{message()} method. The first one is used to send over an API request to the server that looks like that:
 \lstinputlisting{listings/socketmsg.js}
 When something is supposed to be saved on the server, it would be usually done similarly, with the payload field consisting of multiple variables, like updating user information, would have an action type \emph{UPDATE\_USER\_INFO} and payload with field names that correspond to the fields in the database, and an identification of that user. The latter method, \emph{message()} has callbacks that correspond to every message that was sent through \emph{send()}, and more - like actions that are specific only to the server. Every message is basically an object literal wrapped in JSON format that represents values or objects.
-\subsection{Autograder API}
-The API works with requests and responses, to get a deeper understanding one would have to look and compare all the requests and responses. But the general idea of API implemented with websocked is preddy standard. Let's send and receive the following JSON with websocket:
+\subsection{Autograder API}\label{sec:autograderapi}
+The general idea of API implemented with WebSocket is pretty standard. Let's send and receive the following JSON with WebSocket:
 A request to the server would look like 
 \lstinputlisting{listings/socketmsg.js}
 The response could be
 \lstinputlisting{listings/response.json}
-Unlike in RESTful HTTP calls, both request and response consist only of the pure data that needs to be sent, there is no overhead on each request like in HTTP since the connection is established and used throughout the session. The main idea is to use the same actionType in case of simple request. When the API response comes back into the Fluch architecture, the Socket implementation will decide what \emph{action creators} method will be called on \emph{message()}. The action gets dispatched into the system, and a store that is interested in this action will receive the payload and update itself.
+Unlike in RESTful HTTP calls, both request and response consist only of the pure data that needs to be sent, there is no overhead on each request like in HTTP, since the WebSocket connection is established and used throughout the session. The main idea is to use the same actionType in case of simple request. When the API response comes back into the Flux architecture, the Socket implementation will decide what \emph{action creators} method will be called on \emph{message()}. The action gets dispatched into the system, and a store that is interested in this action will receive the payload and update itself.
+\newpage
 \lstinputlisting[caption=Store switch case catching the action from dispatcher, label=lst:storeupdate]{listings/storeupdate.js}
-\section{Server}
+\section{Server}\label{sec:serverimplementation}
 This section will briefly go through how the server was implemented, this is only a test server and was meant to just work, and either echo back whatever was sent to it, or in some cases return data from database.
-\subsection{Go http and WebSocket}
-The server is serving only static files, the main JavaScript file, .html and .css file. This is done with the help of go http package. As mentioned earlier, it was suggested to use gorilla mux, for multiplexing of client requests, but since all communication is done through WebSocket it wasn't implemented optimally, as the only request that client makes normally is the initial handshake and upgrade, see figure \ref{fig:} Timeline of WebSocket protocol. So the server responds to the initial request, upgrades to WebSocket connection, and handles the client somewhere else.
+\subsection{Go http and WebSocket}\label{sec:gohttpws}
+The server is serving only static files, the main JavaScript file, .html and .css file. This is done with the help of go http package. It was suggested to use gorilla mux, for multiplexing of client requests, but since all communication is done through WebSocket it wasn't implemented optimally, as the only request that client makes normally is the initial handshake and upgrade, see figure \ref{fig:} Timeline of WebSocket protocol. So the server responds to the initial request, upgrades to WebSocket connection, and handles the client somewhere else.
 
-WebSocket implementation also uses gorilla package called gorilla/websocket, \emph{WriteMessage()} and \emph{ReadMessage()} methods are used similarly to how it is done on the client side with \emph{send()} and \emph{message()}. When new request is received through upgraded WebSocket connection, the message gets read: 
+WebSocket implementation also uses gorilla package called gorilla/websocket, \emph{WriteMessage()} and \emph{ReadMessage()} methods are used similarly to how it is done on the client side with \emph{send()} and \emph{message()}. When new request is received through upgraded WebSocket connection, the message gets read:
 \lstinputlisting[caption=How the server receives and responds to the request, label=lst:goreadmessage]{listings/goreadmessage.go}
+When it's read, it's then transformed into a \emph{request} struct on line 4, then used to retrieve the relevant data on line 11. When the data is ready, it gets transformed into JSON and send back through the WebSocket line 14.
 
-Listing \ref{lst:goreadmessage}, message is read, transformed into Go struct into a \emph{request} struct on line 4, then used to retrieve the relevant data on line 11. When the data is ready, it gets transformed into JSON and send back through the WebSocket line 14.
-
-\subsection{SQL driver}
-To communicate with the database mysql-server, a third-party driver had to be used, as the build in Go package doesn't provide this functionality. ziutek/mymysql \cite{ziutek} driver was used for this purpose. This packgage provides a couple of SQL communication abstractions for retrieveing data, but for this purpose the Go database/sql package was used, while ziutek/mymysql stod for the link between Autograder server and mysql-server. 
+\subsection{SQL driver}\label{sec:sqldriv}
+To communicate with the database mysql-server, a third-party driver had to be used, as the builtin Go package doesn't provide connection functionality. Ziutek/mymysql \cite{ziutek} driver was used for this purpose. This packgage provides a couple of SQL communication abstractions for retrieveing data, but for this purpose the Go database/sql package was used, while ziutek/mymysql stod for the link between Autograder server and mysql-server. 
 
 \subsection{Database}\label{sec:database}
-The database solution is a relational MySQL database running on mysql-server. All the neccesary tables were created in SQL, and a Go function for initializing the database was created. To see the ER model of the database see Appendix \ref{app:database}. 
+The database solution is a relational MySQL database running on mysql-server. All the neccesary tables were created in SQL, and a Go function for initializing the database was created. To see the ER model and SQL of the database see Appendix \ref{app:database}. 
